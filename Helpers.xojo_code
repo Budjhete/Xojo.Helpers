@@ -310,24 +310,6 @@ Protected Module Helpers
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function GetCompagniesFolder(create_if_not_exists as Boolean = true) As FolderItem
-		  dim fi as FolderItem = App.ApplicationData()
-		  
-		  'MsgBox fi.ShellPath
-		  // FIXME #8387
-		  'fi = fi.Child("Companies")
-		  
-		  'MsgBox fi.ShellPath
-		  
-		  if not fi.Exists and create_if_not_exists then
-		    fi.CreateAsFolder()
-		  end
-		  
-		  return fi
-		End Function
-	#tag EndMethod
-
 	#tag Method, Flags = &h0
 		Function GetResourceFolder() As FolderItem
 		  #if TargetLinux
@@ -529,46 +511,46 @@ Protected Module Helpers
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub linuxcontrolers(vc as ViewContainer)
-		  dim i as integer
-		  dim ppm as PopupMenu
-		  dim pb as BHPushButton
-		  dim c as Control
-		  
-		  ppm = nil
-		  for i=1 to vc.ControlCount
-		    c = vc.Control(i-1)
-		    if c isa PopupMenu then
-		      ppm = PopupMenu(c)
-		      ppm.Height = ppm.Height + 8
-		    elseif c isa BHPushButton then
-		      pb = BHPushButton(c)
-		      pb.height = pb.height + 8
-		    end if
-		    
-		  next
+		  'dim i as integer
+		  'dim ppm as PopupMenu
+		  'dim pb as BHPushButton
+		  'dim c as Control
+		  '
+		  'ppm = nil
+		  'for i=1 to vc.ControlCount
+		  'c = vc.Control(i-1)
+		  'if c isa PopupMenu then
+		  'ppm = PopupMenu(c)
+		  'ppm.Height = ppm.Height + 8
+		  'elseif c isa BHPushButton then
+		  'pb = BHPushButton(c)
+		  'pb.height = pb.height + 8
+		  'end if
+		  '
+		  'next
 		  
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub linuxcontrolers(w as window)
-		  dim i as integer
-		  dim ppm as PopupMenu
-		  dim pb as PushButton
-		  dim c as Control
-		  
-		  ppm = nil
-		  for i=1 to w.ControlCount
-		    c = w.Control(i-1)
-		    if c isa PopupMenu then
-		      ppm = PopupMenu(c)
-		      ppm.Height = ppm.Height + 8
-		    elseif c isa BHPushButton then
-		      pb = PushButton(c)
-		      pb.height = pb.height + 8
-		    end if
-		    
-		  next
+		  'dim i as integer
+		  'dim ppm as PopupMenu
+		  'dim pb as PushButton
+		  'dim c as Control
+		  '
+		  'ppm = nil
+		  'for i=1 to w.ControlCount
+		  'c = w.Control(i-1)
+		  'if c isa PopupMenu then
+		  'ppm = PopupMenu(c)
+		  'ppm.Height = ppm.Height + 8
+		  'elseif c isa BHPushButton then
+		  'pb = PushButton(c)
+		  'pb.height = pb.height + 8
+		  'end if
+		  '
+		  'next
 		  
 		End Sub
 	#tag EndMethod
@@ -691,15 +673,15 @@ Protected Module Helpers
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub savemenuactivation(w as Window, tb as Toolbar, active as Boolean)
-		  dim item as MenuItem = App.MenuBar.Find("miEnregistrer")
-		  if item <> nil then
-		    item.AutoEnable = active
-		  end
-		  
-		  dim itemtb as ToolItem = tb.Item("tiEnregistrer")
-		  if itemtb <> nil then
-		    itemtb.Enabled = active
-		  end
+		  'dim item as MenuItem = App.MenuBar.Find("miEnregistrer")
+		  'if item <> nil then
+		  'item.AutoEnable = active
+		  'end
+		  '
+		  'dim itemtb as ToolItem = tb.Item("tiEnregistrer")
+		  'if itemtb <> nil then
+		  'itemtb.Enabled = active
+		  'end
 		End Sub
 	#tag EndMethod
 
