@@ -62,7 +62,7 @@ Protected Class ZipEntry
 		    
 		    if CompressionMethod = Compression_Deflate then
 		      // Le deflate ajoute 2 octets d'identification à la fin
-		      value = zlibCompress(value)
+		      value = zlibCompress(value)  // NEED zLib 
 		      return value.LeftB(value.LenB - 2)
 		    elseif CompressionMethod = Compression_Store then
 		      return value
