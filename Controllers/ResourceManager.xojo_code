@@ -20,7 +20,7 @@ Protected Class ResourceManager
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function Instance() As ResourceManager
+		 Shared Function Instance() As ResourceManager
 		  if mInstance = nil then
 		    mInstance = new ResourceManager
 		  end

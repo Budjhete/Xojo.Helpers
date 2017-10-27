@@ -58,6 +58,16 @@ Protected Class Version
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function ParsedVersion(pString as String) As Version
+		  if not pString.Test("^\d+(\.\d+)?(\.\d+)?(\.\d+)?$") then
+		    return nil
+		  end
+		  
+		  return new Version(pString)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function ToString() As String
 		  dim version as String = Str(Major) + "." + Str(Minor)
 		  
