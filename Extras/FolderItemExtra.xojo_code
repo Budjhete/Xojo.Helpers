@@ -1,6 +1,19 @@
 #tag Module
 Protected Module FolderItemExtra
 	#tag Method, Flags = &h0
+		Function CountVisible(extends folder as FolderItem) As Integer
+		  Dim count As Integer = folder.Count
+		  dim realCount as integer = 0
+		  For i As Integer = 1 To Count
+		      Dim child As FolderItem = folder.TrueItem(i)
+		      If child.Visible Then realCount = realCount + 1
+		  Next
+		  
+		  Return realCount
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub RecursiveDelete(extends folder as FolderItem)
 		  Dim fi As FolderItem
 		  

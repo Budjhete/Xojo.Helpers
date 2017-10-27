@@ -1,7 +1,20 @@
 #tag Class
-Protected Class BHSystemException
-Inherits BHException
+Protected Class GenericException
+Inherits RuntimeException
+	#tag Method, Flags = &h1000
+		Sub Constructor(message as String)
+		  Message = message
+		End Sub
+	#tag EndMethod
+
+
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="ErrorNumber"
+			Group="Behavior"
+			InitialValue="0"
+			Type="Integer"
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Index"
 			Visible=true
@@ -17,10 +30,21 @@ Inherits BHException
 			Type="Integer"
 		#tag EndViewProperty
 		#tag ViewProperty
+			Name="Message"
+			Group="Behavior"
+			Type="String"
+			EditorType="MultiLineEditor"
+		#tag EndViewProperty
+		#tag ViewProperty
 			Name="Name"
 			Visible=true
 			Group="ID"
 			Type="String"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Reason"
+			Group="Behavior"
+			Type="Text"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Super"

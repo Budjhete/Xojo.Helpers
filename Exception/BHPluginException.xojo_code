@@ -1,5 +1,5 @@
 #tag Class
-Protected Class BHSystemException
+Protected Class BHPluginException
 Inherits BHException
 	#tag ViewBehavior
 		#tag ViewProperty

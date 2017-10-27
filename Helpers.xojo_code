@@ -629,16 +629,6 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ParseVersion(value as String) As Version
-		  if not value.Test("^\d+(\.\d+)?(\.\d+)?(\.\d+)?$") then
-		    return nil
-		  end
-		  
-		  return new Version(value)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Sub plus(Extends Byref pValueA As Integer, Assigns pValueB As Integer)
 		  pValueA = pValueA + pValueB
 		End Sub

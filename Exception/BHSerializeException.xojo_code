@@ -1,6 +1,6 @@
 #tag Class
-Protected Class BHSystemException
-Inherits BHException
+Protected Class BHSerializeException
+Inherits BHSystemException
 	#tag ViewBehavior
 		#tag ViewProperty
 			Name="Index"
