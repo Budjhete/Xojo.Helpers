@@ -1,0 +1,3 @@
+[submodule "zLib Folder"]
+	path = zLib Folder
+	url = git@github.com:Budjhete/Xojo-zlib.git
