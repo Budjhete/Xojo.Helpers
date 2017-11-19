@@ -404,40 +404,6 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub ImportSQL(db as REALSQLDatabase, sql as FolderItem)
-		  dim tis As TextInputStream
-		  tis = TextInputStream.Open(sql)
-		  
-		  ImportSQL(db, tis.ReadAll)
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub ImportSQL(db as REALSQLDatabase, sql as String)
-		  dim tis As TextInputStream
-		  tis = TextInputStream.Open(ResourceManager.Instance.SQL("sqlite"))
-		  
-		  dim autocommit as Boolean = db.AutoCommit
-		  
-		  db.AutoCommit = false
-		  
-		  Dim queries() As String = sql.Split(";")
-		  For Each query As String In queries
-		    db.SQLExecute(query)
-		    If DB.Error Then
-		      MsgBox("DB Error: " + DB.ErrorMessage)
-		    End If
-		  Next
-		  #If DebugBuild then
-		    MsgBox("Table created as realsql")
-		  #endif
-		  
-		  db.Commit()
-		  db.AutoCommit = autocommit
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Sub ImportSQL(db as SQLiteDatabase, sql as FolderItem)
 		  dim tis As TextInputStream
 		  tis = TextInputStream.Open(sql)
@@ -507,29 +473,6 @@ Protected Module Helpers
 		Function is_array(value As Variant) As Boolean
 		  return value.IsArray
 		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub linuxcontrolers(w as window)
-		  'dim i as integer
-		  'dim ppm as PopupMenu
-		  'dim pb as PushButton
-		  'dim c as Control
-		  '
-		  'ppm = nil
-		  'for i=1 to w.ControlCount
-		  'c = w.Control(i-1)
-		  'if c isa PopupMenu then
-		  'ppm = PopupMenu(c)
-		  'ppm.Height = ppm.Height + 8
-		  'elseif c isa BHPushButton then
-		  'pb = PushButton(c)
-		  'pb.height = pb.height + 8
-		  'end if
-		  '
-		  'next
-		  
-		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -635,20 +578,6 @@ Protected Module Helpers
 		      #ENDIF
 		    end if
 		  end if
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub savemenuactivation(w as Window, tb as Toolbar, active as Boolean)
-		  'dim item as MenuItem = App.MenuBar.Find("miEnregistrer")
-		  'if item <> nil then
-		  'item.AutoEnable = active
-		  'end
-		  '
-		  'dim itemtb as ToolItem = tb.Item("tiEnregistrer")
-		  'if itemtb <> nil then
-		  'itemtb.Enabled = active
-		  'end
 		End Sub
 	#tag EndMethod
 
