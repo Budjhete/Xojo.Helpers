@@ -510,29 +510,6 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub linuxcontrolers(vc as ViewContainer)
-		  'dim i as integer
-		  'dim ppm as PopupMenu
-		  'dim pb as BHPushButton
-		  'dim c as Control
-		  '
-		  'ppm = nil
-		  'for i=1 to vc.ControlCount
-		  'c = vc.Control(i-1)
-		  'if c isa PopupMenu then
-		  'ppm = PopupMenu(c)
-		  'ppm.Height = ppm.Height + 8
-		  'elseif c isa BHPushButton then
-		  'pb = BHPushButton(c)
-		  'pb.height = pb.height + 8
-		  'end if
-		  '
-		  'next
-		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub linuxcontrolers(w as window)
 		  'dim i as integer
 		  'dim ppm as PopupMenu
