@@ -142,6 +142,34 @@ Protected Class ResourceManager
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function TemplateGeneral() As FolderItem
+		  dim fi, child as FolderItem
+		  
+		  fi = Templates().Child("General")
+		  
+		  if fi.Exists then
+		    return fi
+		  end
+		  
+		  return nil
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function TemplateReports() As FolderItem
+		  dim fi, child as FolderItem
+		  
+		  fi = Templates().Child("Rapports")
+		  
+		  if fi.Exists then
+		    return fi
+		  end
+		  
+		  return nil
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function Templates() As ZipResource
 		  if mTemplates = nil then
 		    dim zip as ZipArchive
