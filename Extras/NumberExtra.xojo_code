@@ -193,38 +193,6 @@ Protected Module NumberExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function StringValueNoZero(Extends pInteger As Integer) As String
-		  if pInteger = 0 then Return ""
-		  Return Str(pInteger)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function StringValueOuiNon(Extends pBoolean As Boolean) As String
-		  If pBoolean Then
-		    Return "Oui"
-		  Else
-		    Return "Non"
-		  End If
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function StringValueOuiNonAverifier(Extends pInteger As Integer) As String
-		  Select case pInteger
-		  case 1
-		    return "Non"
-		  case 2
-		    return "Oui"
-		  case 3
-		    Return "À vérifier"
-		  else
-		    Return "À vérifier"
-		  End Select
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function XSLValue(Extends pCurrency As Currency) As String
 		  Return Str(pCurrency, "-#0.00")
 		End Function
