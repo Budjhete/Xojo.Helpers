@@ -82,7 +82,7 @@ Protected Module GraphicsExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Sub DrawListBox(Extends g as Graphics, list as ListBox, x as Integer, y as Integer, width as Integer, height as Integer = 0)
 		  dim pX, pY as Integer
 		  

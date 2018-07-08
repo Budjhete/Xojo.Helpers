@@ -183,6 +183,16 @@ Protected Module NumberExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function StringValue(Extends pInteger As Integer, pLength as Integer) As String
+		  dim formatstring as String
+		  for i as Integer = 1 to pLength
+		    formatstring = formatstring + "0"
+		  next
+		  Return Str(pInteger, formatstring)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function XSLValue(Extends pCurrency As Currency) As String
 		  Return Str(pCurrency, "-#0.00")
 		End Function

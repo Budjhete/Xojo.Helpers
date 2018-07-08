@@ -394,6 +394,16 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function IIF(condition as Boolean, trueValue as ORM, falseValue as ORM) As variant
+		  if condition then
+		    return trueValue
+		  else
+		    return falseValue
+		  end
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function IIF(condition as Boolean, trueValue as String, falseValue as String) As String
 		  if condition then
 		    return trueValue
