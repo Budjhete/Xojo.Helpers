@@ -30,7 +30,7 @@ Protected Class Updater
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		 Shared Function Channel() As String
+		Shared Function Channel() As String
 		  if App.StageCode = Application.Final then
 		    return Updater.CHANNEL_STABLE
 		  elseif App.StageCode = Application.Beta then

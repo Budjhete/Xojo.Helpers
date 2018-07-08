@@ -9,6 +9,20 @@ Protected Class Appcast
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Shared Function FullVersionName() As String
+		  #if TargetMacOS
+		    return App.LongVersion + " (Mac OS X)"
+		  #elseif TargetWin32
+		    return App.LongVersion + " (Windows)"
+		  #elseif TargetLinux
+		    return App.LongVersion + " (Linux)"
+		  #endif
+		  
+		  Return App.LongVersion + " (Autre plateforme)"
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub HTTPSocketPageReceived(socket as HTTPSocket, URL as String, HTTPStatus as Integer, Headers as InternetHeaders, Content as String)
 		  dim xml as new XmlDocument
 		  dim param as XmlNode
@@ -94,7 +108,7 @@ Protected Class Appcast
 		Sub Load(url as String)
 		  mSocket = new HTTPSocket
 		  
-		  dim userAgent as String = App.FullVersionName
+		  dim userAgent as String = Appcast.FullVersionName
 		  if DebugBuild or Updater.Instance.ShowPrerelease then
 		    userAgent = userAgent + "; show-prereleases"
 		  end
