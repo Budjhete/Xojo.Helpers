@@ -261,12 +261,38 @@ Begin Window FenetreNouvelleVersion
       Width           =   846
    End
    Begin BHLink LinWithoutGtkLink
+      AutoDeactivate  =   True
+      Bold            =   False
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
       Height          =   32
+      HelpTag         =   ""
       Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   False
       Left            =   121
+      LockBottom      =   False
       LockedInPosition=   False
+      LockLeft        =   False
+      LockRight       =   False
+      LockTop         =   False
+      Multiline       =   False
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   7
       TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   "Untitled"
+      TextAlign       =   0
+      TextColor       =   &c00000000
+      TextFont        =   "System"
+      TextSize        =   0.0
+      TextUnit        =   0
       Top             =   95
+      Transparent     =   False
+      Underline       =   False
+      Visible         =   True
       Width           =   32
    End
    Begin Timer Timer1
