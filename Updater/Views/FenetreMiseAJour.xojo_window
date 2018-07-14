@@ -473,7 +473,7 @@ End
 		  
 		  temp_ = SpecialFolder.Temporary.Child(RandomString(10) + "-part." + ext)
 		  
-		  request.SetRequestHeader("User-Agent", App.FullVersionName)
+		  request.SetRequestHeader("User-Agent", Appcast.FullVersionName)
 		  request.Get(item_.FileURL, temp_)
 		End Sub
 	#tag EndMethod

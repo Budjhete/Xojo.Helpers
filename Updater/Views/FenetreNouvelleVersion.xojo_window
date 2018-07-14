@@ -296,6 +296,7 @@ Begin Window FenetreNouvelleVersion
       Width           =   32
    End
    Begin Timer Timer1
+      Enabled         =   True
       Index           =   -2147483648
       InitialParent   =   ""
       LockedInPosition=   False
@@ -351,6 +352,7 @@ Begin Window FenetreNouvelleVersion
       Scope           =   0
       TabIndex        =   8
       TabPanelIndex   =   0
+      TabStop         =   True
       Top             =   118
       TopLeftColor    =   &c00000000
       Transparent     =   False

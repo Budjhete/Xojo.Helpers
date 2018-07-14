@@ -5,8 +5,8 @@ Protected Module FolderItemExtra
 		  Dim count As Integer = folder.Count
 		  dim realCount as integer = 0
 		  For i As Integer = 1 To Count
-		      Dim child As FolderItem = folder.TrueItem(i)
-		      If child.Visible Then realCount = realCount + 1
+		    Dim child As FolderItem = folder.TrueItem(i)
+		    If child.Visible Then realCount = realCount + 1
 		  Next
 		  
 		  Return realCount

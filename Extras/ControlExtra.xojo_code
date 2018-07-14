@@ -394,26 +394,6 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function ScreenX(Extends ctrl as RectControl) As Integer
-		  if ctrl.Window IsA ViewContainer then
-		    return ctrl.Left + ViewContainer(ctrl.Window).ScreenX
-		  else
-		    return ctrl.Left + ctrl.Window.Left
-		  end
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function ScreenY(Extends ctrl as RectControl) As Integer
-		  if ctrl.Window IsA ViewContainer then
-		    return ctrl.Top + ViewContainer(ctrl.Window).ScreenY
-		  else
-		    return ctrl.Top + ctrl.Window.Top
-		  end
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function Tag(Extends popup as PopupMenu) As Variant
 		  if popup.ListIndex < 0 then
 		    return nil
@@ -457,46 +437,6 @@ Protected Module ControlExtra
 		  next
 		  
 		  return nil
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function WindowLeft(Extends ctrl as RectControl) As Integer
-		  Dim value As Integer = ctrl.Left
-		  
-		  dim theContainer as Window = ctrl.Window
-		  
-		  while theContainer IsA ContainerControl
-		    if theContainer IsA ViewContainer then
-		      value = value + ViewContainer(theContainer).InitialLeft
-		    else
-		      value = value + theContainer.Left
-		    end
-		    
-		    theContainer = ContainerControl(theContainer).Window
-		  wend
-		  
-		  return value
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function WindowTop(Extends ctrl as RectControl) As Integer
-		  Dim value As Integer = ctrl.Top
-		  
-		  dim theContainer as Window = ctrl.Window
-		  
-		  while theContainer IsA ContainerControl
-		    if theContainer IsA ViewContainer then
-		      value = value + ViewContainer(theContainer).InitialTop
-		    else
-		      value = value + theContainer.Top
-		    end
-		    
-		    theContainer = ContainerControl(theContainer).Window
-		  wend
-		  
-		  return value
 		End Function
 	#tag EndMethod
 
