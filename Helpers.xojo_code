@@ -293,11 +293,13 @@ Protected Module Helpers
 		  dim path, fi as FolderItem
 		  
 		  for each path in paths
-		    fi = path.RelativeTo(file)
-		    
-		    if fi <> nil and fi.Exists then
-		      return fi
-		    end
+		    if path <> nil and path.Exists then
+		      fi = path.RelativeTo(file)
+		      
+		      if fi <> nil and fi.Exists then
+		        return fi
+		      end
+		    end if
 		  next
 		  
 		  return nil
