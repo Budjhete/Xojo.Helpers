@@ -320,7 +320,7 @@ End
 
 	#tag Method, Flags = &h1
 		Protected Sub PrepareRelauncher()
-		  mArchive = ResourceManager.Instance.Relauncher()
+		  mArchive = App.Resources.Relauncher()
 		  
 		  if not mArchive.Exists then
 		    MsgBox kLanceurNonDisponible
