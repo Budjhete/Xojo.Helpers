@@ -435,6 +435,8 @@ End
 		  // Calling the overridden superclass constructor.
 		  Super.Constructor
 		  
+		  post = new Dictionary
+		  
 		End Sub
 	#tag EndMethod
 
@@ -453,6 +455,7 @@ End
 		  // Calling the overridden superclass constructor.
 		  Super.Constructor
 		  
+		  post = new Dictionary
 		  
 		End Sub
 	#tag EndMethod
@@ -472,6 +475,8 @@ End
 		  // Calling the overridden superclass constructor.
 		  Super.Constructor
 		  
+		  post = new Dictionary
+		  
 		End Sub
 	#tag EndMethod
 
@@ -481,6 +486,9 @@ End
 		  
 		  // Calling the overridden superclass constructor.
 		  Super.Constructor
+		  
+		  post = new Dictionary
+		  
 		End Sub
 	#tag EndMethod
 
@@ -507,6 +515,10 @@ End
 
 	#tag Property, Flags = &h21
 		Private Message As String
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		post As Dictionary
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -878,10 +890,18 @@ End
 		Name="URLreport"
 		Group="Behavior"
 		Type="String"
+		EditorType="MultiLineEditor"
 	#tag EndViewProperty
 	#tag ViewProperty
 		Name="InitialVersion"
 		Group="Behavior"
 		Type="String"
+		EditorType="MultiLineEditor"
+	#tag EndViewProperty
+	#tag ViewProperty
+		Name="CreationDate"
+		Group="Behavior"
+		Type="String"
+		EditorType="MultiLineEditor"
 	#tag EndViewProperty
 #tag EndViewBehavior
