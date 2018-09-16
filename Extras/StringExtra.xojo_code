@@ -548,26 +548,6 @@ Protected Module StringExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Map(Extends str as String, map as CSDictionary) As String
-		  dim ret as String = str
-		  dim i as Integer = 0
-		  
-		  for each key as String in map.Keys
-		    ret = ret.ReplaceAllB(key, "${"+Str(i)+"}")
-		    i = i + 1
-		  next
-		  
-		  i = 0
-		  for each key as String in map.Keys
-		    ret = ret.ReplaceAllB("${"+Str(i)+"}", map.Value(key).StringValue)
-		    i = i + 1
-		  next
-		  
-		  return ret
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function Money(Extends str as String, default as String = "") As String
 		  str = str.ReplaceAll(",", ".")
 		  
