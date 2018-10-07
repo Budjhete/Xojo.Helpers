@@ -59,18 +59,6 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function ColumnLeft(Extends ctrl as ListBox, column as Integer) As Integer
-		  dim left as Integer = ctrl.ScreenX
-		  
-		  for i as Integer = 0 to (column-1)
-		    left = left + ctrl.Column(i).WidthActual
-		  next
-		  
-		  return left
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function Contains(Extends menu as MenuItem, item as MenuItem) As Boolean
 		  For i as Integer = 0 to menu.Count-1
 		    if menu.Item(i) = item then
@@ -192,12 +180,6 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function Hovered(Extends pControl As RectControl) As Boolean
-		  Return pControl.MouseControlX.Between(0, pControl.Width) And pControl.MouseControlY.Between(0, pControl.Height)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function IndexOf(Extends menu as MenuItem, name as String) As Integer
 		  For i as Integer = 0 to (menu.Count-1)
 		    if menu.Item(i).Name = name then
@@ -238,15 +220,6 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function IsMouseHover(Extends ctrl as RectControl) As Boolean
-		  dim X as Integer = ctrl.MouseControlX
-		  dim Y as Integer = ctrl.MouseControlX
-		  
-		  return (X >= 0 and X < ctrl.Width and Y >= 0 and Y < ctrl.Height)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function ListCount(Extends button as BevelButton) As Integer
 		  #pragma BreakOnExceptions Off
 		  
@@ -277,18 +250,6 @@ Protected Module ControlExtra
 		    ctrl.Width = value
 		  end
 		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function MouseControlX(Extends pControl as RectControl) As Integer
-		  return (pControl.MouseX - pControl.WindowLeft)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function MouseControlY(Extends pControl as RectControl) As Integer
-		  return (pControl.MouseY - pControl.WindowTop)
-		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
@@ -385,12 +346,6 @@ Protected Module ControlExtra
 		Sub RightPosition(Extends ctrl as RectControl, Assigns value as Integer)
 		  ctrl.Left = value - ctrl.Width
 		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function RowTop(Extends ctrl as ListBox, row as Integer) As Integer
-		  return  (ctrl.ScreenY + ctrl.HeaderHeight + ctrl.RowHeight * (row - ctrl.ScrollPosition))
-		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))

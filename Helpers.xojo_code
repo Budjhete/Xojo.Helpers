@@ -416,38 +416,6 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub ImportSQL(db as SQLiteDatabase, sql as FolderItem)
-		  dim tis As TextInputStream
-		  tis = TextInputStream.Open(sql)
-		  
-		  ImportSQL(db, tis.ReadAll)
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub ImportSQL(db as SQliteDatabase, sql as String)
-		  dim tis As TextInputStream
-		  tis = TextInputStream.Open(ResourceManager.Instance.SQL("sqlite"))
-		  
-		  
-		  Dim queries() As String = sql.Split(";")
-		  For Each query As String In queries
-		    db.SQLExecute(query)
-		    If DB.Error Then
-		      System.DebugLog "DB Error: " + db.ErrorCode.StringValue + "  " + db.ErrorMessage + EndOfLine  + EndOfLine + "Dans cette requête : " + query
-		    Else
-		      db.Commit()
-		    End If
-		    
-		  Next
-		  
-		  System.DebugLog "DEBUG : Tables created as sqlite"
-		  
-		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function Int(str As String) As Integer
 		  Return str.toInt
 		End Function
