@@ -122,6 +122,22 @@ Protected Module NumberExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function POSvalue(Extends pCurrency as Currency, pLenth as Integer, pFormat as string = "-#0.00") As String
+		  Dim t as string = Str(pCurrency, pFormat)
+		  
+		  dim L as integer = t.Len
+		  Dim LL as integer
+		  
+		  if L < pLenth AND L < 10 then LL = pLenth - L
+		  
+		  for i as integer = 0 to LL
+		    t =  " " + t
+		  next
+		  Return t
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function QuantityValue(Extends pDouble As Double) As String
 		  Dim pInteger As Integer = pDouble
 		  
