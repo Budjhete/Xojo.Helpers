@@ -376,6 +376,16 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function IIF(condition as Boolean, trueValue as Currency, falseValue as Currency) As Currency
+		  if condition then
+		    return trueValue
+		  else
+		    return falseValue
+		  end
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function IIF(condition as Boolean, trueValue as Double, falseValue as Double) As Double
 		  if condition then
 		    return trueValue
