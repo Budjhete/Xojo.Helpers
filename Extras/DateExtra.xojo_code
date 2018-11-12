@@ -69,6 +69,14 @@ Protected Module DateExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function FormatPlain(extends d As Date) As String
+		  ' 2000-12-31 16h 01m 07s to 20001231160107
+		  return  Str(d.Year) + Str(d.Month) + Str(d.Day) +_
+		  Str(d.Hour).FillLeft("0", 2) + Str(d.Minute).FillLeft("0", 2) + Str(d.Second).FillLeft("0", 2)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function FormatRFC2822(extends d As Date) As String
 		  ' Thu, 21 Dec 2000 16:01:07 +0200
 		  return d.DayOfWeekNameShort + ", " + _
