@@ -348,6 +348,18 @@ Protected Module ControlExtra
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function ScreenX(Extends ctrl as RectControl) As Integer
+		  return ctrl.Left + ctrl.Window.Left
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function ScreenY(Extends ctrl as RectControl) As Integer
+		  return ctrl.top + ctrl.Window.top
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function Tag(Extends popup as PopupMenu) As Variant
 		  if popup.ListIndex < 0 then

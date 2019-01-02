@@ -225,12 +225,16 @@ Protected Module NumberExtra
 		#tag Getter
 			Get
 			  // Use pDecimale to asjust from a DB or a FILE how much decimal you need, the ajustment are live
-			  'dim pDecimale as String = Company.Current.SystemDecimales
-			  '
-			  'if pDecimale = "" then
-			  'pDecimale = "-###,##0.00"
-			  'end if
-			  return "-###,##0.00"
+			  dim pDecimale as Integer = App.SystemDecimales // add this variable string or method string in APP.
+			  dim pFormat as string = "-###"+App.SeparateurNombre+"##0"+App.SeparateurDecimalNombre+"00"
+			  
+			  Dim i As Integer
+			  
+			  For i = 2 To pDecimale - 1
+			    pFormat = pFormat + "0"
+			  next
+			  
+			  return pFormat
 			End Get
 		#tag EndGetter
 		MoneyFormatPref As string
