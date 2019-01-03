@@ -84,7 +84,7 @@ Begin Window FenetreAJour
       TabIndex        =   2
       TabPanelIndex   =   0
       TabStop         =   True
-      Text            =   "#kSoftwareLastVersion"
+      Text            =   "kSoftwareLastVersion"
       TextAlign       =   0
       TextColor       =   &c00000000
       TextFont        =   "System"
@@ -162,7 +162,7 @@ End
 #tag WindowCode
 	#tag Event
 		Sub Open()
-		  lDetail.Text = lDetail.Text.AssignVars(App.Version)
+		  lDetail.Text = kSoftwareLastVersion(App.Lang).AssignVars(App.Version)
 		End Sub
 	#tag EndEvent
 
