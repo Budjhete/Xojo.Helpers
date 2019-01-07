@@ -648,7 +648,7 @@ End
 		  
 		  
 		  req.SetFormData(post)
-		  call req.Post("http://app.budjhete.com/crash-reporter.php", nil, 15)
+		  call req.Post("http://app.kanjo.ca/crash-reporter.php", nil, 15)
 		  
 		  Quit()
 		End Sub

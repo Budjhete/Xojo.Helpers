@@ -415,7 +415,7 @@ Protected Class ZipEntry
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function UncompressedSize() As UInt32
+		Function UncompressedSize() As UInt64
 		  if IsDirectory() then
 		    return 0
 		  end
