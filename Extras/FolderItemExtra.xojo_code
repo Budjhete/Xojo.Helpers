@@ -14,6 +14,42 @@ Protected Module FolderItemExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function RealType(extends folder as FolderItem) As FileType
+		  If Folder.Name.EndsWith(DocumentsTypes.Pdf.Extensions.Split(";")) Then
+		    Return DocumentsTypes.Pdf
+		  End If
+		  
+		  If Folder.Name.EndsWith(DocumentsTypes.Rtf.Extensions.Split(";"))Then
+		    Return DocumentsTypes.RTF
+		  End If
+		  
+		  If Folder.Name.EndsWith(DocumentsTypes.Zip.Extensions.Split(";")) Then
+		    Return DocumentsTypes.Zip
+		  End If
+		  
+		  If Folder.Name.EndsWith(DocumentsTypes.ApplicationMsword.Extensions.Split(";")) Then
+		    Return DocumentsTypes.ApplicationMsWord
+		  End If
+		  
+		  If Folder.Name.EndsWith(DocumentsTypes.ApplicationVndMsExcel.Extensions.Split(";")) Then
+		    Return DocumentsTypes.ApplicationVndMsExcel
+		  End If
+		  
+		  If Folder.Name.EndsWith(DocumentsTypes.TextHtml.Extensions.Split(";")) Then
+		    Return DocumentsTypes.TextHtml
+		  End If
+		  
+		  If Folder.Name.EndsWith(DocumentsTypes.Png.Extensions.Split(";")) Then
+		    Return DocumentsTypes.Png
+		  End If
+		  
+		  If Folder.Name.EndsWith(DocumentsTypes.Jpeg.Extensions.Split(";")) Then
+		    Return DocumentsTypes.Jpeg
+		  End If
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub RecursiveDelete(extends folder as FolderItem)
 		  Dim fi As FolderItem
 		  

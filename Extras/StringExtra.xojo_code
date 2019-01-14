@@ -189,6 +189,17 @@ Protected Module StringExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function Contains(Extends str as String, search() as String) As Boolean
+		  for i as Integer = 0 to search.Ubound
+		    if str.Contains(search(i)) then
+		      Return true
+		    end if // you need StringExtra.Contains
+		  next
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function Contains(Extends str as String, search as String) As Boolean
 		  return str.InStr(search) > 0
 		End Function
@@ -274,6 +285,16 @@ Protected Module StringExtra
 		  Dim pVariant As Variant = CDbl(pString.ReplaceAll(" ", ""))
 		  
 		  Return pVariant.DoubleValue
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function EndsWith(Extends str as String, search() as String) As Boolean
+		  for i as Integer = 0 to search.Ubound
+		    if str.Right(search(i).Len) = search(i) then
+		      Return true
+		    end if // you need StringExtra.Contains
+		  next
 		End Function
 	#tag EndMethod
 

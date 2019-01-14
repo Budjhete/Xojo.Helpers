@@ -1,0 +1,167 @@
+#tag FileTypeSet
+	#tag FileType
+		CodeName=Pdf
+		DocIcon=Budjhete.xojo_resources;&h3FE1108
+		Extension=.pdf
+		Flags=&h0
+		MacCreator=prvw
+		MacType=PDF 
+		Name=application/pdf
+		UTI=com.adobe.pdf
+		UTIConformsTo=public.data, public.composite-content
+		Description=
+		MimeType=
+		Imported=True
+	#tag EndFileType
+
+	#tag FileType
+		CodeName=Rtf
+		DocIcon=Budjhete.xojo_resources;&h4A86934
+		Extension=.rtf
+		Flags=&h0
+		MacCreator=MSWD
+		MacType=TEXT
+		Name=application/rtf
+		UTI=public.rtf
+		UTIConformsTo=public.text
+		Description=
+		MimeType=
+		Imported=True
+	#tag EndFileType
+
+	#tag FileType
+		CodeName=Mp3
+		DocIcon=Budjhete.xojo_resources;&h552C160
+		Extension=.mp3;.swa
+		Flags=&h0
+		MacCreator=TVOD
+		MacType=Mp3 
+		Name=audio/mp3
+		UTI=public.mp3
+		UTIConformsTo=public.audio
+		Description=
+		MimeType=
+		Imported=True
+	#tag EndFileType
+
+	#tag FileType
+		CodeName=Text
+		DocIcon=Budjhete.xojo_resources;&h5FD198C
+		Extension=.asc;.ascii;.bas;.c;.class;.cp;.cpp;.h;.hp;.hpp;.i3;.java;.m2;.m3;.mak;.text;.txt
+		Flags=&h0
+		MacCreator=????
+		MacType=TEXT
+		Name=text/plain
+		UTI=public.text
+		UTIConformsTo=public.data, public.content
+		Description=
+		MimeType=
+		Imported=True
+	#tag EndFileType
+
+	#tag FileType
+		CodeName=Mpeg
+		DocIcon=Budjhete.xojo_resources;&h6A771B8
+		Extension=.mpe;.mpeg;.mpg;.m1s;.m1v;.m1a;.m75;.m15;.mp2;.mpm;.mpv;.mpa
+		Flags=&h0
+		MacCreator=TVOD
+		MacType=MPEG
+		Name=video/mpeg
+		UTI=public.mpeg
+		UTIConformsTo=public.movie
+		Description=
+		MimeType=
+		Imported=True
+	#tag EndFileType
+
+	#tag FileType
+		CodeName=TextHtml
+		DocIcon=Budjhete.xojo_resources;&h751C9E4
+		Extension=.htm;.html
+		Flags=&h0
+		MacCreator=????
+		MacType=TEXT
+		Name=text/html
+		UTI=public.html
+		UTIConformsTo=
+		Description=
+		MimeType=
+		Imported=True
+	#tag EndFileType
+
+	#tag FileType
+		CodeName=ApplicationMsword
+		DocIcon=Budjhete.xojo_resources;&h7FC2210
+		Extension=.doc;.docx;.odt
+		Flags=&h0
+		MacCreator=MSWD
+		MacType=WDBN
+		Name=application/msword
+		UTI=com.microsoft.word.doc
+		UTIConformsTo=
+		Description=
+		MimeType=
+		Imported=True
+	#tag EndFileType
+
+	#tag FileType
+		CodeName=ApplicationVndMsExcel
+		DocIcon=Budjhete.xojo_resources;&h8A67A3C
+		Extension=.xl;.xls;.xlsx
+		Flags=&h0
+		MacCreator=XCEL
+		MacType=XLS 
+		Name=application/vnd.ms-excel
+		UTI=com.microsoft.excel.xls
+		UTIConformsTo=
+		Description=
+		MimeType=
+		Imported=True
+	#tag EndFileType
+
+	#tag FileType
+		CodeName=Zip
+		DocIcon=Budjhete.xojo_resources;&h950D268
+		Extension=.zip
+		Flags=&h0
+		MacCreator=????
+		MacType=ZIP
+		Name=application/zip
+		UTI=com.pkware.zip-archive
+		UTIConformsTo=
+		Description=
+		MimeType=
+		Imported=True
+	#tag EndFileType
+
+	#tag FileType
+		CodeName=Jpeg
+		DocIcon=Budjhete.xojo_resources;&h9FB2A94
+		Extension=.jfif;.jpe;.jpeg;.jpg
+		Flags=&h0
+		MacCreator=prvw
+		MacType=JPEG
+		Name=image/jpeg
+		UTI=public.jpeg
+		UTIConformsTo=public.image
+		Description=
+		MimeType=
+		Imported=True
+	#tag EndFileType
+
+	#tag FileType
+		CodeName=Png
+		DocIcon=Budjhete.xojo_resources;&hAA582C0
+		Extension=.png
+		Flags=&h0
+		MacCreator=ogle
+		MacType=PNGf
+		Name=image/png
+		UTI=public.png
+		UTIConformsTo=public.image
+		Description=
+		MimeType=
+		Imported=True
+	#tag EndFileType
+
+#tag EndFileTypeSet
