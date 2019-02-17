@@ -698,6 +698,21 @@ Protected Module StringExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function ReplaceAccents(Extends pString as Text) As Text
+		  // Remplace les caractères accentués par leurs équivalents non-accentués
+		  
+		  Dim pFrom() As Text = Array("à,á,â,ã,ä,ç,è,é,ê,ë,ì,í,î,ï,ñ,ò,ó,ô,õ,ö,ù,ú,û,ü,ý,ÿ,À,Á,Â,Ã,Ä,Ç,È,É,Ê,Ë,Ì,Í,Î,Ï,Ñ,Ò,Ó,Ô,Õ,Ö,Ù,Ú,Û,Ü,Ý")
+		  Dim pTo() As Text = Array("a,a,a,a,a,c,e,e,e,e,i,i,i,i,n,o,o,o,o,o,u,u,u,u,y,y,A,A,A,A,A,C,E,E,E,E,I,I,I,I,N,O,O,O,O,O,U,U,U,U,Y")
+		  
+		  For pIndex As Integer = 0 To pFrom.Ubound
+		    pString = pString.ReplaceAll(pFrom(pIndex), pTo(pIndex))
+		  next
+		  
+		  return pString
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function ReplaceAllRegExp(Extends str as String, pattern as String, replace as String, params as String = "") As String
 		  Dim reg as New RegEx
 		  dim opts as new RegExOptions

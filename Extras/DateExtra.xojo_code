@@ -372,6 +372,12 @@ Protected Module DateExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function SQLDateTime(Extends d as Xojo.Core.Date) As Text
+		  return d.ToText
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function SQLTime(Extends d as Date) As String
 		  return d.SQLDateTime.Mid(11)
 		End Function
