@@ -235,9 +235,9 @@ Protected Module ArrayExtra
 	#tag Method, Flags = &h0
 		Function Contains(Extends arr() as Integer, value as Integer) As Boolean
 		  for i as Integer = 0 to arr.Ubound
-		    if arr(i).Contains(value) then
+		    if arr(i) = value then
 		      Return true
-		    end if // you need StringExtra.Contains
+		    end if
 		  next
 		  
 		  return false
@@ -247,9 +247,9 @@ Protected Module ArrayExtra
 	#tag Method, Flags = &h0
 		Function Contains(Extends arr() as Text, value as Text) As Boolean
 		  for i as Integer = 0 to arr.Ubound
-		    if arr(i) = value then
+		    if arr(i).Contains(value) then
 		      return true
-		    end
+		    end  // you need TextExtra.Contains
 		  next
 		  
 		  return false

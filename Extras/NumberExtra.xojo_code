@@ -106,23 +106,30 @@ Protected Module NumberExtra
 	#tag Method, Flags = &h0
 		Function PercentValue(Extends pCurrency As Currency) As Text
 		  // @deprecated les pourcentages sont des Double, pas des Currency
-		  Return Format(pCurrency, "-0.00")
+		  //Return Format(pCurrency, "-0.00")
+		  
+		  Return pCurrency.ToText(Locale.Raw)
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+		Function PercentValue(Extends pDouble As Double) As Text
+		  //Return Format(pDouble, "-0.00")
+		  
+		  Return pDouble.ToText(Xojo.Core.Locale.Raw)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function PercentValue(Extends pDouble As Double) As String
-		  Return Format(pDouble, "-0.00")
+		Function PercentValue(Extends pInteger As Integer) As Text
+		  //Return Format(pInteger, "-#")
+		  
+		  Return pInteger.ToText(Xojo.Core.Locale.Raw)
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function PercentValue(Extends pInteger As Integer) As String
-		  Return Format(pInteger, "-#")
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function POSvalue(Extends pCurrency as Currency, pLenth as Integer, pFormat as string = "-#0.00") As String
 		  Dim t as string = Str(pCurrency, pFormat)
 		  
@@ -139,7 +146,7 @@ Protected Module NumberExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function QuantityValue(Extends pDouble As Double) As String
+		Function QuantityValue(Extends pDouble As Double) As Text
 		  Dim pInteger As Integer = pDouble
 		  
 		  If pDouble = pInteger Then
@@ -205,17 +212,17 @@ Protected Module NumberExtra
 		  for i as Integer = 1 to pLength
 		    formatstring = formatstring + "0"
 		  next
-		  Return Str(pInteger, formatstring)
+		  Return pInteger.ToText(Xojo.Core.Locale.Raw, formatstring) //formatstring
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function XSLValue(Extends pCurrency As Currency) As String
 		  Return Str(pCurrency, "-#0.00")
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function XSLValue(Extends pDouble As Double) As String
 		  Return Str(pDouble, "-#0.00")
 		End Function
@@ -227,7 +234,7 @@ Protected Module NumberExtra
 			Get
 			  // Use pDecimale to asjust from a DB or a FILE how much decimal you need, the ajustment are live
 			  dim pDecimale as Integer = App.SystemDecimales // add this variable string or method string in APP.
-			  dim pFormat as string = "-###"+App.SeparateurNombre+"##0"+App.SeparateurDecimalNombre+"00"
+			  dim pFormat as Text = "-###"+App.SeparateurNombre+"##0"+App.SeparateurDecimalNombre+"00"
 			  
 			  Dim i As Integer
 			  
@@ -238,11 +245,11 @@ Protected Module NumberExtra
 			  return pFormat
 			End Get
 		#tag EndGetter
-		MoneyFormatPref As string
+		MoneyFormatPref As Text
 	#tag EndComputedProperty
 
 
-	#tag Constant, Name = MoneyFormat, Type = String, Dynamic = False, Default = \"-###\x2C##0.00##", Scope = Public
+	#tag Constant, Name = MoneyFormat, Type = Text, Dynamic = False, Default = \"-###\x2C##0.00##", Scope = Public
 	#tag EndConstant
 
 	#tag Constant, Name = QuantityFormat, Type = Text, Dynamic = False, Default = \"", Scope = Public
@@ -282,6 +289,11 @@ Protected Module NumberExtra
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="MoneyFormatPref"
+			Group="Behavior"
+			Type="string"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Module
