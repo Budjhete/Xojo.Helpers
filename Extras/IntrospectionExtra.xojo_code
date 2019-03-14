@@ -1,5 +1,6 @@
 #tag Module
 Protected Module IntrospectionExtra
+	#tag CompatibilityFlags = ( TargetConsole and ( Target32Bit or Target64Bit ) ) or ( TargetWeb and ( Target32Bit or Target64Bit ) ) or ( TargetDesktop and ( Target32Bit or Target64Bit ) )
 	#tag Method, Flags = &h0
 		Function GetMethod(Extends type as Introspection.TypeInfo, name as String) As Introspection.MethodInfo
 		  Dim methods() As Introspection.MethodInfo = type.GetMethods()

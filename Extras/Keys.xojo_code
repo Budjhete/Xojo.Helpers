@@ -7,8 +7,8 @@ Protected Module Keys
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
-		Protected Function IsEntrer(char As String) As Boolean
-		  return IsEntrer(Asc(char))
+		Protected Function IsEntrer(char As Text) As Boolean
+		  return IsEntrer(char.Asc)
 		End Function
 	#tag EndMethod
 

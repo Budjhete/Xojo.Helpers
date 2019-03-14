@@ -2,7 +2,7 @@
 Protected Module ListboxExtra
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetWeb and (Target32Bit or Target64Bit))
 		Sub cellPrependControl(extends lb as WebListBox, wc as webcontrol, row as integer, column as integer)
-		  dim script() as string
+		  dim script() as Text
 		  script.append wc.JqeurySelector+".detach().prependTo("+lb.cellSelector(row, column)+");"
 		  script.append wc.JqeurySelector+".css('position','relative');"
 		  lb.ExecuteJavaScript(join(script, EndOfLine.Windows))
@@ -12,13 +12,13 @@ Protected Module ListboxExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetWeb and (Target32Bit or Target64Bit))
-		Function cellSelector(extends lb as WebListBox, row as integer, column as Integer) As String
+		Function cellSelector(extends lb as WebListBox, row as integer, column as Integer) As Text
 		  return "$('#" +lb.ControlID + "_userrows tr').eq(" + str(Row) + ").find('td').eq(" + str(Column) + ")"
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetWeb and (Target32Bit or Target64Bit))
-		Function jQeurySelector(extends wc as WebControl) As String
+		Function jQeurySelector(extends wc as WebControl) As Text
 		  return "$('#"+wc.ControlID+"')"
 		End Function
 	#tag EndMethod

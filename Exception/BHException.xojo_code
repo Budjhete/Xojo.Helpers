@@ -2,14 +2,25 @@
 Protected Class BHException
 Inherits RuntimeException
 	#tag Method, Flags = &h0
-		Function Classname() As String
+		Function Classname() As Text
 		  // Return the name of the class of the current exception
-		  return Introspection.GetType(Me).Fullname
+		  return Xojo.Introspection.GetType(Me).Fullname
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h1000
-		Sub Constructor(message as String, errorNumber as Integer, ParamArray variables as Pair)
+	#tag Method, Flags = &h0
+		Sub Constructor(message as Text)
+		  // Generic constructor for an exception
+		  //
+		  // @param message: Message of the exception
+		  // @param variables: Variables that will be replaced in message
+		  SetMessage(message)
+		  SetPrevious()
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1000, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub Constructor(message as Text, errorNumber as Integer, ParamArray variables as Pair)
 		  // Generic constructor for an exception
 		  //
 		  // @param message: Message of the exception
@@ -23,8 +34,8 @@ Inherits RuntimeException
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h1000
-		Sub Constructor(message as String, errorNumber as Integer, location as String, ParamArray variables as Pair)
+	#tag Method, Flags = &h1000, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub Constructor(message as Text, errorNumber as Integer, location as Text, ParamArray variables as Pair)
 		  // Generic constructor for an exception
 		  //
 		  // @param message: Message of the exception
@@ -36,32 +47,89 @@ Inherits RuntimeException
 		  
 		  Me.ErrorNumber = errorNumber
 		  Me.Location = location
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1000
+		Sub Constructor(message as Text, errorNumber as Integer, location as Text, variables as Xojo.Core.Dictionary)
+		  // Generic constructor for an exception
+		  //
+		  // @param message: Message of the exception
+		  // @param errorNumber: Error code
+		  // @param location: Location where the exception occur
+		  // @param variables: Variables that will be replaced in message
+		  SetMessage(message, variables)
+		  SetPrevious()
+		  
+		  Me.ErrorNumber = errorNumber
+		  Me.Location = location
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1000, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+		Sub Constructor(message as Text, errorNumber as Integer, variables as Xojo.Core.Dictionary)
+		  // Generic constructor for an exception
+		  //
+		  // @param message: Message of the exception
+		  // @param errorNumber: Error code
+		  // @param variables: Variables that will be replaced in message
+		  SetMessage(message, variables)
+		  SetPrevious()
+		  
+		  Me.ErrorNumber = errorNumber
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub Constructor(message as Text, ParamArray variables as Pair)
+		  // Generic constructor for an exception
+		  //
+		  // @param message: Message of the exception
+		  // @param variables: Variables that will be replaced in message
+		  SetMessage(message, variables)
+		  SetPrevious()
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1000, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub Constructor(message as Text, location as Text, ParamArray variables as Pair)
+		  // Generic constructor for an exception
+		  //
+		  // @param message: Message of the exception
+		  // @param location: Location where the exception occur
+		  // @param variables: Variables that will be replaced in message
+		  SetMessage(message, variables)
+		  SetPrevious()
+		  
+		  Me.Location = location
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1000
+		Sub Constructor(message as Text, location as Text, variables as Xojo.Core.Dictionary)
+		  // Generic constructor for an exception
+		  //
+		  // @param message: Message of the exception
+		  // @param location: Location where the exception occur
+		  // @param variables: Variables that will be replaced in message
+		  SetMessage(message, variables)
+		  SetPrevious()
+		  
+		  Me.Location = location
+		  
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(message as String, ParamArray variables as Pair)
+		Sub Constructor(message as Text, variables as Xojo.Core.Dictionary)
 		  // Generic constructor for an exception
 		  //
 		  // @param message: Message of the exception
 		  // @param variables: Variables that will be replaced in message
 		  SetMessage(message, variables)
 		  SetPrevious()
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h1000
-		Sub Constructor(message as String, location as String, ParamArray variables as Pair)
-		  // Generic constructor for an exception
-		  //
-		  // @param message: Message of the exception
-		  // @param location: Location where the exception occur
-		  // @param variables: Variables that will be replaced in message
-		  SetMessage(message, variables)
-		  SetPrevious()
-		  
-		  Me.Location = location
-		  
 		End Sub
 	#tag EndMethod
 
@@ -73,43 +141,68 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Sub Handle(ex as BHException, title as String = "Une exception n'a pas été gérée")
+		Shared Sub Handle(ex as BHException, title as Text = "Une exception n'a pas été gérée")
 		  // Generic method to handle a BHException
 		  //
 		  // @param ex: The exception to handle
 		  // @param title: Message box title
-		  MsgBox(title + EndOfLine + EndOfLine + ex.Text())
+		  ErrorBox(title,ex.toText())
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Operator_Convert() As String
-		  // Convert the exception to String
-		  return Text()
+		Function Operator_Convert() As Text
+		  // Convert the exception to Text
+		  return ToText()
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Sub SetMessage(message as String, variables() as Pair)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+		Sub SetMessage(message as Text)
+		  // Set the message of the exception
+		  //
+		  // @param message: Message of the exception
+		  // @param variables: Variables that will be replaced in message
+		  
+		  Me.ErrorMessage = message
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub SetMessage(message as Text, variables() as Pair)
 		  // Set the message of the exception
 		  //
 		  // @param message: Message of the exception
 		  // @param variables: Variables that will be replaced in message
 		  for each variable as Pair in variables
-		    message = message.ReplaceAll(variable.Left.StringValue, variable.Right.StringValue)
+		    message = message.ReplaceAll(str(variable.Left), str(variable.Right))
 		  next
 		  
-		  Me.Message = message
+		  Me.ErrorMessage = message
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Sub SetMessage(message as String, ParamArray variables as Pair)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub SetMessage(message as Text, ParamArray variables as Pair)
 		  // Set the message of the exception
 		  //
 		  // @param message: Message of the exception
 		  // @param variables: Variables that will be replaced in message
 		  SetMessage(message, variables)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+		Sub SetMessage(message as Text, variables as Xojo.Core.Dictionary)
+		  // Set the message of the exception
+		  //
+		  // @param message: Message of the exception
+		  // @param variables: Variables that will be replaced in message
+		  for each variable as DictionaryEntry in variables
+		    message = message.ReplaceAll(variable.Key.TextValue, variable.Value.TextValue)
+		  next
+		  
+		  Me.ErrorMessage = message
 		End Sub
 	#tag EndMethod
 
@@ -122,28 +215,32 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Text() As String
+		Function ToText() As Text
 		  // Return a text representation of the exception using the following format:
 		  //      Classname [ code ]: Message ~ Location
-		  dim text as String = Classname
+		  dim FullMessage as Text = Classname
 		  
 		  if ErrorNumber <> 0 then
-		    text = text + " [" + Str(ErrorNumber) + "]"
+		    FullMessage = FullMessage + " [" + ErrorNumber.ToText + "]"
 		  end
 		  
-		  text = text + ": " + Message
+		  FullMessage = FullMessage + ": " + ErrorMessage
 		  
 		  if Location <> "" then
-		    text = text + " ~ " + Location
+		    FullMessage = FullMessage + " ~ " + Location
 		  end
 		  
-		  return text
+		  return FullMessage
 		End Function
 	#tag EndMethod
 
 
 	#tag Property, Flags = &h0
-		Location As String
+		ErrorMessage As Text
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		Location As Text
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
@@ -179,7 +276,7 @@ Inherits RuntimeException
 		#tag ViewProperty
 			Name="Location"
 			Group="Behavior"
-			Type="String"
+			Type="Text"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -211,6 +308,11 @@ Inherits RuntimeException
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ErrorMessage"
+			Group="Behavior"
+			Type="Text"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

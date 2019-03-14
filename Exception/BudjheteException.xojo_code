@@ -8,34 +8,34 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		Sub Constructor(message as String)
-		  Me.Message = message
+		Sub Constructor(message as Text)
+		  Me.ErrorMessage = message
 		  
-		  System.Log(System.LogLevelERROR, self.Message)
+		  System.DebugLog(self.ErrorMessage)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		Sub Constructor(message as String, code as Integer)
-		  Me.Message = message
+		Sub Constructor(message as Text, code as Integer)
+		  Me.ErrorMessage = message
 		  mCode = code
 		  
-		  System.Log(System.LogLevelERROR, self.Message)
+		  System.DebugLog(self.ErrorMessage)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		Sub Constructor(message as String, code as Integer, location as String)
-		  Me.Message = message
+		Sub Constructor(message as Text, code as Integer, location as Text)
+		  Me.ErrorMessage = message
 		  mCode = code
 		  mLocation = location
 		  
-		  System.Log(System.LogLevelERROR, self.Message)
+		  System.DebugLog(ErrorMessage)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function HumanReadableCode(code as Integer) As String
+		Shared Function HumanReadableCode(code as Integer) As Text
 		  select case code
 		  case E_UNDEFINED
 		    return "Undefined"
@@ -68,18 +68,22 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Location() As String
+		Function Location() As Text
 		  return mLocation
 		End Function
 	#tag EndMethod
 
+
+	#tag Property, Flags = &h0
+		ErrorMessage As Text
+	#tag EndProperty
 
 	#tag Property, Flags = &h1
 		Protected mCode As Integer = E_UNDEFINED
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
-		Protected mLocation As String
+		Protected mLocation As Text
 	#tag EndProperty
 
 
@@ -133,6 +137,11 @@ Inherits RuntimeException
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ErrorMessage"
+			Group="Behavior"
+			Type="Text"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

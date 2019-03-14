@@ -1,6 +1,6 @@
 #tag Module
 Protected Module FolderItemExtra
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function CountVisible(extends folder as FolderItem) As Integer
 		  Dim count As Integer = folder.Count
 		  dim realCount as integer = 0
@@ -76,7 +76,7 @@ Protected Module FolderItemExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub RecursivePermissions(extends folder as FolderItem, permissions as Integer)
 		  folder.Permissions = permissions
 		  
@@ -86,8 +86,8 @@ Protected Module FolderItemExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function RelativeTo(Extends fi as FolderItem, path as String) As FolderItem
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function RelativeTo(Extends fi as FolderItem, path as Text) As FolderItem
 		  dim chunks() as String = path.Split("/")
 		  for i as Integer = 0 to UBound(chunks)
 		    if not fi.Exists then
@@ -101,16 +101,16 @@ Protected Module FolderItemExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function UniqueFolderItem(extends parent as FolderItem, basename as String, suffixe as String = "") As FolderItem
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function UniqueFolderItem(extends parent as FolderItem, basename as Text, suffixe as Text = "") As FolderItem
 		  return parent.Child(parent.UniqueFolderItemName(basename, suffixe))
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function UniqueFolderItemName(extends parent as FolderItem, basename as String, suffixe as String = "") As String
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function UniqueFolderItemName(extends parent as FolderItem, basename as Text, suffixe as Text = "") As Text
 		  dim i as Integer
-		  dim f as string
+		  dim f as Text
 		  try
 		    i = 1
 		    dim file as FolderItem = parent.Child(basename+suffixe)
@@ -133,7 +133,7 @@ Protected Module FolderItemExtra
 		    return file.Name
 		    
 		  Catch err as NilObjectException
-		    dim s as string = "Crash à unique folder à l'étape : " + str(i) + EndOfLine + _
+		    dim s as Text = "Crash à unique folder à l'étape : " + i.ToText + EndOfLine + _
 		    "dossier : " + parent.NativePath  + EndOfLine + _
 		    "file : " + f  + EndOfLine + _
 		    "basename : " + basename + EndOfLine + _
@@ -146,7 +146,7 @@ Protected Module FolderItemExtra
 	#tag EndMethod
 
 
-	#tag Constant, Name = kImpossibleDeGenererUnFichierUnique, Type = String, Dynamic = True, Default = \"Impossible de g\xC3\xA9n\xC3\xA9rer un fichier unique.", Scope = Public
+	#tag Constant, Name = kImpossibleDeGenererUnFichierUnique, Type = Text, Dynamic = True, Default = \"Impossible de g\xC3\xA9n\xC3\xA9rer un fichier unique.", Scope = Public
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"Impossible de g\xC3\xA9n\xC3\xA9rer un fichier unique."
 		#Tag Instance, Platform = Any, Language = en, Definition  = \"Cannot create a unique file."
 	#tag EndConstant

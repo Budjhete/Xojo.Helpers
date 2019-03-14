@@ -2,131 +2,131 @@
 Protected Class AbstractException
 Inherits RuntimeException
 	#tag Method, Flags = &h1000
-		Sub Constructor(level as Integer, message as String)
+		Sub Constructor(level as Integer, message as Text)
 		  Me.LevelCode = level
-		  Me.Message = message
+		  Me.ErrorMessage = message
 		  
 		  mPrevious = Me
-		  System.Log(System.LogLevelERROR, Me.Message)
+		  System.DebugLog(Me.ErrorMessage)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		Sub Constructor(level as Integer, message as String, code as Integer)
+		Sub Constructor(level as Integer, message as Text, code as Integer)
 		  Me.LevelCode = level
-		  Me.Message = message
+		  Me.ErrorMessage = message
 		  Me.Code = code
 		  
 		  mPrevious = Me
-		  System.Log(System.LogLevelERROR, Me.Message)
+		  System.DebugLog(Me.ErrorMessage)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		Sub Constructor(level as Integer, message as String, code as Integer, line as Integer)
+		Sub Constructor(level as Integer, message as Text, code as Integer, line as Integer)
 		  Me.LevelCode = level
-		  Me.Message = message
+		  Me.ErrorMessage = message
 		  Me.Code = code
 		  Me.Line = line
 		  
 		  mPrevious = Me
-		  System.Log(System.LogLevelERROR, Me.Message)
+		  System.DebugLog(Me.ErrorMessage)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		Sub Constructor(level as Integer, message as String, code as Integer, location as String)
+		Sub Constructor(level as Integer, message as Text, code as Integer, location as Text)
 		  Me.LevelCode = level
-		  Me.Message = message
+		  Me.ErrorMessage = message
 		  Me.Code = code
 		  Me.Location = location
 		  
 		  mPrevious = Me
-		  System.Log(System.LogLevelERROR, Me.Message)
+		  System.DebugLog(Me.ErrorMessage)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		Sub Constructor(level as Integer, message as String, code as Integer, location as String, line as Integer)
+		Sub Constructor(level as Integer, message as Text, code as Integer, location as Text, line as Integer)
 		  Me.LevelCode = level
-		  Me.Message = message
-		  Me.Code = code
-		  Me.Location = location
-		  Me.Line = line
-		  
-		  mPrevious = Me
-		  System.Log(System.LogLevelERROR, Me.Message)
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h1000
-		Sub Constructor(message as String)
-		  Me.Message = message
-		  
-		  mPrevious = Me
-		  System.Log(System.LogLevelERROR, Me.Message)
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h1000
-		Sub Constructor(message as String, code as Integer)
-		  Me.Message = message
-		  Me.Code = code
-		  
-		  mPrevious = Me
-		  System.Log(System.LogLevelERROR, Me.Message)
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h1000
-		Sub Constructor(message as String, code as Integer, line as Integer)
-		  Me.Message = message
-		  Me.Code = code
-		  Me.Line = line
-		  
-		  mPrevious = Me
-		  System.Log(System.LogLevelERROR, Me.Message)
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h1000
-		Sub Constructor(message as String, code as Integer, location as String)
-		  Me.Message = message
-		  Me.Code = code
-		  Me.Location = location
-		  
-		  mPrevious = Me
-		  System.Log(System.LogLevelERROR, Me.Message)
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h1000
-		Sub Constructor(message as String, code as Integer, location as String, line as Integer)
-		  Me.Message = message
+		  Me.ErrorMessage = message
 		  Me.Code = code
 		  Me.Location = location
 		  Me.Line = line
 		  
 		  mPrevious = Me
-		  System.Log(System.LogLevelERROR, Me.Message)
+		  System.DebugLog(Me.ErrorMessage)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1000
+		Sub Constructor(message as Text)
+		  Me.ErrorMessage = message
+		  
+		  mPrevious = Me
+		  System.DebugLog(Me.ErrorMessage)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1000
+		Sub Constructor(message as Text, code as Integer)
+		  Me.ErrorMessage = message
+		  Me.Code = code
+		  
+		  mPrevious = Me
+		  System.DebugLog(Me.ErrorMessage)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1000
+		Sub Constructor(message as Text, code as Integer, line as Integer)
+		  Me.ErrorMessage = message
+		  Me.Code = code
+		  Me.Line = line
+		  
+		  mPrevious = Me
+		  System.DebugLog( Me.ErrorMessage)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1000
+		Sub Constructor(message as Text, code as Integer, location as Text)
+		  Me.ErrorMessage = message
+		  Me.Code = code
+		  Me.Location = location
+		  
+		  mPrevious = Me
+		  System.DebugLog(Me.ErrorMessage)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1000
+		Sub Constructor(message as Text, code as Integer, location as Text, line as Integer)
+		  Me.ErrorMessage = message
+		  Me.Code = code
+		  Me.Location = location
+		  Me.Line = line
+		  
+		  mPrevious = Me
+		  System.DebugLog(Me.ErrorMessage)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		Shared Sub HandleBasic(e as AbstractException)
-		  dim text as String
+		  dim FullMessage as Text
 		  
-		  if e.Message <> "" then
-		    text = e.Message
+		  if e.ErrorMessage <> "" then
+		    FullMessage = e.ErrorMessage
 		  else
-		    text = e.Type()
+		    FullMessage = e.Type()
 		  end
 		  
 		  if e.Code > 0 then
-		    text = text + " ["+Str(e.Code)+"]"
+		    FullMessage = FullMessage + " ["+e.Code.ToText+"]"
 		  end
 		  
-		  MsgBox text
+		  ErrorBox FullMessage
 		End Sub
 	#tag EndMethod
 
@@ -139,12 +139,12 @@ Inherits RuntimeException
 
 	#tag Method, Flags = &h0
 		Shared Sub HandleDetailed(e as AbstractException)
-		  MsgBox e.Text()
+		  ErrorBox e.toText()
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function HumanReadableLevel(level as Integer) As String
+		Shared Function HumanReadableLevel(level as Integer) As Text
 		  select case level
 		  case E_UNDEFINED
 		    return "Undefined"
@@ -177,7 +177,7 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Level() As String
+		Function Level() As Text
 		  // Retourne le level de l'exception sous sont format lisible (texte)
 		  //
 		  // @return Le level de l'exception au format texte.
@@ -193,50 +193,58 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Text() As String
+		Function ToText() As Text
 		  // Affiche tout le détail de l'exception disponible au format texte
 		  
-		  dim text as String = Type()
+		  dim FullMessage as Text = Type()
 		  
 		  if Code > 0 and LevelCode <> 0 then
-		    text = text + " [" + Level + " " + Str(Code)+"]"
+		    FullMessage = FullMessage + " [" + Level + " " + Code.ToText+"]"
 		  elseif Code > 0 then
-		    text = text + " [" + Str(Code) + "]"
+		    FullMessage = FullMessage + " [" + Code.ToText + "]"
 		  elseif LevelCode > 0 then
-		    text = text + " [" + Level + "]"
+		    FullMessage = FullMessage + " [" + Level + "]"
 		  end
 		  
 		  
-		  if Message <> "" then
-		    text = text + ": " + Message
+		  if FullMessage <> "" then
+		    FullMessage = FullMessage + ": " + ErrorMessage
 		  end
 		  
-		  text = text + " ~ "
+		  FullMessage = FullMessage + " ~ "
 		  
 		  if Location <> "" then
-		    text = text + Location
+		    FullMessage = FullMessage + Location
 		  else
-		    dim call_stack() as String = Me.Stack()
+		    dim call_stack() as Text
 		    
+		    #if TargetIOS then
+		      for Each st as StackFrame in Me.CallStack
+		        call_stack.Append(st.Name)
+		      next
+		    #else
+		      call_stack() = Me.Stack()
+		      
+		    #endif
 		    if call_stack.Ubound >= 0 then
-		      text = text + call_stack(0)
+		      FullMessage = FullMessage + call_stack(0)
 		    else
-		      text = text + "unknown-location"
+		      FullMessage = FullMessage + "unknown-location"
 		    end
 		  end
 		  
 		  if Line >= 0 then
-		    text = text + "," + Str(Line)
+		    FullMessage = FullMessage + "," + Line.ToText
 		  end
 		  
-		  return text
+		  return FullMessage
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Type() As String
+		Function Type() As Text
 		  // Retourne le type de la classe principale (son nom) de l'exception
-		  return Introspection.GetType(Me).Name
+		  return Xojo.Introspection.GetType(Me).Name
 		End Function
 	#tag EndMethod
 
@@ -256,6 +264,10 @@ Inherits RuntimeException
 	#tag EndComputedProperty
 
 	#tag Property, Flags = &h0
+		ErrorMessage As Text
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
 		LevelCode As Integer
 	#tag EndProperty
 
@@ -264,7 +276,7 @@ Inherits RuntimeException
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Location As String
+		Location As Text
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
@@ -312,7 +324,7 @@ Inherits RuntimeException
 		#tag ViewProperty
 			Name="Location"
 			Group="Behavior"
-			Type="String"
+			Type="Text"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -344,6 +356,11 @@ Inherits RuntimeException
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ErrorMessage"
+			Group="Behavior"
+			Type="Text"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

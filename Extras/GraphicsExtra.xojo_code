@@ -1,12 +1,12 @@
 #tag Module
 Protected Module GraphicsExtra
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function Contains(Extends g as Graphics, x as Integer, y as Integer) As Boolean
 		  return (x >= 0 and y >= 0 and x < g.Width and y < g.Height)
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub DrawDottedLine(Extends g as Graphics, x1 as Integer, y1 as Integer, x2 as Integer, y2 as Integer, space as Integer = 1)
 		  dim x, y, dx, dy as Integer
 		  
@@ -54,7 +54,7 @@ Protected Module GraphicsExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub DrawGradientX(Extends g as Graphics, xStart as Integer, colorStart as Color, xEnd as Integer, colorEnd as Color)
 		  dim length as Integer = Abs(xEnd - xStart)
 		  
@@ -68,7 +68,7 @@ Protected Module GraphicsExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub DrawGradientY(Extends g as Graphics, yStart as Integer, colorStart as Color, yEnd as Integer, colorEnd as Color)
 		  dim length as Integer = Abs(yEnd - yStart)
 		  
@@ -82,12 +82,12 @@ Protected Module GraphicsExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub DrawListBox(Extends g as Graphics, list as ListBox, x as Integer, y as Integer, width as Integer, height as Integer = 0)
 		  dim pX, pY as Integer
 		  
 		  dim cWidths() as Integer
-		  dim cNames() as String = list.InitialValue.Split(Tabulation)
+		  dim cNames() as Text = list.InitialValue.Split(Tabulation)
 		  dim size as Integer
 		  
 		  pX = 0
@@ -169,7 +169,7 @@ Protected Module GraphicsExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub DrawPicture(Extends g as Graphics, pic as Picture, hAlign as HorizontalAlign = HorizontalAlign.Left, vAlign as VerticalAlign = VerticalAlign.Middle, offsetX as Integer = 0, offsetY as Integer = 0)
 		  dim x, y as Integer
 		  
@@ -192,12 +192,12 @@ Protected Module GraphicsExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Sub DrawString(Extends g as Graphics, text as String, x as Integer, y as Integer, width as Integer, align as TextAlign, alignOnPivot as Boolean = true)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub DrawString(Extends g as Graphics, text as Text, x as Integer, y as Integer, width as Integer, align as TextAlign, alignOnPivot as Boolean = true)
 		  if align = TextAlign.Left then
 		    g.DrawString(text, x, y, width)
 		  else
-		    dim lines() as String = g.Wrap(text, width)
+		    dim lines() as Text = g.Wrap(text, width)
 		    
 		    for i as Integer = 0 to lines.Ubound
 		      dim lineWidth as Integer = g.StringWidth(lines(i))
@@ -215,9 +215,9 @@ Protected Module GraphicsExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Sub DrawString(Extends g as Graphics, text as String, x as Integer, y as Integer, align as TextAlign)
-		  dim lines() as String = text.Split(EndOfLine)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub DrawString(Extends g as Graphics, text as Text, x as Integer, y as Integer, align as TextAlign)
+		  dim lines() as Text = text.Split(EndOfLine)
 		  
 		  for i as Integer = 0 to lines.Ubound
 		    if align = TextAlign.Left then
@@ -235,13 +235,27 @@ Protected Module GraphicsExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function Wrap(Extends g as Graphics, text as String, width as Integer) As String()
-		  dim lines() as String
-		  dim para() as String = text.Split(EndOfLine)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target32Bit or Target64Bit))
+		Sub DrawString(Extends g as iOSGraphics, pText as Text, x as Integer, y as Integer, MaxWidth as Integer, align as iOSTextAlignment = iOSTextAlignment.Left, alignOnPivot as Boolean = true)
+		  g.DrawTextLine(pText, x, y, MaxWidth, align, alignOnPivot)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target32Bit or Target64Bit))
+		Sub DrawString(Extends g as iOSGraphics, pText as Text, x as Integer, y as Integer, align as iOSTextAlignment = iOSTextAlignment.Left)
+		  g.DrawTextBlock(pText, x, y, -1, -1, align)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function Wrap(Extends g as Graphics, text as Text, width as Integer) As Text()
+		  dim lines() as Text
+		  dim para() as Text = text.Split(EndOfLine)
 		  
 		  for p as Integer = 0 to para.Ubound
-		    dim ret() as String = g.WrapLine(para(p), width)
+		    dim ret() as Text = g.WrapLine(para(p), width)
 		    
 		    for i as Integer = 0 to ret.Ubound
 		      lines.Append(ret(i))
@@ -252,17 +266,34 @@ Protected Module GraphicsExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function WrapLine(Extends g as Graphics, line as String, width as Integer) As String()
-		  dim lines() as String
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target32Bit or Target64Bit))
+		Function Wrap(Extends g as iOSGraphics, text as Text, width as Integer) As Text()
+		  dim lines() as Text
+		  dim para() as Text = text.Split(EndOfLine)
+		  
+		  for p as Integer = 0 to para.Ubound
+		    dim ret() as Text = g.WrapLine(para(p), width)
+		    
+		    for i as Integer = 0 to ret.Ubound
+		      lines.Append(ret(i))
+		    next
+		  next
+		  
+		  return lines
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function WrapLine(Extends g as Graphics, line as Text, width as Integer) As Text()
+		  dim lines() as Text
 		  
 		  if g.StringWidth(line) <= width then
 		    lines.Append(line)
 		    return lines
 		  end
 		  
-		  dim words() as String = line.Split(" ")
-		  dim buffer, tmp as String
+		  dim words() as Text = line.Split(" ")
+		  dim buffer, tmp as Text
 		  
 		  for w as Integer = 0 to words.Ubound
 		    if buffer = "" then
@@ -287,11 +318,57 @@ Protected Module GraphicsExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function WrapWord(Extends g as Graphics, word as String, width as Integer) As String()
-		  dim lines() as String
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target32Bit or Target64Bit))
+		Function WrapLine(Extends g as iOSGraphics, line as Text, width as Integer) As Text()
+		  dim lines() as Text
+		  
+		  if g.TextLineSize(line).Width <= width then
+		    lines.Append(line)
+		    return lines
+		  end
+		  
+		  dim words() as Text = line.Split(" ")
+		  dim buffer, tmp as Text
+		  
+		  for w as Integer = 0 to words.Ubound
+		    if buffer = "" then
+		      buffer = words(w)
+		    else
+		      tmp = buffer + " "+words(w)
+		      
+		      if g.TextLineSize(tmp).Width > width then
+		        lines.Append(buffer)
+		        buffer = words(w)
+		      else
+		        buffer = tmp
+		      end
+		    end
+		  next
+		  
+		  if buffer <> "" then
+		    lines.Append(buffer)
+		  end
+		  
+		  return lines
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function WrapWord(Extends g as Graphics, word as Text, width as Integer) As Text()
+		  dim lines() as Text
 		  
 		  if g.StringWidth(word) <= width then
+		    lines.Append(word)
+		    return lines
+		  end
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target32Bit or Target64Bit))
+		Function WrapWord(Extends g as iOSGraphics, word as Text, width as Integer) As Text()
+		  dim lines() as Text
+		  
+		  if g.TextLineSize(word).Width <= width then
 		    lines.Append(word)
 		    return lines
 		  end
@@ -305,7 +382,7 @@ Protected Module GraphicsExtra
 		Right
 	#tag EndEnum
 
-	#tag Enum, Name = TextAlign, Type = Integer, Flags = &h0
+	#tag Enum, Name = TextAlign, Type = Integer, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Left
 		  Center
 		Right

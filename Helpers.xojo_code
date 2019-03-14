@@ -10,7 +10,13 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function BaseName(Extends fi as FolderItem) As String
+		Function AutoArray(ParamArray pAutos As Auto) As Auto()
+		  Return pAutos
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function BaseName(Extends fi as FolderItem) As Text
 		  dim pos as Integer = fi.Name.InStrReverse(".")
 		  
 		  if pos = 0 then
@@ -59,18 +65,24 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ConvertToHex(Source As String) As String
-		  Dim SrcMB As MemoryBlock
-		  SrcMB=New MemoryBlock(Source.LenB)
-		  SrcMB.StringValue(0,SrcMB.Size)=Source
+		Function ConvertToHex(Source As Text) As Text
+		  Xojo.Core
+		  Dim SrcMB As Xojo.Core.MemoryBlock
+		  SrcMB = Xojo.Core.TextEncoding.UTF8.ConvertTextToData(Source)
 		  
-		  Dim ReturnValue As String
-		  Dim OneBitHex As String
+		  
+		  
+		  Dim ReturnValue As Text
+		  Dim OneBitHex As Text
 		  For i As Integer=0 To SrcMB.Size-1
-		    OneBitHex=Hex(SrcMB.Byte(i))
+		    
+		    Dim b As UInt8 = SrcMB.UInt8Value(i)
+		    OneBitHex=b.ToHex(2)
+		    
 		    If i<>0 Then
-		      If OneBitHex.Len=1 Then OneBitHex="0" + OneBitHex
+		      If OneBitHex.Length=1 Then OneBitHex="0" + OneBitHex
 		    End If
+		    
 		    ReturnValue=ReturnValue+OneBitHex
 		  Next
 		  
@@ -79,32 +91,33 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub CopyFileorFolder(source as FolderItem, destination as FolderItem)
+		Sub CopyFileorFolder(source as Xojo.IO.FolderItem, destination as Xojo.IO.FolderItem)
+		  Using Xojo.IO
 		  Dim i as Integer
 		  Dim newFolder as FolderItem
 		  
-		  If source.directory then
+		  If source.IsFolder then
 		    
 		    newFolder=destination.child(source.name)
 		    newFolder.createAsFolder
 		    
-		    For i=1 to source.count
-		      If source.item(i).directory then
-		        CopyFileOrFolder source.item(i), newFolder
+		    For Each f As FolderItem In source.Children
+		      If f.IsFolder then
+		        CopyFileOrFolder f, newFolder
 		      else
-		        source.item(i).CopyFileTo newFolder
+		        f.CopyTo newFolder
 		      end if
-		    next
+		    Next
 		    
 		  else
-		    source.CopyFileTo destination
+		    source.CopyTo destination
 		  end if
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function CurrentOS() As String
-		  dim os as string
+		Function CurrentOS() As Text
+		  dim os as Text
 		  
 		  
 		  #if TargetMacOS
@@ -170,7 +183,7 @@ Protected Module Helpers
 		      GetVersionExA( info )
 		    end if
 		    
-		    dim str as String
+		    dim str as Text
 		    
 		    if info.Long( 4 ) = 4 then
 		      if info.Long( 8 ) = 0 then
@@ -226,22 +239,24 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function DateToUnix(d As Date) As Uint64
-		  Return (d.TotalSeconds - 2082844800)
+		Function DateToUnix(d As Xojo.Core.Date) As Uint64
+		  Using Xojo.Core
+		  Return d.SecondsFrom1970
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Equals(Extends ref as Dictionary, obj as Dictionary) As Boolean
-		  for each key as Variant in ref.Keys
-		    if not obj.HasKey(key) or ref.Value(key) <> obj.Value(key) then
+		Function Equals(Extends ref as Xojo.Core.Dictionary, obj as Xojo.Core.Dictionary) As Boolean
+		  Using Xojo.Core
+		  for each entry as DictionaryEntry in ref
+		    if not obj.HasKey(entry.Key) or entry.Value <> obj.Value(entry.key) then
 		      return false
 		    end
 		  next
 		  
 		  
-		  for each key as Variant in obj.Keys
-		    if not ref.HasKey(key) or obj.Value(key) <> ref.Value(key) then
+		  for each entry as DictionaryEntry in obj
+		    if not ref.HasKey(entry.key) or entry <> ref.Value(entry.key) then
 		      return false
 		    end
 		  next
@@ -251,19 +266,28 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub ErrorBox(title as String, message as String)
-		  MsgBox(title+EndOfLine+EndOfLine+message)
+		Sub ErrorBox(title as Text = "", message as Text)
+		  #if TargetIOS then
+		    Dim MessageBox As iOSMessageBox
+		    MessageBox.Title = title
+		    MessageBox.Message = message
+		    
+		    MessageBox.Show
+		    
+		  #else
+		    MsgBox(title+EndOfLine+EndOfLine+message)
+		  #endif
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function EstEntrer(char As String) As Boolean
-		  return (char = chr(3) Or char = chr(13))
+		Function EstEntrer(char As Text) As Boolean
+		  return (char = Text.FromUnicodeCodepoint(3) Or char = Text.FromUnicodeCodepoint(13))
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Extension(Extends fi as FolderItem) As String
+		Function Extension(Extends fi as FolderItem) As Text
 		  dim pos as Integer = fi.Name.InStrReverse(".")
 		  
 		  if pos = 0 then
@@ -275,21 +299,21 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function FillLeft(str as String, padding As String, length As Integer) As String
+		Function FillLeft(str As Text, padding As Text, length As Integer) As Text
 		  trigger_error("La fonction «FillLeft» est désuette.", ErrorType.Deprecated)
 		  return str.FillLeft(padding, length)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function FillRight(str as String, padding As String, length As Integer) As String
+		Function FillRight(str As Text, padding As Text, length As Integer) As Text
 		  trigger_error("La fonction «FillRight» est désuette.", ErrorType.Deprecated)
 		  return str.FillRight(padding, length)
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function FindFile(file as String, paths() as FolderItem) As FolderItem
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function FindFile(file as Text, paths() as FolderItem) As FolderItem
 		  dim path, fi as FolderItem
 		  
 		  for each path in paths
@@ -306,7 +330,7 @@ Protected Module Helpers
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub ForceQuit()
 		  Quit()
 		End Sub
@@ -318,17 +342,19 @@ Protected Module Helpers
 		    return App.ExecutableFile.Parent.Child("Resources")
 		  #elseif TargetWin32
 		    return App.ExecutableFile.Parent.Child(replace(App.ExecutableFile.Name, ".exe", "") + " Resources")
-		  #else
+		  #elseif TargetMacOS
 		    return App.ExecutableFile.Parent.Parent.Child("Resources")
+		  #Elseif TargetIOS
+		    Return SpecialFolder.GetResource("Resources")
 		  #endif
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function GetResourceItem(path as String) As FolderItem
+		Function GetResourceItem(path as Text) As Xojo.IO.FolderItem
 		  dim fi as FolderItem = GetResourceFolder()
 		  
-		  dim chunks() as String = path.Split("/")
+		  dim chunks() as Text = path.Split("/")
 		  for i as Integer = 0 to UBound(chunks)
 		    if not fi.Exists then
 		      return nil
@@ -342,7 +368,7 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Hyphenate(str As String) As String
+		Function Hyphenate(str As Text) As Text
 		  'str = RemoveAccents(str)
 		  '
 		  'Dim rx As New RegEx
@@ -406,7 +432,7 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function IIF(condition as Boolean, trueValue as ORM, falseValue as ORM) As variant
+		Function IIF(condition as Boolean, trueValue as ORM, falseValue as ORM) As Auto
 		  if condition then
 		    return trueValue
 		  else
@@ -416,7 +442,7 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function IIF(condition as Boolean, trueValue as String, falseValue as String) As String
+		Function IIF(condition as Boolean, trueValue as Text, falseValue as Text) As Text
 		  if condition then
 		    return trueValue
 		  else
@@ -425,14 +451,53 @@ Protected Module Helpers
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub ImportSQL(db as SQLiteDatabase, sql as FolderItem)
+		  dim tis As TextInputStream
+		  tis = TextInputStream.Open(sql)
+		  
+		  ImportSQL(db, tis.ReadAll)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub ImportSQL(db as SQliteDatabase, sql as String)
+		  dim tis As TextInputStream
+		  tis = TextInputStream.Open(ResourceManager.Instance.SQL("sqlite"))
+		  
+		  
+		  Dim queries() As String = sql.Split(";")
+		  For Each query As String In queries
+		    db.SQLExecute(query)
+		    If DB.Error Then
+		      System.DebugLog "DB Error: " + db.ErrorCode.StringValue + "  " + db.ErrorMessage + EndOfLine  + EndOfLine + "Dans cette requête : " + query
+		    Else
+		      db.Commit()
+		    End If
+		    
+		  Next
+		  
+		  System.DebugLog "DEBUG : Tables created as sqlite"
+		  
+		  
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
-		Function Int(str As String) As Integer
+		Function Int(str As Text) As Integer
 		  Return str.toInt
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function IsInteger(str as String) As Boolean
+		Function isArray(value As Auto) As Boolean
+		  Using Xojo.Introspection
+		  Return Xojo.Introspection.GetType(value).isArray
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function IsInteger(str as Text) As Boolean
 		  return str.Test("^\d+$")
 		End Function
 	#tag EndMethod
@@ -444,7 +509,7 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetDesktop and (Target32Bit or Target64Bit))
-		Function IsWindowOpen(name As String) As boolean
+		Function IsWindowOpen(name As Text) As boolean
 		  For i as Integer = 0 to WindowCount - 1
 		    Dim w as Window = Window(i)
 		    If w <> nil then
@@ -459,14 +524,8 @@ Protected Module Helpers
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function is_array(value As Variant) As Boolean
-		  return value.IsArray
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub LogToDesktop(message As String)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub LogToDesktop(message As Text)
 		  #if DebugBuild then
 		    dim fp as TextOutputStream
 		    
@@ -482,8 +541,8 @@ Protected Module Helpers
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function MD5(f as FolderItem) As String
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function MD5(f as FolderItem) As Text
 		  // test parameters
 		  If f=Nil Then Return ""
 		  If Not f.Exists Then Return ""
@@ -493,7 +552,7 @@ Protected Module Helpers
 		  // Note: RB string supports any binary data
 		  Dim InputData As TextInputStream
 		  InputData=f.OpenAsTextFile
-		  Dim FileData As String
+		  Dim FileData As Text
 		  If InputData=Nil Then
 		    // file f is not readable
 		    Return ""
@@ -503,11 +562,11 @@ Protected Module Helpers
 		  End If
 		  
 		  // get the MD5 digest
-		  Dim MD5Dgt As String
+		  Dim MD5Dgt As Text
 		  MD5Dgt=MD5(FileData)
 		  
 		  // convert MD5 digest to a Hex string
-		  Dim HashStr As String
+		  Dim HashStr As Text
 		  HashStr = ConvertToHex(MD5Dgt)
 		  
 		  Return HashStr
@@ -527,9 +586,10 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Parent(Extends fi as FolderItem, endsWith as String) As FolderItem
+		Function Parent(Extends fi as FolderItem, endsWith as Text) As Xojo.IO.FolderItem
+		  Using Xojo.IO
 		  dim parent as FolderItem = fi.Parent
-		  if parent = nil or parent.Name.EndsWith(endsWith) then
+		  if (parent = nil) or parent.Name.EndsWith(endsWith) then
 		    return parent
 		  end
 		  
@@ -550,10 +610,10 @@ Protected Module Helpers
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub Reveal(Extends f as FolderItem)
 		  Dim shell1 as new Shell
-		  Dim cmd as string
+		  Dim cmd as Text
 		  if f <>  nil then
 		    if f.Exists then
 		      #IF TargetWin32 then
@@ -583,37 +643,37 @@ Protected Module Helpers
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function StringMD5(str As String) As String
-		  return ConvertToHex(MD5(str)).Lowercase.Padding(32, "0", PaddingAlignment.Left)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+		Function StringMD5(str As Text) As Text
+		  return ConvertToHex(Xojo.Core.TextEncoding.UTF8.ConvertDataToText(Xojo.Crypto.MD5(Xojo.Core.TextEncoding.UTF8.ConvertTextToData(str)))).Lowercase.Padding(32, "0", PaddingAlignment.Left)
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function StringRepeat(pattern As String, multiplier As Integer) As String
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function StringRepeat(pattern As Text, multiplier As Integer) As Text
 		  trigger_error("La fonction «StringRepeat» est désuette.", ErrorType.Deprecated)
 		  return pattern.Repeat(multiplier)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function strtobasictype(value As String) As Variant
-		  dim variant As Variant = value
-		  return variant
+		Function strtobasictype(value As Text) As Auto
+		  dim Auto As Auto = value
+		  return Auto
 		  
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Sub TODO(tache as String)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub TODO(tache as Text)
 		  #if DebugBuild
 		    System.Log(System.LogLevelInformation, "TODO: " + tache)
 		  #endif
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Sub trigger_error(erreur AS String, Optional type As ErrorType = ErrorType.Error)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+		Sub trigger_error(erreur As Text, Optional type As ErrorType = ErrorType.Error)
 		  Select Case type
 		  Case ErrorType.Error
 		    erreur = "Error: " +erreur
@@ -625,11 +685,11 @@ Protected Module Helpers
 		    erreur = "Depecrated: " +erreur
 		  End
 		  
-		  MsgBox erreur
+		  ErrorBox erreur
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function UnixToDate(i As Int64) As Date
 		  Dim cd As New Date
 		  
@@ -640,19 +700,13 @@ Protected Module Helpers
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function Utf8StringValue(Extends field as DatabaseField, default as String = "") As String
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function Utf8StringValue(Extends field as DatabaseField, default as Text = "") As Text
 		  if field.Value.IsNull() then
 		    return default
 		  end
 		  
 		  return field.StringValue.DefineEncoding(Encodings.UTF8)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function VariantArray(ParamArray pVariants As Variant) As Variant()
-		  Return pVariants
 		End Function
 	#tag EndMethod
 

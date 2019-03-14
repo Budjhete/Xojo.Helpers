@@ -2,10 +2,15 @@
 Protected Class GenericException
 Inherits RuntimeException
 	#tag Method, Flags = &h1000
-		Sub Constructor(message as String)
-		  Message = message
+		Sub Constructor(message as Text)
+		  ErrorMessage = message
 		End Sub
 	#tag EndMethod
+
+
+	#tag Property, Flags = &h0
+		ErrorMessage As Text
+	#tag EndProperty
 
 
 	#tag ViewBehavior
@@ -58,6 +63,11 @@ Inherits RuntimeException
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ErrorMessage"
+			Group="Behavior"
+			Type="Text"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

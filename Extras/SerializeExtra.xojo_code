@@ -1,14 +1,8 @@
 #tag Module
 Protected Module SerializeExtra
-	#tag Method, Flags = &h0
-		Function Serialize(Extends ref as Dictionary) As String
-		  return Serialize(ref)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function Serialize(value as Variant) As String
-		  dim json as Variant = SerializeObject(value)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function Serialize(value as Auto) As Text
+		  dim json as Auto = SerializeObject(value)
 		  
 		  if json IsA JSONItem then
 		    return JSONItem(json).ToString()
@@ -18,40 +12,47 @@ Protected Module SerializeExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function SerializeObject(value as Variant) As Variant
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function Serialize(Extends ref as Dictionary) As Text
+		  return Serialize(ref)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function SerializeObject(value as Auto) As Auto
+		  Using Xojo.Core
 		  if value.IsArray() then
 		    
 		    dim j as new JSONItem()
 		    
-		    if value.ArrayElementType = Variant.TypeString then
+		    if value.ArrayElementType = Auto.TypeString then
 		      // Tableaux de string
-		      dim arr() as String = value
-		      for each item as Variant in arr
+		      dim arr() as Text = value
+		      for each item as Auto in arr
 		        j.Append(item)
 		      next
-		    elseif value.ArrayElementType = Variant.TypeInteger then
+		    elseif value.ArrayElementType = Auto.TypeInteger then
 		      // Tableaux de Integer
 		      dim arr() as Integer = value
-		      for each item as Variant in arr
+		      for each item as Auto in arr
 		        j.Append(item)
 		      next
-		    elseif value.ArrayElementType = Variant.TypeDouble then
+		    elseif value.ArrayElementType = Auto.TypeDouble then
 		      // Tableaux de Double
 		      dim arr() as Double = value
-		      for each item as Variant in arr
+		      for each item as Auto in arr
 		        j.Append(item)
 		      next
-		    elseif value.ArrayElementType = Variant.TypeBoolean then
+		    elseif value.ArrayElementType = Auto.TypeBoolean then
 		      // Tableaux de Double
 		      dim arr() as Boolean = value
-		      for each item as Variant in arr
+		      for each item as Auto in arr
 		        j.Append(item)
 		      next
-		    elseif value.ArrayElementType = Variant.TypeObject then
+		    elseif value.ArrayElementType = Auto.TypeObject then
 		      // Tableaux de Double
 		      dim arr() as Dictionary = value
-		      for each item as Variant in arr
+		      for each item as Auto in arr
 		        j.Append(item)
 		      next
 		    else
@@ -65,8 +66,8 @@ Protected Module SerializeExtra
 		    dim j as new JSONItem()
 		    dim d as Dictionary = Dictionary(value)
 		    
-		    for each key as String in d.Keys
-		      j.Value(key) = SerializeObject(d.Value(key))
+		    for each ent as DictionaryEntry in d
+		      j.Value(ent.key) = SerializeObject(ent.Value)
 		    next
 		    
 		    return j
@@ -83,7 +84,7 @@ Protected Module SerializeExtra
 		  //// Tableaux
 		  //dim contents as JSONItem
 		  //
-		  //for each value as Variant in
+		  //for each value as Auto in
 		  //
 		  //j.Value(key) = contents
 		  //elseif ref.Value(key) IsA Dictionary then
@@ -99,16 +100,16 @@ Protected Module SerializeExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function Unserialize(serialize as String) As Variant
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function Unserialize(serialize as String) As Auto
 		  dim j as new JSONItem(serialize)
 		  
 		  return UnserializeObject(j)
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function UnserializeObject(obj as Variant) As Variant
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function UnserializeObject(obj as Auto) As Auto
 		  if obj IsA JSONItem then
 		    dim j as JSONItem = JSONItem(obj)
 		    
@@ -118,7 +119,7 @@ Protected Module SerializeExtra
 		      dim d as new Dictionary()
 		      
 		      for i as Integer = 0 to j.Count-1
-		        dim name as String = j.Name(i)
+		        dim name as Text = j.Name(i)
 		        d.Value(name) = UnserializeObject(j.Value(name))
 		      next
 		      

@@ -1,94 +1,101 @@
 #tag Module
 Protected Module DateExtra
 	#tag Method, Flags = &h0
-		Sub BeginOfTheDay(Extends d As Date)
-		  d.Hour = 0
-		  d.Minute = 0
-		  d.Second = 0
+		Function AbbreviatedDate(Extends d as Xojo.Core.Date) As Text
+		  return d.ToText.left(11)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub BeginOfTheDay(Extends d As Xojo.Core.Date)
+		  d.Hour(0)
+		  d.Minute(0)
+		  d.Second(0)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function BeginOfTime(Extends d As Date) As Date
+		Function BeginOfTime(Extends d As Xojo.Core.Date) As Xojo.Core.Date
 		  
-		  return new Date(1970, 1, 1)
+		  return new Xojo.Core.Date(0, Xojo.Core.TimeZone.Current)
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Clone(Extends d as Date) As Date
-		  return new Date(d)
+		Function Clone(Extends d as Xojo.Core.Date) As Xojo.Core.Date
+		  dim a as Xojo.Core.date = d
+		  return a
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function DatesMatch(d1 as Date, d2 as Date) As Boolean
+		Function DatesMatch(d1 as Xojo.Core.Date, d2 as Xojo.Core.Date) As Boolean
 		  return d1.DayOfYear = d2.DayOfYear and d1.Year = d2.Year
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function DayOfWeekName(Extends d as Date) As String
+		Sub Day(Extends d as Xojo.Core.Date, pDay as integer)
+		  dim nD as New Date(d.Year, d.Month, pDay, d.Hour, d.Minute, d.Second, d.Nanosecond, d.TimeZone)
+		  d = nD
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function DayOfWeekName(Extends d as Xojo.Core.Date) As Text
 		  return kDayOfWeek.NthField(",", d.DayOfWeek)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function DayOfWeekNameShort(Extends d as Date) As String
+		Function DayOfWeekNameShort(Extends d as Xojo.Core.Date) As Text
 		  return kDayOfWeekShort.NthField(",", d.DayOfWeek)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function DaysInMonth(Extends d as Date) As Integer
-		  dim d1 as new Date(d)
-		  d1.Day = 1
+		Function DaysInMonth(Extends d as Xojo.Core.Date) As Integer
+		  dim d1 as Xojo.Core.Date = d
+		  d1.Day(1)
 		  
-		  dim d2 as new Date(d1)
-		  d2.Month = (d2.Month + 1)
-		  d2.Day = (d2.Day - 1)
+		  dim d2 as Xojo.Core.Date = d1
+		  d2.Month(d2.Month + 1)
+		  d2.Day(d2.Day - 1)
 		  
 		  return (d2.Day - d1.Day) + 1
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub EndOfTheDay(Extends d As Date)
-		  d.Hour = 23
-		  d.Minute = 59
-		  d.Second = 59
+		Sub EndOfTheDay(Extends d As Xojo.Core.Date)
+		  
+		  d.Hour(23)
+		  d.Minute(59)
+		  d.Second(59)
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function FormatISO8601(extends d As Date) As String
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function FormatISO8601(extends d As Xojo.Core.Date) As Text
 		  ' 2004-02-12T15:19:21+00:00
-		  return d.SQLDateTime.Replace(" ", "T") + d.GMTHourOffset
+		  return d.ToText.Replace(" ", "T") + d.GMTHourOffset
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function FormatPlain(extends d As Date) As String
-		  ' 2000-12-31 16h 01m 07s to 20001231160107
-		  return  Str(d.Year) + Str(d.Month) + Str(d.Day) +_
-		  Str(d.Hour).FillLeft("0", 2) + Str(d.Minute).FillLeft("0", 2) + Str(d.Second).FillLeft("0", 2)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function FormatRFC2822(extends d As Date) As String
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function FormatRFC2822(extends d As Date) As Text
 		  ' Thu, 21 Dec 2000 16:01:07 +0200
 		  return d.DayOfWeekNameShort + ", " + _
-		  Str(d.Day) + " " + d.MonthNameShort + " " + Str(d.Year) + " " + _
-		  Str(d.Hour).FillLeft("0", 2) + ":" + Str(d.Minute).FillLeft("0", 2) + ":" + Str(d.Second).FillLeft("0", 2) + " " + _
+		  d.Day.ToText + " " + d.MonthNameShort + " " + d.Year.ToText + " " + _
+		  d.Hour.ToText.FillLeft("0", 2) + ":" + d.Minute.ToText.FillLeft("0", 2) + ":" + d.Second.ToText.FillLeft("0", 2) + " " + _
 		  d.GMTHourOffset.Replace(":", "")
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function GMTHourOffset(Extends d as Date) As String
-		  dim ret as String
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function GMTHourOffset(Extends d as Date) As Text
+		  dim ret as Text
 		  
 		  if d.GMTOffset >= 0 then
 		    ret = ret + "+"
@@ -98,81 +105,78 @@ Protected Module DateExtra
 		  
 		  dim min as Integer = 60 * (d.GMTOffset - Floor(d.GMTOffset))
 		  
-		  ret = ret + Str(Floor(d.GMTOffset)).FillLeft("0", 2) + ":" + _
-		  Str(min).FillLeft("0", 2)
+		  ret = ret + Str(Floor(d.GMTOffset).).FillLeft("0", 2) + ":" + _
+		  min.ToText.FillLeft("0", 2)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function IsAnteMeridiem(Extends d as Date) As Boolean
+		Sub Hour(Extends d as Xojo.Core.Date, pHour as integer)
+		  dim nD as New Date(d.Year, d.Month, d.Day, pHour, d.Minute, d.Second, d.Nanosecond, d.TimeZone)
+		  d = nD
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function IsAnteMeridiem(Extends d as Xojo.Core.Date) As Boolean
 		  return (d.Hour < 12)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function IsFuture(Extends d as Date) As Boolean
-		  Dim now As New Date
-		  return (d > now)
+		Function IsFuture(Extends d as Xojo.Core.Date) As Boolean
+		  return (d > Xojo.Core.date.Now)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function IsPast(Extends d as Date) As Boolean
-		  Dim now As New Date
-		  return (d < now)
+		Function IsPast(Extends d as Xojo.Core.Date) As Boolean
+		  return (d < Xojo.Core.Date.Now)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function IsPostMeridiem(Extends d as Date) As Boolean
+		Function IsPostMeridiem(Extends d as Xojo.Core.Date) As Boolean
 		  return (d.Hour >= 12)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function IsToday(Extends d as Date) As Boolean
+		Function IsToday(Extends d as Xojo.Core.Date) As Boolean
 		  // Return True if this date is the same day as today.
-		  Dim now As New Date
-		  return DatesMatch( d, now )
+		  Dim now As Xojo.Core.Date
+		  return DatesMatch( d, Xojo.Core.date.Now )
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function IsTomorrow(extends d As Date) As Boolean
+		Function IsTomorrow(extends d As Xojo.Core.Date) As Boolean
 		  // Return True if this date is the same day as tomorrow.
-		  Dim tomorrow As New Date
-		  tomorrow.TotalSeconds = tomorrow.TotalSeconds + kSecondsPerDay
+		  Dim tomorrow As new Xojo.Core.Date(Xojo.Core.Date.Now.SecondsFrom1970 + kSecondsPerDay,  Xojo.Core.TimeZone.Current)
 		  return DatesMatch( d, tomorrow )
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function IsYesterday(extends d As Date) As Boolean
+		Function IsYesterday(extends d As Xojo.Core.Date) As Boolean
 		  // Return True if this date is the same day as yesterday.
-		  Dim yesterday As New Date
-		  yesterday.TotalSeconds = yesterday.TotalSeconds - kSecondsPerDay
+		  Dim yesterday As new Xojo.Core.Date(d.SecondsFrom1970 - kSecondsPerDay, Xojo.Core.TimeZone.Current)
 		  return DatesMatch( d, yesterday )
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function LastMonthEnd(Extends d As Date) As Date
-		  dim aDate As new Date(IIF(d.Month = 1, d.Year - 1, d.Year), IIF(d.Month = 1, 12, d.Month - 1), 1)
-		  aDate.Day = aDate.DaysInMonth()
-		  aDate.Hour = 23
-		  aDate.Minute = 59
-		  aDate.Second = 59
+		Function LastMonthEnd(Extends d As Xojo.Core.Date) As Xojo.Core.Date
+		  dim aDate As new Xojo.Core.Date(IIF(d.Month = 1, d.Year - 1, d.Year), IIF(d.Month = 1, 12, d.Month - 1), d.DaysInMonth(), 23, 59, 59,  Xojo.Core.TimeZone.Current)
+		  
 		  
 		  return aDate// 31 decembre de l'annee
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function LastMonthStart(Extends d As Date, firstDay As Date = Nil) As Date
-		  dim dd as new Date(IIF(d.Month = 1, d.Year - 1, d.Year), IIF(d.Month = 1, 12, d.Month - 1), 1)
-		  dd.Hour = 0
-		  dd.Minute = 0
-		  dd.Second = 1
+		Function LastMonthStart(Extends d As Xojo.Core.Date, firstDay As Xojo.Core.Date = Nil) As Xojo.Core.Date
+		  dim dd as new Xojo.Core.Date(IIF(d.Month = 1, d.Year - 1, d.Year), IIF(d.Month = 1, 12, d.Month - 1), 1, 0, 0, 1,Xojo.Core.TimeZone.Current)
 		  
 		  return dd
 		  
@@ -180,49 +184,49 @@ Protected Module DateExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function LastQuarterEnd(Extends d As Date, firstDay As Date = Nil) As Date
+		Function LastQuarterEnd(Extends d As Xojo.Core.Date, firstDay As Xojo.Core.Date = Nil) As Xojo.Core.Date
 		  dim start as Date = d.QuarterEnd(firstDay)
-		  start.Month = start.Month - 3
-		  start.day = start.day - 1
-		  start.Hour = 23
-		  start.Minute = 59
-		  start.Second = 59
+		  start.Month(start.Month - 3)
+		  start.day(start.day - 1)
+		  start.Hour(23)
+		  start.Minute(59)
+		  start.Second(59)
 		  return start
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function LastQuarterStart(Extends d As Date, firstDay As Date = Nil) As Date
+		Function LastQuarterStart(Extends d As Xojo.Core.Date, firstDay As Xojo.Core.Date = Nil) As Xojo.Core.Date
 		  dim start as Date = d.QuarterStart(firstDay)
-		  start.Month = start.Month - 3
-		  start.Hour =  0
-		  start.Minute = 0
-		  start.Second = 1
+		  start.Month(start.Month - 3)
+		  start.Hour(0)
+		  start.Minute(0)
+		  start.Second(1)
 		  return start
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function LastYearEnd(Extends d As Date, firstDay As Date = nil) As Date
+		Function LastYearEnd(Extends d As Xojo.Core.Date, firstDay As Xojo.Core.Date = nil) As Xojo.Core.Date
 		  dim aDate as Date = d.YearEnd(firstDay)
-		  aDate.Year = aDate.Year - 1
-		  aDate.Hour = 23
-		  aDate.Minute = 59
-		  aDate.Second = 59
+		  aDate.Year(aDate.Year - 1)
+		  aDate.Hour(23)
+		  aDate.Minute(59)
+		  aDate.Second(59)
 		  
 		  return aDate
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function LastYearStart(Extends d As Date, firstDay As Date = nil) As Date
+		Function LastYearStart(Extends d As Xojo.Core.Date, firstDay As Xojo.Core.Date = nil) As Xojo.Core.Date
 		  dim aDate as Date = d.YearStart(firstDay)
-		  aDate.Year = aDate.Year - 1
-		  aDate.Hour = 0
-		  aDate.Minute = 0
-		  aDate.Second = 1
+		  aDate.Year(aDate.Year - 1)
+		  aDate.Hour(0)
+		  aDate.Minute(0)
+		  aDate.Second(1)
 		  
 		  
 		  return aDate
@@ -230,64 +234,85 @@ Protected Module DateExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function LongishDate(extends d As Date) As String
+		Function LongishDate(extends d As Xojo.Core.Date) As Text
 		  // Return a date in the format: <month name> <day>, <year>
-		  return d.MonthName + " " + Str( d.Day ) + ", " + Str( d.Year )
+		  return d.MonthName + " " + d.Day.ToText + ", " + d.Year.ToText
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function MonthEnd(Extends d As Date) As Date
-		  return new Date(d.Year , d.Month, d.DaysInMonth())
+		Sub Minute(Extends d as Xojo.Core.Date, pMinute as integer)
+		  dim nD as New Date(d.Year, d.Month, d.Day, d.Hour, pMinute, d.Second, d.Nanosecond, d.TimeZone)
+		  d = nD
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Month(Extends d as Xojo.Core.Date, pMonth as integer)
+		  dim nD as New Date(d.Year, pMonth, d.Day, d.Hour, d.Minute, d.Second, d.Nanosecond, d.TimeZone)
+		  d = nD
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function MonthEnd(Extends d As Xojo.Core.Date) As Xojo.Core.Date
+		  return new Date(d.Year , d.Month, d.DaysInMonth(), Xojo.Core.TimeZone.Current)
 		  
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function MonthName(Extends d as Date) As String
+		Function MonthName(Extends d as Date) As Text
 		  return kMonths.NthField(",", d.month)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function MonthNameShort(Extends d as Date) As String
+		Function MonthNameShort(Extends d as Date) As Text
 		  return kMonthsShort.NthField(",", d.month)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function MonthStart(Extends d As Date) As Date
-		  return new Date(d.Year , d.Month, 1)
+		Function MonthStart(Extends d As Xojo.Core.Date) As Xojo.Core.Date
+		  return new Xojo.Core.Date(d.Year , d.Month, 1, Xojo.Core.TimeZone.Current)
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function NextQuarterEnd(Extends d As Date, firstDay As Date = Nil) As Date
-		  d.Month = d.Month + 3
-		  d.Hour = 23
-		  d.Minute = 59
-		  d.Second = 59
+		Sub Nanosecond(Extends d as Xojo.Core.Date, pNanosecond as integer)
+		  dim nD as New Date(d.Year, d.Month, d.Day, d.Hour, d.Minute, d.Second, pNanosecond, d.TimeZone)
+		  d = nD
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function NextQuarterEnd(Extends d As Xojo.Core.Date, firstDay As Xojo.Core.Date = Nil) As Xojo.Core.Date
+		  d.Month(d.Month + 3)
+		  d.Hour(23)
+		  d.Minute(59)
+		  d.Second(59)
 		  return d.QuarterEnd(firstDay)
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function NextQuarterStart(Extends d As Date, firstDay As Date = Nil) As Date
-		  d.Month = d.Month + 3
-		  d.Hour = 0
-		  d.Minute = 0
-		  d.Second = 1
+		Function NextQuarterStart(Extends d As Xojo.Core.Date, firstDay As Xojo.Core.Date = Nil) As Xojo.Core.Date
+		  d.Month(d.Month + 3)
+		  d.Hour(0)
+		  d.Minute(0)
+		  d.Second(1)
 		  return d.QuarterStart(firstDay)
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function NextYear(Extends d As Date) As Date
-		  d.Year = d.Year + 1
+		Function NextYear(Extends d As Xojo.Core.Date) As Xojo.Core.Date
+		  d.Year(d.Year + 1)
 		  return d
 		  
 		End Function
@@ -300,17 +325,17 @@ Protected Module DateExtra
 		    return Ceil(d.Month / 3)
 		  end
 		  
-		  dim q1, q2, q3, q4 as Date
+		  dim q1, q2, q3, q4 as Xojo.Core.Date
 		  
 		  q1 = d.YearStart(firstDay)
 		  
-		  q2 = new Date(q1)
-		  q3 = new Date(q1)
-		  q4 = new Date(q1)
+		  q2 = q1
+		  q3 = q1
+		  q4 = q1
 		  
-		  q2.Month = q2.Month + 3
-		  q3.Month = q3.Month + 6
-		  q4.Month = q4.Month + 9
+		  q2.Month(q2.Month + 3)
+		  q3.Month(q3.Month + 6)
+		  q4.Month(q4.Month + 9)
 		  
 		  if d < q2 then
 		    return 1
@@ -326,12 +351,12 @@ Protected Module DateExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function QuarterEnd(Extends d As Date, firstDay As Date = Nil) As Date
-		  dim ThisQuarterEnd As Date = d.QuarterStart(firstDay)
-		  ThisQuarterEnd.Month = ThisQuarterEnd.Month + 3
-		  ThisQuarterEnd.Hour = 23
-		  ThisQuarterEnd.Minute = 59
-		  ThisQuarterEnd.Second = 59
+		Function QuarterEnd(Extends d As Xojo.Core.Date, firstDay As Xojo.Core.Date = Nil) As Xojo.Core.Date
+		  dim ThisQuarterEnd As Xojo.Core.Date = d.QuarterStart(firstDay)
+		  ThisQuarterEnd.Month(ThisQuarterEnd.Month + 3)
+		  ThisQuarterEnd.Hour(23)
+		  ThisQuarterEnd.Minute(59)
+		  ThisQuarterEnd.Second(59)
 		  return ThisQuarterEnd
 		  
 		  
@@ -339,12 +364,12 @@ Protected Module DateExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function QuarterStart(Extends d As Date, firstDay as Date = Nil) As Date
+		Function QuarterStart(Extends d as Xojo.Core.Date, firstDay as Date = Nil) As Xojo.Core.Date
 		  firstDay = d.YearStart(firstDay)
 		  
-		  dim quarterStart as Date = new Date(firstDay)
+		  dim quarterStart as Xojo.Core.Date = firstDay
 		  
-		  quarterStart.Month = quarterStart.Month + 3 * (d.Quarter(firstDay) - 1)
+		  quarterStart.Month(quarterStart.Month + 3 * (d.Quarter(firstDay) - 1))
 		  
 		  return quarterStart
 		  
@@ -372,118 +397,118 @@ Protected Module DateExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub Second(Extends d as Xojo.Core.Date, pSecond as integer)
+		  dim nD as New Date(d.Year, d.Month, d.Day, d.Hour, d.Minute, pSecond, d.Nanosecond, d.TimeZone)
+		  d = nD
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function SQLDateTime(Extends d as Xojo.Core.Date) As Text
 		  return d.ToText
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function SQLTime(Extends d as Date) As String
-		  return d.SQLDateTime.Mid(11)
+		Function SQLTime(Extends d as Xojo.Core.Date) As Text
+		  return d.ToText.Mid(11)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function UnixTime(extends d As Date) As UInt64
-		  Return (d.TotalSeconds - 2082844800)
+		Function UnixTime(extends d As Xojo.Core.Date) As UInt64
+		  Return d.SecondsFrom1970
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function WeekEnd(Extends d As Date) As Date
-		  dim aDate as Date = new Date(d)
-		  
-		  aDate.Day = aDate.Day + 7 - d.DayOfWeek
-		  aDate.Hour = 23
-		  aDate.Minute = 59
-		  aDate.Second = 59
-		  return aDate
+		Function WeekEnd(Extends d As Xojo.Core.Date) As Xojo.Core.Date
+		  return New Xojo.Core.Date(d.Year, d.Month, d.Day + 7 - d.DayOfWeek, 23, 59, 59, xojo.Core.TimeZone.Current)
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		Function WeekStart(Extends d As Date) As Date
-		  dim aDate as Date = new Date(d)
 		  
-		  aDate.Day = aDate.Day - d.DayOfWeek + 1
-		  aDate.Hour = 0
-		  aDate.Minute = 0
-		  aDate.Second = 1
-		  return aDate
 		  
+		  return new Xojo.Core.Date(d.Year + 1, d.Month, d.Day - d.DayOfWeek + 1, 0, 0, 1, Xojo.Core.TimeZone.Current)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function YearEnd(Extends d As date, firstDay As Date = Nil) As Date
+		Sub Year(Extends d as Xojo.Core.Date, pYear as integer)
+		  dim nD as New Date(pYear, d.Month, d.Day, d.Hour, d.Minute, d.Second, d.Nanosecond, d.TimeZone)
+		  d = nD
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function YearEnd(Extends d As Xojo.core.date, firstDay As Xojo.core.Date = Nil) As Xojo.core.Date
+		  Using Xojo.Core
 		  dim aDate as Date = d.YearStart(firstDay)
-		  aDate.Year = aDate.Year + 1
 		  aDate = aDate.Yesterday
 		  
-		  aDate.Hour = 23
-		  aDate.Minute = 59
-		  aDate.Second = 59
 		  
-		  return aDate
+		  
+		  return new Xojo.Core.Date(aDate.Year + 1, aDate.Month, aDate.Day, 23, 59, 59, Xojo.Core.TimeZone.Current)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function YearStart(Extends d As Date, firstDate As Date = Nil) As Date
+		Function YearStart(Extends d As Xojo.Core.Date, firstDate As Xojo.Core.Date = Nil) As Xojo.Core.Date
+		  Using Xojo.Core
 		  // Année fiscale
 		  if firstDate <> Nil then
-		    dim start as new Date(d.Year, firstDate.Month, firstDate.Day) // 1er Janvier de l'annee
-		    
+		    dim start as new date(d.Year, firstDate.Month, firstDate.Day, 0, 0, 1, 0, Xojo.Core.TimeZone.Current)
 		    if start > d then
-		      start.Year = start.Year - 1
+		      Dim ouwanYear As New DateInterval
+		      ouwanYear.Years = 1
+		      start = start - ouwanYear
 		    end
-		    start.Hour = 0
-		    start.Minute = 0
-		    start.Second = 1
+		    
 		    return start
 		  end if
 		  
 		  
 		  // Année civile - 1et janvier
-		  return new Date(d.Year, 1, 1, 0, 0, 1)
+		  return new Date(d.Year, 1, 1, 0, 0, 1, 0, Xojo.Core.TimeZone.Current)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Yesterday(extends d As Date) As Date
-		  d .TotalSeconds = d .TotalSeconds - kSecondsPerDay
-		  return d
+		Function Yesterday(extends d As Xojo.Core.Date) As Xojo.Core.Date
+		  return new Xojo.Core.date(d.SecondsFrom1970 - kSecondsPerDay, Xojo.Core.TimeZone.Current)
 		End Function
 	#tag EndMethod
 
 
-	#tag Constant, Name = kAnteMeridiem, Type = String, Dynamic = True, Default = \"AM", Scope = Protected
+	#tag Constant, Name = kAnteMeridiem, Type = Text, Dynamic = True, Default = \"AM", Scope = Protected
 		#Tag Instance, Platform = Any, Language = en, Definition  = \"AM"
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"AM"
 	#tag EndConstant
 
-	#tag Constant, Name = kDayOfWeek, Type = String, Dynamic = True, Default = \"Sunday\x2CMonday\x2CTuesday\x2CWednesday\x2CThursday\x2CFriday\x2CSaturday", Scope = Protected
+	#tag Constant, Name = kDayOfWeek, Type = Text, Dynamic = True, Default = \"Sunday\x2CMonday\x2CTuesday\x2CWednesday\x2CThursday\x2CFriday\x2CSaturday", Scope = Protected
 		#Tag Instance, Platform = Any, Language = en, Definition  = \"Sunday\x2CMonday\x2CTuesday\x2CWednesday\x2CThursday\x2CFriday\x2CSaturday"
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"Dimanche\x2CLundi\x2CMardi\x2CMercredi\x2CJeudi\x2CVendredi\x2CSamedi"
 	#tag EndConstant
 
-	#tag Constant, Name = kDayOfWeekShort, Type = String, Dynamic = True, Default = \"Sun\x2CMon\x2CTue\x2CWed\x2CThu\x2CFri\x2CSat", Scope = Protected
+	#tag Constant, Name = kDayOfWeekShort, Type = Text, Dynamic = True, Default = \"Sun\x2CMon\x2CTue\x2CWed\x2CThu\x2CFri\x2CSat", Scope = Protected
 		#Tag Instance, Platform = Any, Language = en, Definition  = \"Sun\x2CMon\x2CTue\x2CWed\x2CThu\x2CFri\x2CSat"
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"Dim\x2CLun\x2CMar\x2CMer\x2CJeu\x2CVen\x2CSam"
 	#tag EndConstant
 
-	#tag Constant, Name = kMonths, Type = String, Dynamic = True, Default = \"January\x2CFebruary\x2CMarch\x2CApril\x2CMay\x2CJune\x2CJuly\x2CAugust\x2CSeptember\x2COctober\x2CNovember\x2CDecember", Scope = Protected
+	#tag Constant, Name = kMonths, Type = Text, Dynamic = True, Default = \"January\x2CFebruary\x2CMarch\x2CApril\x2CMay\x2CJune\x2CJuly\x2CAugust\x2CSeptember\x2COctober\x2CNovember\x2CDecember", Scope = Protected
 		#Tag Instance, Platform = Any, Language = en, Definition  = \"January\x2CFebruary\x2CMarch\x2CApril\x2CMay\x2CJune\x2CJuly\x2CAugust\x2CSeptember\x2COctober\x2CNovember\x2CDecember"
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"Janvier\x2CF\xC3\xA9vrier\x2CMars\x2CAvril\x2CMai\x2CJuin\x2CJuillet\x2CAo\xC3\xBBt\x2CSeptembre\x2COctobre\x2CNovembre\x2CD\xC3\xA9cembre"
 	#tag EndConstant
 
-	#tag Constant, Name = kMonthsShort, Type = String, Dynamic = True, Default = \"Jan\x2CFeb\x2CMar\x2CApr\x2CMay\x2CJun\x2CJul\x2CAug\x2CSep\x2COct\x2CNov\x2CDec", Scope = Protected
+	#tag Constant, Name = kMonthsShort, Type = Text, Dynamic = True, Default = \"Jan\x2CFeb\x2CMar\x2CApr\x2CMay\x2CJun\x2CJul\x2CAug\x2CSep\x2COct\x2CNov\x2CDec", Scope = Protected
 		#Tag Instance, Platform = Any, Language = en, Definition  = \"Jan\x2CFeb\x2CMar\x2CApr\x2CMay\x2CJun\x2CJul\x2CAug\x2CSep\x2COct\x2CNov\x2CDec"
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"Jan\x2CF\xC3\xA9v\x2CMar\x2CAvr\x2CMai\x2CJun\x2CJul\x2CAo\xC3\xBB\x2CSep\x2COct\x2CNov\x2CD\xC3\xA9c"
 	#tag EndConstant
 
-	#tag Constant, Name = kPostMeridiem, Type = String, Dynamic = True, Default = \"PM", Scope = Protected
+	#tag Constant, Name = kPostMeridiem, Type = Text, Dynamic = True, Default = \"PM", Scope = Protected
 		#Tag Instance, Platform = Any, Language = en, Definition  = \"PM"
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"PM"
 	#tag EndConstant
@@ -491,17 +516,17 @@ Protected Module DateExtra
 	#tag Constant, Name = kSecondsPerDay, Type = Double, Dynamic = False, Default = \"86400", Scope = Protected
 	#tag EndConstant
 
-	#tag Constant, Name = kToday, Type = String, Dynamic = True, Default = \"Today", Scope = Protected
+	#tag Constant, Name = kToday, Type = Text, Dynamic = True, Default = \"Today", Scope = Protected
 		#Tag Instance, Platform = Any, Language = en, Definition  = \"Today"
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"Aujourd\'hui"
 	#tag EndConstant
 
-	#tag Constant, Name = kTomorrow, Type = String, Dynamic = True, Default = \"Tomorrow", Scope = Protected
+	#tag Constant, Name = kTomorrow, Type = Text, Dynamic = True, Default = \"Tomorrow", Scope = Protected
 		#Tag Instance, Platform = Any, Language = en, Definition  = \"Tomorrow"
 		#Tag Instance, Platform = Any, Language = Default, Definition  = \"Demain"
 	#tag EndConstant
 
-	#tag Constant, Name = kYesterday, Type = String, Dynamic = True, Default = \"Yesterday", Scope = Protected
+	#tag Constant, Name = kYesterday, Type = Text, Dynamic = True, Default = \"Yesterday", Scope = Protected
 		#Tag Instance, Platform = Any, Language = en, Definition  = \"Yesterday"
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"Hier"
 	#tag EndConstant

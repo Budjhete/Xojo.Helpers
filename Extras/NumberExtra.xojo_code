@@ -13,33 +13,34 @@ Protected Module NumberExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Decimal(Extends x As Double, decimalsCount as Integer = 2) As String
-		  dim frac as String = "0"
+		Function Decimal(Extends x as Double, decimalsCount as Integer = 2) As Text
+		  dim frac as Text = "0"
 		  frac = frac.Repeat(decimalsCount)
 		  
-		  return Format(x, "#0."+frac+";-#0."+frac+";0."+frac).Replace(",", ".").Replace(" ", ",")
+		  return x.ToText(Locale.Current, "#0."+frac+";-#0."+frac+";0."+frac).Replace(",", ".").Replace(" ", ",")
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ExactMoneyValue(Extends pCurrency As Currency, pUnit As String = "") As String
-		  If Len(pUnit) > 1 Then
+		Function ExactMoneyValue(Extends pCurrency As Currency, pUnit As Text = "") As Text
+		  If pUnit.Length > 1 Then
 		    pUnit = " " + pUnit
 		  End If
 		  
-		  Return Format(pCurrency, "-###,##0.00#####" + pUnit)
+		  Return pCurrency.Format("-###,##0.00#####" + pUnit)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Format(Extends pCurrency As Currency, pFormat As String) As String
-		  Return Format(pCurrency, pFormat)
+		Function Format(Extends pCurrency As Currency, pFormat As Text) As Text
+		  Dim pDouble as Double = Double.FromText(pCurrency.ToText)
+		  Return pDouble.ToText(Locale.Raw, pFormat)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Format(Extends pDouble As Double, pFormat As String) As String
-		  Return Format(pDouble, pFormat)
+		Function Format(Extends pDouble As Double, pFormat As Text) As Text
+		  Return pDouble.ToText(Locale.Current, pFormat)
 		End Function
 	#tag EndMethod
 
@@ -73,37 +74,37 @@ Protected Module NumberExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function MoneyValue(Extends pCurrency As Currency, pUnit As String = "") As String
-		  If Len(pUnit) > 1 Then
+		Function MoneyValue(Extends pCurrency As Currency, pFormat As Text = "-#0.00", pUnit As Text = "") As Text
+		  If pUnit.Length > 1 Then
 		    pUnit = " " + pUnit
 		  End If
 		  
-		  Return Format(pCurrency, MoneyFormatPref + pUnit)
+		  Return pCurrency.Format(pFormat + pUnit)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function MoneyValue(Extends pDouble As Double, pUnit As String = "") As String
-		  If Len(pUnit) > 1 Then
+		Function MoneyValue(Extends pDouble As Double, pFormat As Text = "-#0.00", pUnit As Text = "") As Text
+		  If pUnit.Length > 1 Then
 		    pUnit = " " + pUnit
 		  End If
 		  
-		  Return Format(pDouble, MoneyFormatPref + pUnit)
+		  Return pDouble.ToText(Locale.Raw, pFormat + pUnit)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function MoneyValue(Extends pInteger As Integer, pUnit As String = "") As String
-		  If Len(pUnit) > 1 Then
+		Function MoneyValue(Extends pInteger As Integer, pFormat As Text = "-#0.00", pUnit As Text = "") As Text
+		  If pUnit.Length > 1 Then
 		    pUnit = " " + pUnit
 		  End If
 		  
-		  Return Format(pInteger, MoneyFormatPref + pUnit)
+		  Return pInteger.ToText(Locale.Raw, pFormat + pUnit)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function PercentValue(Extends pCurrency As Currency) As String
+		Function PercentValue(Extends pCurrency As Currency) As Text
 		  // @deprecated les pourcentages sont des Double, pas des Currency
 		  Return Format(pCurrency, "-0.00")
 		End Function
@@ -142,17 +143,17 @@ Protected Module NumberExtra
 		  Dim pInteger As Integer = pDouble
 		  
 		  If pDouble = pInteger Then
-		    Return Format(pDouble, "-0")
+		    Return pDouble.ToText(Locale.Current, "-0")
 		  End If
 		  
-		  Return Format(pDouble, "-0.####")
+		  Return pDouble.ToText(Locale.Current, "-0.####")
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		Function Round(Extends pCurrency As Currency, pPrecision As Integer) As Double
-		  dim pExponent as Double = Pow(10, pPrecision)
+		  dim pExponent as Double = (10 ^ pPrecision)
 		  
 		  Return Round(pCurrency * pExponent) / pExponent
 		End Function
@@ -160,7 +161,7 @@ Protected Module NumberExtra
 
 	#tag Method, Flags = &h0
 		Function Round(Extends pDouble As Double, pPrecision As Integer) As Double
-		  dim pExponent as Double = Pow(10, pPrecision)
+		  dim pExponent as Double = (10 ^ pPrecision)
 		  
 		  Return Round(pDouble * pExponent) / pExponent
 		End Function
@@ -177,7 +178,7 @@ Protected Module NumberExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function StringValue(Extends pBoolean As Boolean) As String
+		Function StringValue(Extends pBoolean As Boolean) As Text
 		  If pBoolean Then
 		    Return "True"
 		  Else
@@ -187,20 +188,20 @@ Protected Module NumberExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function StringValue(Extends pDouble As Double) As String
-		  Return Str(pDouble)
+		Function StringValue(Extends pDouble As Double) As Text
+		  Return pDouble.ToText()
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function StringValue(Extends pInteger As Integer) As String
-		  Return Str(pInteger)
+		Function StringValue(Extends pInteger As Integer) As Text
+		  Return pInteger.ToText()
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function StringValue(Extends pInteger As Integer, pLength as Integer) As String
-		  dim formatstring as String
+		Function StringValue(Extends pInteger as Integer, pLength as Integer) As Text
+		  dim formatstring as Text
 		  for i as Integer = 1 to pLength
 		    formatstring = formatstring + "0"
 		  next
@@ -244,7 +245,7 @@ Protected Module NumberExtra
 	#tag Constant, Name = MoneyFormat, Type = String, Dynamic = False, Default = \"-###\x2C##0.00##", Scope = Public
 	#tag EndConstant
 
-	#tag Constant, Name = QuantityFormat, Type = String, Dynamic = False, Default = \"", Scope = Public
+	#tag Constant, Name = QuantityFormat, Type = Text, Dynamic = False, Default = \"", Scope = Public
 	#tag EndConstant
 
 
@@ -262,12 +263,6 @@ Protected Module NumberExtra
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="MoneyFormatPref"
-			Group="Behavior"
-			Type="string"
-			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"

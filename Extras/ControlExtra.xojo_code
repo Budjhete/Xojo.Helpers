@@ -1,7 +1,7 @@
 #tag Module
 Protected Module ControlExtra
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Sub AccessTo(Extends toolbar as Toolbar, ItemName as String, License as String, Permission as String)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub AccessTo(Extends toolbar as Toolbar, ItemName as Text, License as Text, Permission as Text)
 		  'dim item as ToolItem = toolbar.Find(ItemName)
 		  '
 		  'if item <> nil then
@@ -10,8 +10,8 @@ Protected Module ControlExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Sub AddRow(Extends popup as BHPopupMenu, text as String, tag as Variant)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub AddRow(Extends popup as BHPopupMenu, text as Text, tag as Auto)
 		  #if not TargetMacOS
 		    if Text = "-" then
 		      return
@@ -23,8 +23,8 @@ Protected Module ControlExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Sub AppendAfter(Extends menu as MenuItem, after as String, from as MenuItem)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub AppendAfter(Extends menu as MenuItem, after as Text, from as MenuItem)
 		  dim index as Integer = menu.IndexOf(after)
 		  
 		  if index >= 0 then
@@ -36,8 +36,8 @@ Protected Module ControlExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Sub AppendBefore(Extends menu as MenuItem, before as String, from as MenuItem)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub AppendBefore(Extends menu as MenuItem, before as Text, from as MenuItem)
 		  dim index as Integer = menu.IndexOf(before)
 		  
 		  if index >= 0 then
@@ -46,19 +46,31 @@ Protected Module ControlExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub AppendSeparator(Extends menu as MenuItem)
 		  menu.Append(new MenuItem(MenuItem.TextSeparator))
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function Bottom(Extends ctrl as RectControl) As Integer
 		  return ctrl.Top + ctrl.Height
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function ColumnLeft(Extends ctrl as ListBox, column as Integer) As Integer
+		  dim left as Integer = ctrl.ScreenX
+		  
+		  for i as Integer = 0 to (column-1)
+		    left = left + ctrl.Column(i).WidthActual
+		  next
+		  
+		  return left
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function Contains(Extends menu as MenuItem, item as MenuItem) As Boolean
 		  For i as Integer = 0 to menu.Count-1
 		    if menu.Item(i) = item then
@@ -70,7 +82,7 @@ Protected Module ControlExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub DeleteAllItems(Extends toolbar as Toolbar)
 		  For i as Integer = (toolbar.Count-1) downto 0
 		    toolbar.Remove(i)
@@ -78,7 +90,7 @@ Protected Module ControlExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub EmptyRow(Extends list as ListBox, row As Integer)
 		  if row >= list.ListCount then
 		    return
@@ -90,7 +102,7 @@ Protected Module ControlExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h21
+	#tag Method, Flags = &h21, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Private Function EvaluateGraphics() As Graphics
 		  if pEvaluation = nil then
 		    pEvaluation = new Picture(1, 1, 32)
@@ -100,8 +112,8 @@ Protected Module ControlExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h1, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Protected Function EvaluateHeight(control as Label, text as String) As Integer
+	#tag Method, Flags = &h1, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Protected Function EvaluateHeight(control as Label, text as Text) As Integer
 		  dim g as Graphics = EvaluateGraphics
 		  
 		  g.TextFont = control.TextFont
@@ -115,8 +127,8 @@ Protected Module ControlExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h1, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Protected Function EvaluateWidth(control as Label, text as String) As Integer
+	#tag Method, Flags = &h1, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Protected Function EvaluateWidth(control as Label, text as Text) As Integer
 		  dim g as Graphics = EvaluateGraphics
 		  
 		  g.TextFont = control.TextFont
@@ -130,8 +142,8 @@ Protected Module ControlExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h1, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Protected Function EvaluateWidth(control as PushButton, text as String) As Integer
+	#tag Method, Flags = &h1, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Protected Function EvaluateWidth(control as PushButton, text as Text) As Integer
 		  dim g as Graphics = EvaluateGraphics
 		  
 		  g.TextFont = control.TextFont
@@ -145,8 +157,8 @@ Protected Module ControlExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function Find(Extends menu as MenuItem, name as String) As MenuItem
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function Find(Extends menu as MenuItem, name as Text) As MenuItem
 		  For i as Integer = 0 to (menu.Count-1)
 		    if menu.Item(i).Name = name then
 		      return menu.Item(i)
@@ -161,8 +173,8 @@ Protected Module ControlExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function Find(Extends toolbar as Toolbar, name as String) As ToolItem
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function Find(Extends toolbar as Toolbar, name as Text) As ToolItem
 		  for i as Integer = 0 to toolbar.Count-1
 		    if toolbar.Item(i).Name = name then
 		      return toolbar.Item(i)
@@ -173,14 +185,20 @@ Protected Module ControlExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function HaveFocus(Extends ctrl as Control) As Boolean
 		  return (ctrl.Window.Focus = ctrl)
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function IndexOf(Extends menu as MenuItem, name as String) As Integer
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function Hovered(Extends pControl As RectControl) As Boolean
+		  Return pControl.MouseControlX.Between(0, pControl.Width) And pControl.MouseControlY.Between(0, pControl.Height)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function IndexOf(Extends menu as MenuItem, name as Text) As Integer
 		  For i as Integer = 0 to (menu.Count-1)
 		    if menu.Item(i).Name = name then
 		      return i
@@ -190,8 +208,8 @@ Protected Module ControlExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function IndexOf(Extends tabPanel as TabPanel, name as String) As Integer
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function IndexOf(Extends tabPanel as TabPanel, name as Text) As Integer
 		  for i as Integer = 0 to tabPanel.PanelCount-1
 		    if tabPanel.Caption(i) = name then
 		      return i
@@ -202,8 +220,8 @@ Protected Module ControlExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Sub InsertAfter(Extends menu as MenuItem, after as String, from as MenuItem)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub InsertAfter(Extends menu as MenuItem, after as Text, from as MenuItem)
 		  dim index as Integer = menu.IndexOf(after)
 		  
 		  if index >= 0 then
@@ -212,14 +230,23 @@ Protected Module ControlExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Sub InsertRow(Extends popup as BHPopupMenu, index as Integer, text as String, tag as Variant)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub InsertRow(Extends popup as BHPopupMenu, index as Integer, text as Text, tag as Auto)
 		  popup.InsertRow(index, text)
 		  popup.RowTag(index) = tag
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function IsMouseHover(Extends ctrl as RectControl) As Boolean
+		  dim X as Integer = ctrl.MouseControlX
+		  dim Y as Integer = ctrl.MouseControlX
+		  
+		  return (X >= 0 and X < ctrl.Width and Y >= 0 and Y < ctrl.Height)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function ListCount(Extends button as BevelButton) As Integer
 		  #pragma BreakOnExceptions Off
 		  
@@ -240,7 +267,7 @@ Protected Module ControlExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub LockWidth(Extends ctrl as RectControl, Assigns value as Integer)
 		  if ctrl.LockRight then
 		    dim right as Integer = ctrl.Right
@@ -252,8 +279,20 @@ Protected Module ControlExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Sub Remove(Extends menu as MenuItem, name as String)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function MouseControlX(Extends pControl as RectControl) As Integer
+		  return (pControl.MouseX - pControl.WindowLeft)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function MouseControlY(Extends pControl as RectControl) As Integer
+		  return (pControl.MouseY - pControl.WindowTop)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub Remove(Extends menu as MenuItem, name as Text)
 		  dim index as Integer = menu.IndexOf(name)
 		  if index >= 0 then
 		    menu.Remove(index)
@@ -262,8 +301,8 @@ Protected Module ControlExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Sub Remove(Extends tabPanel as TabPanel, name as String)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub Remove(Extends tabPanel as TabPanel, name as Text)
 		  dim index as Integer = tabPanel.IndexOf(name)
 		  
 		  if index >= 0 then
@@ -272,8 +311,8 @@ Protected Module ControlExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Sub Remove(Extends toolbar as Toolbar, name as String)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub Remove(Extends toolbar as Toolbar, name as Text)
 		  For i as Integer = 0 to (toolbar.Count-1)
 		    if toolbar.Item(i).Name = name then
 		      toolbar.Remove(i)
@@ -283,8 +322,8 @@ Protected Module ControlExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Sub RemoveByTag(Extends popup as PopupMenu, value as Variant)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub RemoveByTag(Extends popup as PopupMenu, value as Auto)
 		  dim index as Integer = popup.ListIndex
 		  
 		  for i as Integer = (popup.ListCount-1) downto 0
@@ -306,8 +345,8 @@ Protected Module ControlExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Sub RemoveByText(Extends listbox as ListBox, text as String, column as Integer = 0)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub RemoveByText(Extends listbox as ListBox, text as Text, column as Integer = 0)
 		  for row as Integer = listbox.ListCount-1 downto 0
 		    if listbox.Cell(row, column) = text then
 		      listbox.RemoveRow(row)
@@ -316,52 +355,46 @@ Protected Module ControlExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Sub RemoveOnCondition(Extends toolbar as Toolbar, name as String, condition as Boolean)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub RemoveOnCondition(Extends toolbar as Toolbar, name as Text, condition as Boolean)
 		  if condition then
 		    toolbar.Remove(name)
 		  end
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function Right(Extends ctrl as RectControl) As Integer
 		  return ctrl.Window.Width - ctrl.RightPosition
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub Right(Extends ctrl as RectControl, Assigns value as Integer)
 		  ctrl.RightPosition = ctrl.Window.Width - value
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function RightPosition(Extends ctrl as RectControl) As Integer
 		  return ctrl.Left + ctrl.Width
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub RightPosition(Extends ctrl as RectControl, Assigns value as Integer)
 		  ctrl.Left = value - ctrl.Width
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function ScreenX(Extends ctrl as RectControl) As Integer
-		  return ctrl.Left + ctrl.Window.Left
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function RowTop(Extends ctrl as ListBox, row as Integer) As Integer
+		  return  (ctrl.ScreenY + ctrl.HeaderHeight + ctrl.RowHeight * (row - ctrl.ScrollPosition))
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function ScreenY(Extends ctrl as RectControl) As Integer
-		  return ctrl.top + ctrl.Window.top
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function Tag(Extends popup as PopupMenu) As Variant
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function Tag(Extends popup as PopupMenu) As Auto
 		  if popup.ListIndex < 0 then
 		    return nil
 		  end
@@ -370,8 +403,8 @@ Protected Module ControlExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Sub Tag(Extends popup as PopupMenu, Assigns value as Variant)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub Tag(Extends popup as PopupMenu, Assigns value as Auto)
 		  for i as Integer = 0 to (popup.ListCount-1)
 		    if popup.List(i) <> "-" and popup.RowTag(i) = value then
 		      popup.ListIndex = i
@@ -383,8 +416,8 @@ Protected Module ControlExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function TagExists(Extends popup as PopupMenu, value as Variant) As Boolean
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function TagExists(Extends popup as PopupMenu, value as Auto) As Boolean
 		  for i as Integer = 0 to (popup.ListCount-1)
 		    if popup.RowTag(i) = value then
 		      return true
@@ -395,7 +428,7 @@ Protected Module ControlExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function Toolbar(Extends win as Window) As Toolbar
 		  for i as Integer = 0 to (win.ControlCount-1)
 		    if win.Control(i) IsA Toolbar then
@@ -408,7 +441,7 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 
-	#tag Property, Flags = &h21
+	#tag Property, Flags = &h21, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Private pEvaluation As Picture
 	#tag EndProperty
 

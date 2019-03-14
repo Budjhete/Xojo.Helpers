@@ -1,19 +1,19 @@
 #tag Module
 Protected Module ApplicationExtra
-	#tag Method, Flags = &h0
-		Function Args(Extends a as Application) As String()
-		  dim args as String = System.CommandLine.Trim
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function Args(Extends a as Application) As Text()
+		  dim args as Text = System.CommandLine.Trim
 		  return args.Split(" ")
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function CommandLine(Extends a as Application) As String
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function CommandLine(Extends a as Application) As Text
 		  return System.CommandLine.Trim
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function PID(Extends a as Application) As Integer
 		  #if TargetMacOS
 		    // For a Mac OS app, we use the system's
