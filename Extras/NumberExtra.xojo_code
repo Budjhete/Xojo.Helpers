@@ -293,7 +293,7 @@ Protected Module NumberExtra
 		#tag ViewProperty
 			Name="MoneyFormatPref"
 			Group="Behavior"
-			Type="string"
+			Type="Text"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Module
