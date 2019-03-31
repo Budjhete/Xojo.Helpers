@@ -1,7 +1,7 @@
 #tag Class
 Protected Class Appcast
 	#tag Method, Flags = &h0
-		Sub Constructor(url as String = "")
+		Sub Constructor(url as Text = "")
 		  if url <> "" then
 		    Load(url)
 		  end
@@ -47,25 +47,25 @@ Protected Class Appcast
 		    ' Titre
 		    param = node.Child("title")
 		    if param <> nil then
-		      item.Title = param.FirstChild.Value
+		      item.Title = param.FirstChild.Value.ToText
 		    end
 		    
 		    ' Description
 		    param = node.Child("description")
 		    if param <> nil then
-		      item.Description = param.FirstChild.Value
+		      item.Description = param.FirstChild.Value.ToText
 		    end
 		    
 		    ' Date
 		    param = node.Child("pubDate")
 		    if param <> nil then
-		      item.Date = param.FirstChild.Value
+		      item.Date = param.FirstChild.Value.ToText
 		    end
 		    
 		    ' ReleaseNotesURL
 		    param = node.Child("releaseNotesLink")
 		    if param <> nil then
-		      item.ReleaseNotesURL = param.FirstChild.Value
+		      item.ReleaseNotesURL = param.FirstChild.Value.ToText
 		    end
 		    
 		    ' Enclosure:
@@ -73,9 +73,9 @@ Protected Class Appcast
 		      
 		      param = node.Child(j)
 		      if param.Name = "enclosure" and param.GetAttribute("os") = kMonOS then
-		        item.MD5Signature = param.GetAttribute("md5Signature")
-		        item.FileURL = param.GetAttribute("url")
-		        item.MinimumSystemVersion = param.GetAttribute("minimumSystemVersion")
+		        item.MD5Signature = param.GetAttribute("md5Signature").ToText
+		        item.FileURL = param.GetAttribute("url").ToText
+		        item.MinimumSystemVersion = param.GetAttribute("minimumSystemVersion").ToText
 		        item.Length = Val(param.GetAttribute("length"))
 		        item.Version = new Version(param.GetAttribute("version"))
 		      end
@@ -105,7 +105,7 @@ Protected Class Appcast
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Load(url as String)
+		Sub Load(url as Text)
 		  mSocket = new HTTPSocket
 		  
 		  dim userAgent as String = Appcast.FullVersionName
@@ -124,13 +124,13 @@ Protected Class Appcast
 		  AddHandler mSocket.PageReceived, AddressOf HTTPSocketPageReceived
 		  
 		  mSocket.Yield = true
-		  dim content as String = mSocket.Get(url, 3)
+		  dim content as string = mSocket.Get(url, 3)
 		  
 		  #pragma BreakOnExceptions Off
 		  
 		  try
 		    if content.Trim() <> "" then
-		      ParseContent(content)
+		      ParseContent(content.ToText)
 		    end
 		    
 		    RaiseEvent Success()
@@ -143,7 +143,7 @@ Protected Class Appcast
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub ParseContent(Content as String)
+		Sub ParseContent(Content as Text)
 		  redim Items(-1)
 		  
 		  dim xml as new XmlDocument
@@ -169,25 +169,25 @@ Protected Class Appcast
 		    ' Titre
 		    param = node.Child("title")
 		    if param <> nil then
-		      item.Title = param.FirstChild.Value
+		      item.Title = param.FirstChild.Value.ToText
 		    end
 		    
 		    ' Description
 		    param = node.Child("description")
 		    if param <> nil then
-		      item.Description = param.FirstChild.Value
+		      item.Description = param.FirstChild.Value.ToText
 		    end
 		    
 		    ' Date
 		    param = node.Child("pubDate")
 		    if param <> nil then
-		      item.Date = param.FirstChild.Value
+		      item.Date = param.FirstChild.Value.ToText
 		    end
 		    
 		    ' ReleaseNotesURL
 		    param = node.Child("releaseNotesLink")
 		    if param <> nil then
-		      item.ReleaseNotesURL = param.FirstChild.Value
+		      item.ReleaseNotesURL = param.FirstChild.Value.ToText
 		    end
 		    
 		    ' Enclosure:
@@ -195,9 +195,9 @@ Protected Class Appcast
 		      
 		      param = node.Child(j)
 		      if param.Name = "enclosure" and param.GetAttribute("os") = kMonOS then
-		        item.MD5Signature = param.GetAttribute("md5Signature")
-		        item.FileURL = param.GetAttribute("url")
-		        item.MinimumSystemVersion = param.GetAttribute("minimumSystemVersion")
+		        item.MD5Signature = param.GetAttribute("md5Signature").ToText
+		        item.FileURL = param.GetAttribute("url").ToText
+		        item.MinimumSystemVersion = param.GetAttribute("minimumSystemVersion").ToText
 		        item.Length = Val(param.GetAttribute("length"))
 		        item.Version = new Version(param.GetAttribute("version"))
 		      end

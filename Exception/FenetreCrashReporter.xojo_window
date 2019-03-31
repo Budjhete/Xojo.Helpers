@@ -233,6 +233,7 @@ Begin Window FenetreCrashReporter
       TextFont        =   "System"
       TextSize        =   0.0
       TextUnit        =   0
+      Text_           =   ""
       Top             =   279
       Transparent     =   False
       Underline       =   False
@@ -353,6 +354,7 @@ Begin Window FenetreCrashReporter
       TextFont        =   "System"
       TextSize        =   0.0
       TextUnit        =   0
+      Text_           =   ""
       Top             =   220
       Transparent     =   False
       Underline       =   False
@@ -444,11 +446,11 @@ End
 		Sub Constructor(error as RuntimeException)
 		  Me.excp = error
 		  
-		  Message = "Une exception de type "+Introspection.GetType(error).Name+" n'a pas été gérée." + EndOfLine
-		  'Message = Message + pMessage + EndOfLine
+		  Message = "Une exception de type "+Introspection.GetType(error).Name.totext+" n'a pas été gérée." + EndOfLine_
+		  'Message = Message + pMessage + EndOfLine_
 		  
 		  if error.Message <> "" then
-		    Message = Message + EndOfLine + EndOfLine + "Message:"+EndOfLine +error.Message()
+		    Message = Message + EndOfLine_ + EndOfLine_ + "Message:"+EndOfLine_ +error.Message().ToText
 		  end
 		  
 		  tInformations.Text = Message
@@ -461,14 +463,14 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		Sub Constructor(error as RuntimeException, pMessage as string)
+		Sub Constructor(error as RuntimeException, pMessage as Text)
 		  Me.excp = error
 		  
-		  Message = "Une exception de type "+Introspection.GetType(error).Name+" n'a pas été gérée." + EndOfLine
-		  Message = Message + pMessage + EndOfLine
+		  Message = "Une exception de type "+Introspection.GetType(error).Name.ToText+" n'a pas été gérée." + EndOfLine_
+		  Message = Message + pMessage + EndOfLine_
 		  
 		  if error.Message <> "" then
-		    Message = Message + EndOfLine + EndOfLine + "Message:"+EndOfLine +error.Message()
+		    Message = Message + EndOfLine_ + EndOfLine_ + "Message:"+EndOfLine_ +error.Message.ToText
 		  end
 		  
 		  tInformations.Text = Message
@@ -481,7 +483,7 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		Sub Constructor(infos as String)
+		Sub Constructor(infos as Text)
 		  Message = infos
 		  
 		  // Calling the overridden superclass constructor.
@@ -514,7 +516,7 @@ End
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private Message As String
+		Private Message As Text
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -601,7 +603,7 @@ End
 		  
 		  
 		  if System.NetworkInterfaceCount > 0 then
-		    post.Value("MAC-modified") = StringMD5(System.GetNetworkInterface(0).MACAddress).Lowercase
+		    post.Value("MAC-modified") = StringMD5(System.GetNetworkInterface(0).MACAddress.ToText).Lowercase
 		  end if
 		  
 		  post.Value("NbWindows") = str(WindowCount)

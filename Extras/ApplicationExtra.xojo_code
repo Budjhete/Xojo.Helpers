@@ -1,15 +1,15 @@
 #tag Module
 Protected Module ApplicationExtra
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = false
 		Function Args(Extends a as Application) As Text()
-		  dim args as Text = System.CommandLine.Trim
+		  dim args as string = System.CommandLine.Trim
 		  return args.Split(" ")
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function CommandLine(Extends a as Application) As Text
-		  return System.CommandLine.Trim
+		  return System.CommandLine.Trim.ToText
 		End Function
 	#tag EndMethod
 

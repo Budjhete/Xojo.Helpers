@@ -75,15 +75,6 @@ Protected Module StringExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function BooleanValue(Extends pString As Integer) As Boolean
-		  
-		  Dim pVariant As Variant = pString
-		  
-		  Return pVariant.BooleanValue
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function BooleanValue(Extends pString As String) As Boolean
 		  pString = pString.ReplaceAll(" ", "")
 		  
@@ -246,29 +237,13 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function CurrencyValue(Extends pString As String) As Currency
 		  pString = pString.ReplaceAll(" ", "")
 		  
 		  Dim pVariant As Variant = CDbl(pString.ReplaceAll(" ", ""))
 		  
 		  Return pVariant.CurrencyValue
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function Decimal(Extends str as String, default as String = "") As String
-		  str = str.ReplaceAll(",", ".")
-		  
-		  if str.test("^\.\d+") then
-		    str = "0"+str
-		  elseif not str.test("^\-?\d+") then
-		    return default
-		  end
-		  
-		  str = str.ReplaceAllRegExp("[^\d\.\-]+", "")
-		  
-		  return Str(Val(str))
 		End Function
 	#tag EndMethod
 
@@ -288,7 +263,7 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function EndsWith(Extends str as String, search() as String) As Boolean
 		  for i as Integer = 0 to search.Ubound
 		    if str.Right(search(i).Len) = search(i) then
@@ -298,7 +273,7 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function EndsWith(Extends str as String, search as String) As Boolean
 		  return (str.Right(search.Len) = search)
 		End Function
@@ -310,7 +285,7 @@ Protected Module StringExtra
 		    return default
 		  end
 		  
-		  return Str(Int(str))
+		  return str(str.IntegerValue)
 		End Function
 	#tag EndMethod
 
@@ -550,7 +525,7 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = false
 		Function LTrim(Extends source As String, charsToTrim As String) As String
 		  // This is an extended version of RB's LTrim function that lets you specify
 		  // a set of characters to trim.
@@ -568,7 +543,7 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = false
 		Function Money(Extends str as String, default as String = "") As String
 		  str = str.ReplaceAll(",", ".")
 		  
@@ -586,7 +561,7 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = false
 		Function MoneyPositive(Extends str as String, default as String = "") As String
 		  str = str.ReplaceAll(",", ".")
 		  
@@ -610,13 +585,13 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = false
 		Function MoneyValue(Extends pString As String, pUnit As String) As String
 		  Return pString.CurrencyValue.MoneyValue(pUnit)
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = false
 		Function Number(Extends str as String, default as String = "") As String
 		  if not str.test("^\d+") then
 		    return default
@@ -697,22 +672,7 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function ReplaceAccents(Extends pString as Text) As Text
-		  // Remplace les caractères accentués par leurs équivalents non-accentués
-		  
-		  Dim pFrom() As Text = Array("à,á,â,ã,ä,ç,è,é,ê,ë,ì,í,î,ï,ñ,ò,ó,ô,õ,ö,ù,ú,û,ü,ý,ÿ,À,Á,Â,Ã,Ä,Ç,È,É,Ê,Ë,Ì,Í,Î,Ï,Ñ,Ò,Ó,Ô,Õ,Ö,Ù,Ú,Û,Ü,Ý")
-		  Dim pTo() As Text = Array("a,a,a,a,a,c,e,e,e,e,i,i,i,i,n,o,o,o,o,o,u,u,u,u,y,y,A,A,A,A,A,C,E,E,E,E,I,I,I,I,N,O,O,O,O,O,U,U,U,U,Y")
-		  
-		  For pIndex As Integer = 0 To pFrom.Ubound
-		    pString = pString.ReplaceAll(pFrom(pIndex), pTo(pIndex))
-		  next
-		  
-		  return pString
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = false
 		Function ReplaceAllRegExp(Extends str as String, pattern as String, replace as String, params as String = "") As String
 		  Dim reg as New RegEx
 		  dim opts as new RegExOptions
@@ -844,15 +804,6 @@ Protected Module StringExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Slugalize(Extends pString as String) As String
-		  Return pString.ReplaceAccents. _
-		  ReplaceAllRegExp("[\W\s]+", " "). _ // replace non-word and space by space
-		  Trim. _ // trim beginning and ending spaces
-		  ReplaceAll(" ", "-")
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function SplitAndKeep(Extends source as String, delimiter as String = " ") As String()
 		  dim parts() as String
 		  
@@ -866,13 +817,13 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function SplitCSV(Extends pString As String) As String()
 		  Return SplitCommaSeparatedValuesMBS(pString)
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = false
 		Function SplitMultiple(Extends source as String, delimiters() as String) As String()
 		  dim parts() as String
 		  dim parts2() as String
@@ -895,82 +846,15 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = false
 		Function SplitMultiple(Extends source as String, delimiters as String) As String()
 		  return source.SplitMultiple(delimiters.Split(""))
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function SplitMultipleAndKeep(Extends source as String, delimiters() as String) As String()
-		  dim parts() as String
-		  dim parts2() as String
-		  dim result() as String
-		  
-		  delimiters = delimiters.Clone()
-		  dim delimiter as String = delimiters.Pop()
-		  
-		  parts = source.SplitAndKeep(delimiter)
-		  if delimiters.Ubound < 0 then
-		    return parts
-		  end
-		  
-		  for each part as String in parts
-		    parts2 = part.SplitMultipleAndKeep(delimiters)
-		    result.AppendAll(parts2)
-		  next
-		  
-		  return result
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = false
 		Function SplitMultipleAndKeep(Extends source as String, delimiters as String) As String()
 		  return source.SplitMultipleAndKeep(delimiters.Split(""))
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function Sprintf(format as String, ParamArray args as Variant) As String
-		  dim matches() as RegExMatch = format.SearchAll("%(b|c|d|u|f|o|s|x|X)")
-		  dim match as RegExMatch
-		  dim replace as String
-		  dim arg as Variant
-		  
-		  if matches.Ubound <> Ubound(args) then
-		    Raise new InvalidArgumentsException
-		  end
-		  
-		  for i as Integer = 0 to matches.Ubound
-		    replace = ""
-		    match = matches(i)
-		    arg = args(i)
-		    
-		    Select Case match.SubExpressionString(1)
-		    Case "s"
-		      replace = arg.StringValue
-		    Case "d"
-		      replace = Str(arg.IntegerValue)
-		    Case "f"
-		      replace = Str(arg.DoubleValue)
-		    Case "u"
-		      replace = Str(arg.UInt32Value)
-		    Case "c"
-		      replace = Chr(arg.IntegerValue)
-		    Case "b"
-		      ' Integer -> binaire
-		    Case "o"
-		      ' Integer -> octal
-		    Case "x"
-		      ' Integer -> hexadecimal
-		    Case "X"
-		      ' Integer -> hexadecimal
-		    End
-		    
-		    format = format.Replace(match.SubExpressionString(0), replace)
-		  next
-		  
-		  return format
 		End Function
 	#tag EndMethod
 
@@ -982,11 +866,11 @@ Protected Module StringExtra
 
 	#tag Method, Flags = &h0
 		Function toCurrency(Extends str as String) As Currency
-		  return Val(str.Decimal())
+		  return Val(str.MoneyValue)
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = false
 		Function toDouble(Extends str as String) As Double
 		  return Val(str.Decimal())
 		End Function
@@ -995,6 +879,15 @@ Protected Module StringExtra
 	#tag Method, Flags = &h0
 		Function toInt(Extends str as String) As Integer
 		  return CType(Val(str), Integer)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function ToText(Extends s() as String) As Text()
+		  dim Tss() as text
+		  For each ss as string in s
+		    tss.Append(ss.ToText)
+		  Next
 		End Function
 	#tag EndMethod
 
@@ -1047,33 +940,10 @@ Protected Module StringExtra
 	#tag EndMethod
 
 
-	#tag Constant, Name = kBaseTable10, Type = String, Dynamic = False, Default = \"0123456789", Scope = Public
-	#tag EndConstant
-
-	#tag Constant, Name = kBaseTable16, Type = String, Dynamic = False, Default = \"0123456789ABCDEF", Scope = Public
-	#tag EndConstant
-
-	#tag Constant, Name = kBaseTable2, Type = String, Dynamic = False, Default = \"01", Scope = Public
-	#tag EndConstant
-
-	#tag Constant, Name = kBaseTable36, Type = String, Dynamic = False, Default = \"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", Scope = Public
-	#tag EndConstant
-
-	#tag Constant, Name = kBaseTable64, Type = String, Dynamic = False, Default = \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", Scope = Public
-	#tag EndConstant
-
-	#tag Constant, Name = kBaseTable8, Type = String, Dynamic = False, Default = \"01234567", Scope = Public
-	#tag EndConstant
-
-	#tag Constant, Name = Tabulation, Type = String, Dynamic = False, Default = \"\t", Scope = Public
-	#tag EndConstant
-
-
-	#tag Enum, Name = PaddingAlignment, Type = Integer, Flags = &h0
-		Left
-		  Center
-		Right
-	#tag EndEnum
+	#tag Note, Name = Required
+		
+		TextExtra
+	#tag EndNote
 
 
 	#tag ViewBehavior

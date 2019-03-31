@@ -43,7 +43,7 @@ Protected Class Updater
 
 	#tag Method, Flags = &h0
 		Sub Check()
-		  LastCheckTime = new Date()
+		  LastCheckTime = Xojo.Core.Date.now
 		  
 		  dim item as AppcastItem = GetNewer()
 		  if item <> nil and not Me.windowShow then
@@ -115,6 +115,8 @@ Protected Class Updater
 
 	#tag Method, Flags = &h0
 		Function IsUpdateLater(v as Version) As Boolean
+		  Using Xojo.Core
+		  
 		  if not Me.UpdateConfig.HasKey("UpdateLater") then
 		    return false
 		  end
@@ -125,7 +127,7 @@ Protected Class Updater
 		  end
 		  
 		  dim when as Date = liste.GetDate(v.ToString)
-		  dim now as new Date
+		  dim now as Date = Xojo.Core.Date.Now
 		  
 		  return (now < when)
 		End Function
@@ -239,7 +241,7 @@ Protected Class Updater
 			  Me.UpdateConfig.Set("LastCheckTime", value)
 			End Set
 		#tag EndSetter
-		LastCheckTime As Date
+		LastCheckTime As Xojo.Core.Date
 	#tag EndComputedProperty
 
 	#tag Property, Flags = &h21
@@ -272,6 +274,8 @@ Protected Class Updater
 	#tag ComputedProperty, Flags = &h1
 		#tag Getter
 			Get
+			  Using Xojo.Core
+			  
 			  If Not App.Configuration.HasKey("Updates") Then
 			    App.Configuration.Value("Updates") = New Dictionary
 			  End If
@@ -286,7 +290,7 @@ Protected Class Updater
 			  App.Configuration.Value("Updates") = value
 			End Set
 		#tag EndSetter
-		Protected UpdateConfig As Dictionary
+		Protected UpdateConfig As Xojo.Core.Dictionary
 	#tag EndComputedProperty
 
 	#tag Property, Flags = &h21
@@ -294,16 +298,16 @@ Protected Class Updater
 	#tag EndProperty
 
 
-	#tag Constant, Name = CHANNEL_BETA, Type = String, Dynamic = False, Default = \"beta", Scope = Public
+	#tag Constant, Name = CHANNEL_BETA, Type = Text, Dynamic = False, Default = \"beta", Scope = Public
 	#tag EndConstant
 
-	#tag Constant, Name = CHANNEL_STABLE, Type = String, Dynamic = False, Default = \"stable", Scope = Public
+	#tag Constant, Name = CHANNEL_STABLE, Type = Text, Dynamic = False, Default = \"stable", Scope = Public
 	#tag EndConstant
 
-	#tag Constant, Name = CHANNEL_UNSTABLE, Type = String, Dynamic = False, Default = \"genesis", Scope = Public
+	#tag Constant, Name = CHANNEL_UNSTABLE, Type = Text, Dynamic = False, Default = \"genesis", Scope = Public
 	#tag EndConstant
 
-	#tag Constant, Name = kAppcastUrl, Type = String, Dynamic = False, Default = \"http://app.kanjo.ca/download/appcast.xml", Scope = Protected
+	#tag Constant, Name = kAppcastUrl, Type = Text, Dynamic = False, Default = \"http://app.kanjo.ca/download/appcast.xml", Scope = Protected
 	#tag EndConstant
 
 

@@ -216,7 +216,7 @@ Inherits RuntimeException
 		  if Location <> "" then
 		    FullMessage = FullMessage + Location
 		  else
-		    dim call_stack() as Text
+		    dim call_stack() as String
 		    
 		    #if TargetIOS then
 		      for Each st as StackFrame in Me.CallStack
@@ -227,7 +227,7 @@ Inherits RuntimeException
 		      
 		    #endif
 		    if call_stack.Ubound >= 0 then
-		      FullMessage = FullMessage + call_stack(0)
+		      FullMessage = FullMessage + call_stack(0).ToText
 		    else
 		      FullMessage = FullMessage + "unknown-location"
 		    end

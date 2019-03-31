@@ -192,12 +192,6 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function Hovered(Extends pControl As RectControl) As Boolean
-		  Return pControl.MouseControlX.Between(0, pControl.Width) And pControl.MouseControlY.Between(0, pControl.Height)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function IndexOf(Extends menu as MenuItem, name as Text) As Integer
 		  For i as Integer = 0 to (menu.Count-1)
 		    if menu.Item(i).Name = name then
@@ -390,6 +384,18 @@ Protected Module ControlExtra
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function RowTop(Extends ctrl as ListBox, row as Integer) As Integer
 		  return  (ctrl.ScreenY + ctrl.HeaderHeight + ctrl.RowHeight * (row - ctrl.ScrollPosition))
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function ScreenX(Extends ctrl as RectControl) As Integer
+		  return ctrl.Left + ctrl.Window.Left
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function ScreenY(Extends ctrl as RectControl) As Integer
+		  return ctrl.top + ctrl.Window.top
 		End Function
 	#tag EndMethod
 

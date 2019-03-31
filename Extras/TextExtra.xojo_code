@@ -11,16 +11,6 @@ Protected Module TextExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function AssignVars(Extends str as Text, ParamArray vars as Pair) As Text
-		  For Each p as Pair in vars
-		    str = str.ReplaceAll("$"+p.Left, p.Right)
-		  Next
-		  
-		  return str
-		End Function
-	#tag EndMethod
-
 	#tag Method, Flags = &h0
 		Function AssignVars(Extends str as Text, ParamArray vars as Text) As Text
 		  dim i as Integer = 1
@@ -45,6 +35,8 @@ Protected Module TextExtra
 
 	#tag Method, Flags = &h0
 		Function AssignVars(str as Text, vars as Xojo.Core.Dictionary) As Text
+		  Using Xojo.Core
+		  
 		  for each ent as DictionaryEntry in vars
 		    str = str.ReplaceAll("$"+ent.Key, ent.Value)
 		  Next
@@ -92,28 +84,13 @@ Protected Module TextExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function BeginsWith(Extends str as Text, search as Text) As Boolean
-		  return (str.Left(search.Length) = search)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function BooleanValue(Extends pString As Integer) As Boolean
-		  
-		  Dim pAuto As Auto = pString
-		  
-		  Return pAuto.BooleanValue
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function BooleanValue(Extends pString As Text) As Boolean
 		  pString = pString.ReplaceAll(" ", "")
 		  
 		  dim pAuto as Auto = pString
 		  
 		  if pAuto.IsNumeric then
-		    return pAuto.BooleanValue
+		    return pAuto.AutoBooleanValue
 		  else
 		    if pString = "True" or pString = "Vrai" or pString = "1" then
 		      return True
@@ -132,7 +109,11 @@ Protected Module TextExtra
 		    return s
 		  end if
 		  
-		  first = Chr(first.Asc - &h20)
+		  #if TargetIOS then
+		    first = Chr(first.Asc - &h20)
+		  #else
+		    first = Chr(first.Asc - &h20).ToText
+		  #endif
 		  return first + s.Mid(2)
 		End Function
 	#tag EndMethod
@@ -179,7 +160,7 @@ Protected Module TextExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target32Bit or Target64Bit))
 		Function Chr(i as integer) As Text
 		  return Text.FromUnicodeCodepoint(i)
 		End Function
@@ -188,6 +169,17 @@ Protected Module TextExtra
 	#tag Method, Flags = &h0
 		Function Clean(Extends str as Text) As Text
 		  return str.ReplaceRegExp("\s+", " ").Trim()
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function Contains(Extends str as Text, search() as Text) As Boolean
+		  for i as Integer = 0 to search.Ubound
+		    if str.Contains(search(i)) then
+		      Return true
+		    end if // you need StringExtra.Contains
+		  next
+		  
 		End Function
 	#tag EndMethod
 
@@ -232,7 +224,7 @@ Protected Module TextExtra
 		    for i as Integer = 0 to parts.Ubound
 		      dim ret as RegExMatch = parts(i).Search("^\s*"+enclose+"(.*)"+enclose+"\s*$")
 		      if ret <> nil then
-		        parts(i) = ret.SubExpressionString(1)
+		        parts(i) = ret.SubExpressionText(1)
 		      end
 		    next
 		  end
@@ -241,7 +233,7 @@ Protected Module TextExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function CurrencyValue(Extends pString As Text) As Currency
 		  pString = pString.ReplaceAll(" ", "")
 		  
@@ -269,7 +261,15 @@ Protected Module TextExtra
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function DecodeBase6(Extends aText As Text) As Text
-		  Return DecodeBase64(aText)
+		  Return DecodeBase64(aText).ToText
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function DecodeBase64(Extends aText As Text) As Text
+		  Dim str as string = aText
+		  
+		  return DecodeBase64(str).ToText
 		End Function
 	#tag EndMethod
 
@@ -318,7 +318,7 @@ Protected Module TextExtra
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function EncodeBase64(Extends aText As Text) As Text
-		  Return EncodeBase64(aText)
+		  Return EncodeBase64(aText).ToText
 		End Function
 	#tag EndMethod
 
@@ -372,8 +372,18 @@ Protected Module TextExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function EndOfLine() As Text
+		Function EndOfLine_() As Text
 		  return Text.FromUnicodeCodepoint(10)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function EndsWith(Extends str as Text, search() as Text) As Boolean
+		  for i as Integer = 0 to search.Ubound
+		    if str.Right(search(i).Length) = search(i) then
+		      Return true
+		    end if // you need StringExtra.Contains
+		  next
 		End Function
 	#tag EndMethod
 
@@ -383,7 +393,7 @@ Protected Module TextExtra
 		    return default
 		  end
 		  
-		  return Int(str).ToText
+		  return str.IntegerValue.ToText
 		End Function
 	#tag EndMethod
 
@@ -425,6 +435,7 @@ Protected Module TextExtra
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function Format(Extends pString As Text, ParamArray pReplacements As Pair) As Text
+		  Using Xojo.Core
 		  Dim pDictionary As New Dictionary
 		  
 		  For Each pReplacement As Pair In pReplacements
@@ -457,6 +468,7 @@ Protected Module TextExtra
 
 	#tag Method, Flags = &h0
 		Function Format(Extends pString As Text, pReplacements As Xojo.Core.Dictionary) As Text
+		  Using Xojo.Core
 		  For Each pRepl As DictionaryEntry In pReplacements
 		    pString = pString.ReplaceAll("{" + pRepl.Key + "}", pRepl.Value)
 		  Next
@@ -582,14 +594,14 @@ Protected Module TextExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function JoinCSV(Extends pStrings() As Text) As Text
+		Function JoinCSV(Extends pTexts() As Text) As Text
 		  // RFC 4180
 		  
 		  Dim pValues() As Text
 		  
-		  For pIndex As Integer = 0 To pStrings.Ubound
+		  For pIndex As Integer = 0 To pTexts.Ubound
 		    // Quote quote and quote that
-		    pValues.Append(Chr(34) + pStrings(pIndex).Replace(Chr(34), Chr(34) + Chr(34)) + Chr(34))
+		    pValues.Append(Text.FromUnicodeCodepoint(34) + pTexts(pIndex).Replace(Text.FromUnicodeCodepoint(34), Text.FromUnicodeCodepoint(34) + Text.FromUnicodeCodepoint(34)) + Text.FromUnicodeCodepoint(34))
 		  Next
 		  
 		  Return Text.Join(pValues, ",")
@@ -613,7 +625,7 @@ Protected Module TextExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function LTrim(Extends source As Text, charsToTrim As Text) As Text
+		Function LTrim(Extends source As Text, charsToTrim As Text = " ") As Text
 		  // This is an extended version of RB's LTrim function that lets you specify
 		  // a set of characters to trim.
 		  
@@ -722,7 +734,7 @@ Protected Module TextExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function RandomString(len as Integer, source as Text = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890") As Text
+		Function RandomText(len as Integer, source as Text = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890") As Text
 		  Dim str, num As Text
 		  Dim nbChars, start, i As Integer
 		  nbChars = source.Length
@@ -793,7 +805,7 @@ Protected Module TextExtra
 		  #if TargetIOS then
 		    Return reg.ReplaceAll(str)
 		  #else
-		    return reg.Replace(str)
+		    return reg.Replace(str).ToText
 		  #endif
 		End Function
 	#tag EndMethod
@@ -827,7 +839,7 @@ Protected Module TextExtra
 		  #if TargetIOS then
 		    return reg.ReplaceAll(str)
 		  #else
-		    return reg.Replace(str)
+		    return reg.Replace(str).ToText
 		    
 		  #endif
 		End Function
@@ -997,7 +1009,15 @@ Protected Module TextExtra
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function SplitCSV(Extends pString As Text) As Text()
-		  Return SplitCommaSeparatedValuesMBS(pString)
+		  Dim Sss() as string = SplitCommaSeparatedValuesMBS(pString)
+		  dim Ttt() as text
+		  for each s as string in Sss
+		    
+		    Ttt.Append(s.ToText)
+		    
+		  next
+		  
+		  Return Ttt
 		End Function
 	#tag EndMethod
 
@@ -1059,17 +1079,11 @@ Protected Module TextExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target32Bit or Target64Bit))
 		Function Sprintf(format as Text, ParamArray args as Auto) As Text
-		  #if TargetIOS then
-		    dim matches() as JKRegEx.RegExMatch = format.SearchAll("%(b|c|d|u|f|o|s|x|X)")
-		    dim match as JKRegEx.RegExMatch
-		    
-		  #else
-		    dim matches() as RegExMatch = format.SearchAll("%(b|c|d|u|f|o|s|x|X)")
-		    dim match as RegExMatch
-		    
-		  #endif
+		  
+		  dim matches() as JKRegEx.RegExMatch = format.SearchAll("%(b|c|d|u|f|o|s|x|X)")
+		  dim match as JKRegEx.RegExMatch
 		  
 		  dim replace as Text
 		  dim arg as Auto
@@ -1111,6 +1125,52 @@ Protected Module TextExtra
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function Sprintf(format as Text, ParamArray args as Auto) As Text
+		  
+		  dim matches() as RegExMatch = format.SearchAll("%(b|c|d|u|f|o|s|x|X)")
+		  dim match as RegExMatch
+		  
+		  dim replace as Text
+		  dim arg as Auto
+		  
+		  if matches.Ubound <> Ubound(args) then
+		    Raise new InvalidArgumentsException
+		  end
+		  
+		  for i as Integer = 0 to matches.Ubound
+		    replace = ""
+		    match = matches(i)
+		    arg = args(i)
+		    
+		    Select Case match.SubExpressionString(1)
+		    Case "s"
+		      replace = arg.AutoTextValue
+		    Case "d"
+		      replace = arg.AutoIntegerValue.ToText
+		    Case "f"
+		      replace = arg.AutoDoubleValue.ToText
+		    Case "u"
+		      replace = arg.AutoIntegerValue.ToText
+		    Case "c"
+		      replace = Text.FromUnicodeCodepoint(arg.AutoIntegerValue)
+		    Case "b"
+		      ' Integer -> binaire
+		    Case "o"
+		      ' Integer -> octal
+		    Case "x"
+		      ' Integer -> hexadecimal
+		    Case "X"
+		      ' Integer -> hexadecimal
+		    End
+		    
+		    format = format.Replace(match.SubExpressionText(0), replace)
+		  next
+		  
+		  return format
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Function Test(Extends str as Text, pattern as Text, params as Text = "") As Boolean
 		  return str.Search(pattern, params) <> nil
@@ -1132,6 +1192,16 @@ Protected Module TextExtra
 	#tag Method, Flags = &h0
 		Function toInt(Extends str as Text) As Integer
 		  return Integer.FromText(str)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target64Bit))
+		Function ToSrings(Extends str() as Text) As String()
+		  dim s() as string
+		  for each t as text in str
+		    s.Append(t)
+		  next
+		  Return s
 		End Function
 	#tag EndMethod
 
@@ -1161,13 +1231,13 @@ Protected Module TextExtra
 
 	#tag Method, Flags = &h0
 		Function URLDecode(Extends pString As Text) As Text
-		  Return DecodeURLComponent(pString)
+		  Return DecodeURLComponent(pString).ToText
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		Function URLEncode(Extends pString As Text) As Text
-		  Return EncodeURLComponent(pString)
+		  Return EncodeURLComponent(pString).ToText
 		End Function
 	#tag EndMethod
 
@@ -1190,11 +1260,11 @@ Protected Module TextExtra
 	#tag Constant, Name = kBaseTable8, Type = Text, Dynamic = False, Default = \"01234567", Scope = Public
 	#tag EndConstant
 
-	#tag Constant, Name = Tabulation, Type = Text, Dynamic = False, Default = \"\t", Scope = Public
+	#tag Constant, Name = Tabulation, Type = Text, Dynamic = False, Default = \"\t", Scope = Public, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 	#tag EndConstant
 
 
-	#tag Enum, Name = PaddingAlignment, Type = Integer, Flags = &h0
+	#tag Enum, Name = PaddingAlignment, Type = Integer, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Left
 		  Center
 		Right

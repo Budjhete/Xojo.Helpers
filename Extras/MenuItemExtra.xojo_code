@@ -42,7 +42,7 @@ Protected Module MenuItemExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Replace(Extends pMenuItem As MenuItem, pName As String, pMenuItemToInsert As MenuItem)
+		Sub Replace(Extends pMenuItem As MenuItem, pName As Text, pMenuItemToInsert As MenuItem)
 		  pMenuItem.Replace(pMenuItem.IndexOf(pName), pMenuItemToInsert)
 		End Sub
 	#tag EndMethod

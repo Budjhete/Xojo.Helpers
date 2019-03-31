@@ -10,24 +10,6 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function AutoArray(ParamArray pAutos As Auto) As Auto()
-		  Return pAutos
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function BaseName(Extends fi as FolderItem) As Text
-		  dim pos as Integer = fi.Name.InStrReverse(".")
-		  
-		  if pos = 0 then
-		    return fi.Name
-		  end
-		  
-		  return fi.Name.Left(pos-1)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function Between(value as Double, min as Double, max as Double) As Boolean
 		  return value.Between(min, max)
 		End Function
@@ -155,12 +137,18 @@ Protected Module Helpers
 		        os = "Mac OS X Mavericks"
 		      case 10
 		        os = "Mac OS X Yosemite"
-		      case 10
+		      case 11
 		        os = "Mac OS X El Capitan"
+		      case 12
+		        os = "Mac OS X Sierra"
+		      case 13
+		        os = "Mac OS X High Sierra"
+		      case 11
+		        os = "Mac OS X Mojave"
 		      end select
 		    end select
 		    
-		    os = os + " "+str(sys1)+"."+str(sys2)+"."+str(sys3)
+		    os = os + " "+sys1.ToText+"."+sys2.ToText+"."+sys3.ToText
 		    
 		  #elseif TargetWin32
 		    os = "Windows"
@@ -287,18 +275,6 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Extension(Extends fi as FolderItem) As Text
-		  dim pos as Integer = fi.Name.InStrReverse(".")
-		  
-		  if pos = 0 then
-		    return ""
-		  end
-		  
-		  return fi.Name.Mid(pos+1)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function FillLeft(str As Text, padding As Text, length As Integer) As Text
 		  trigger_error("La fonction «FillLeft» est désuette.", ErrorType.Deprecated)
 		  return str.FillLeft(padding, length)
@@ -313,8 +289,8 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function FindFile(file as Text, paths() as FolderItem) As FolderItem
-		  dim path, fi as FolderItem
+		Function FindFile(file as Text, paths() as Xojo.IO.FolderItem) As Xojo.IO.FolderItem
+		  dim path, fi as Xojo.IO.FolderItem
 		  
 		  for each path in paths
 		    if path <> nil and path.Exists then
@@ -337,21 +313,22 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function GetResourceFolder() As FolderItem
+		Function GetResourceFolder() As Xojo.io.FolderItem
 		  #if TargetLinux
-		    return App.ExecutableFile.Parent.Child("Resources")
+		    return new Xojo.IO.FolderItem(App.ExecutableFile.Parent.Child("Resources").NativePath.ToText)
 		  #elseif TargetWin32
-		    return App.ExecutableFile.Parent.Child(replace(App.ExecutableFile.Name, ".exe", "") + " Resources")
+		    return new Xojo.IO.FolderItem(App.ExecutableFile.Parent.Child(replace(App.ExecutableFile.Name, ".exe", "") + " Resources").NativePath.ToText)
 		  #elseif TargetMacOS
-		    return App.ExecutableFile.Parent.Parent.Child("Resources")
+		    return new Xojo.IO.FolderItem(App.ExecutableFile.Parent.Parent.Child("Resources").NativePath.ToText)
 		  #Elseif TargetIOS
-		    Return SpecialFolder.GetResource("Resources")
+		    Return new Xojo.IO.FolderItem(SpecialFolder.GetResource("Resources").NativePath.ToText)
 		  #endif
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		Function GetResourceItem(path as Text) As Xojo.IO.FolderItem
+		  Using Xojo.IO
 		  dim fi as FolderItem = GetResourceFolder()
 		  
 		  dim chunks() as Text = path.Split("/")
@@ -452,25 +429,19 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub ImportSQL(db as SQLiteDatabase, sql as FolderItem)
-		  dim tis As TextInputStream
-		  tis = TextInputStream.Open(sql)
+		Sub ImportSQL(db as SQliteDatabase, sql as Text)
+		  Using Xojo.Core
+		  Using Xojo.IO
 		  
-		  ImportSQL(db, tis.ReadAll)
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub ImportSQL(db as SQliteDatabase, sql as String)
-		  dim tis As TextInputStream
-		  tis = TextInputStream.Open(ResourceManager.Instance.SQL("sqlite"))
+		  dim tis As Xojo.IO.TextInputStream
+		  tis = Xojo.IO.TextInputStream.Open(ResourceManager.Instance.SQL("sqlite"), Xojo.Core.TextEncoding.UTF8)
 		  
 		  
-		  Dim queries() As String = sql.Split(";")
-		  For Each query As String In queries
+		  Dim queries() As Text = sql.Split(";")
+		  For Each query As Text In queries
 		    db.SQLExecute(query)
 		    If DB.Error Then
-		      System.DebugLog "DB Error: " + db.ErrorCode.StringValue + "  " + db.ErrorMessage + EndOfLine  + EndOfLine + "Dans cette requête : " + query
+		      System.DebugLog "DB Error: " + db.ErrorCode.StringValue + "  " + db.ErrorMessage.ToText + EndOfLine_  + EndOfLine_ + "Dans cette requête : " + query
 		    Else
 		      db.Commit()
 		    End If
@@ -480,6 +451,17 @@ Protected Module Helpers
 		  System.DebugLog "DEBUG : Tables created as sqlite"
 		  
 		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub ImportSQL(db as SQLiteDatabase, sql as Xojo.IO.FolderItem)
+		  Using Xojo.Core
+		  
+		  dim tis As Xojo.IO.TextInputStream
+		  tis = Xojo.IO.TextInputStream.Open(sql, Xojo.Core.TextEncoding.UTF8)
+		  
+		  ImportSQL(db, tis.ReadAll)
 		End Sub
 	#tag EndMethod
 
@@ -542,28 +524,33 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function MD5(f as FolderItem) As Text
+		Function MD5(f as Xojo.IO.FolderItem) As Text
+		  Using Xojo.IO
+		  
 		  // test parameters
 		  If f=Nil Then Return ""
 		  If Not f.Exists Then Return ""
-		  If f.Directory Then Return ""
+		  If f.IsFolder Then Return ""
 		  
 		  // read file f to a string
 		  // Note: RB string supports any binary data
-		  Dim InputData As TextInputStream
-		  InputData=f.OpenAsTextFile
-		  Dim FileData As Text
-		  If InputData=Nil Then
-		    // file f is not readable
-		    Return ""
-		  Else
-		    FileData=InputData.ReadAll
-		    InputData.Close
-		  End If
+		  Dim b As BinaryStream
+		  b = BinaryStream.Open(f, Xojo.IO.BinaryStream.LockModes.Read)
+		  
 		  
 		  // get the MD5 digest
 		  Dim MD5Dgt As Text
-		  MD5Dgt=MD5(FileData)
+		  If b.Length<1 Then
+		    // file f is not readable
+		    Return ""
+		  Else
+		    Dim mb As New Xojo.Core.MemoryBlock(b.Read(b.Length))
+		    b.Close
+		    MD5Dgt= Xojo.Core.TextEncoding.UTF8.ConvertDataToText(Xojo.Crypto.MD5(mb))
+		    
+		  End If
+		  
+		  
 		  
 		  // convert MD5 digest to a Hex string
 		  Dim HashStr As Text
@@ -586,7 +573,7 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Parent(Extends fi as FolderItem, endsWith as Text) As Xojo.IO.FolderItem
+		Function Parent(Extends fi as Xojo.IO.FolderItem, endsWith as Text) As Xojo.IO.FolderItem
 		  Using Xojo.IO
 		  dim parent as FolderItem = fi.Parent
 		  if (parent = nil) or parent.Name.EndsWith(endsWith) then
@@ -611,7 +598,7 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub Reveal(Extends f as FolderItem)
+		Sub Reveal(Extends f as folderItem)
 		  Dim shell1 as new Shell
 		  Dim cmd as Text
 		  if f <>  nil then
@@ -620,7 +607,28 @@ Protected Module Helpers
 		        cmd  = "explorer.exe /select,"+ chr(34)+ f.NativePath+ chr(34)
 		        shell1.execute(cmd)
 		      #elseIf TargetMachO or TargetMacOS then
-		        cmd  = "Open -R "+  f.ShellPath
+		        cmd  = "Open -R "+  f.NativePath.ToText
+		        shell1.execute(cmd)
+		      #else
+		        ' Linux?
+		        
+		      #ENDIF
+		    end if
+		  end if
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub Reveal(Extends f as Xojo.IO.FolderItem)
+		  Dim shell1 as new Shell
+		  Dim cmd as Text
+		  if f <>  nil then
+		    if f.Exists then
+		      #IF TargetWin32 then
+		        cmd  = "explorer.exe /select,"+ chr(34)+ f.Path+ chr(34)
+		        shell1.execute(cmd)
+		      #elseIf TargetMachO or TargetMacOS then
+		        cmd  = "Open -R "+  f.Path
 		        shell1.execute(cmd)
 		      #else
 		        ' Linux?
@@ -665,6 +673,18 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function SubExpressionString(Extends pExp as RegExMatch, pID as Integer) As Text
+		  Return pExp.SubExpressionString(pID).ToText
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function SubExpressionText(Extends pExp as RegExMatch, pID as Integer) As Text
+		  Return pExp.SubExpressionString(pID).ToText
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub TODO(tache as Text)
 		  #if DebugBuild
 		    System.Log(System.LogLevelInformation, "TODO: " + tache)
@@ -700,7 +720,7 @@ Protected Module Helpers
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = false
 		Function Utf8StringValue(Extends field as DatabaseField, default as Text = "") As Text
 		  if field.Value.IsNull() then
 		    return default

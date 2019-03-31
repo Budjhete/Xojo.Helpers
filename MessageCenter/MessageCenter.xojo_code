@@ -2,7 +2,7 @@
 Protected Class MessageCenter
 	#tag Method, Flags = &h0
 		Sub Constructor()
-		  mReceivers = new Dictionary
+		  mReceivers = new Xojo.Core.Dictionary
 		  
 		  mTimer = new Timer
 		  mTimer.Mode = Timer.ModeOff
@@ -13,7 +13,7 @@ Protected Class MessageCenter
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function IsRegistered(receiver as MessageReceiver, msgType as Variant) As Boolean
+		Function IsRegistered(receiver as MessageReceiver, msgType as Auto) As Boolean
 		  if not mReceivers.HasKey(msgType) then
 		    return false
 		  end if
@@ -31,7 +31,7 @@ Protected Class MessageCenter
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Register(receiver as MessageReceiver, msgType as Variant)
+		Sub Register(receiver as MessageReceiver, msgType as Auto)
 		  if IsRegistered(receiver, msgType) then
 		    Raise new BHApplicationException(kReceveurDejaEnregistre) // BUG 1075
 		  end
@@ -184,7 +184,7 @@ Protected Class MessageCenter
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private mReceivers As Dictionary
+		Private mReceivers As Xojo.Core.Dictionary
 	#tag EndProperty
 
 	#tag Property, Flags = &h21

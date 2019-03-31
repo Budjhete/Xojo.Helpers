@@ -1,15 +1,15 @@
 #tag Class
 Protected Class AppcastItem
 	#tag Property, Flags = &h0
-		Date As String
+		Date As Text
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Description As String
+		Description As Text
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		FileURL As String
+		FileURL As Text
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -17,19 +17,19 @@ Protected Class AppcastItem
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		MD5Signature As String
+		MD5Signature As Text
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		MinimumSystemVersion As String
+		MinimumSystemVersion As Text
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		ReleaseNotesURL As String
+		ReleaseNotesURL As Text
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Title As String
+		Title As Text
 	#tag EndProperty
 
 	#tag Property, Flags = &h0

@@ -66,6 +66,12 @@ Protected Module ArrayExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function AutoArray(ParamArray pAutos as Auto) As Auto()
+		  return pAutos
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function Average(Extends arr() As Double) As Double
 		  // Return the arithmetic mean of the values in the array.
 		  Dim item, sum As Double

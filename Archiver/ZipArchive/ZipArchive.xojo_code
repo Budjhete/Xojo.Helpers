@@ -156,7 +156,7 @@ Protected Class ZipArchive
 		  end
 		  
 		  for each child as ZipEntry in mEntries
-		    if child.LocalName.BeginsWith(directory) then
+		    if child.LocalName.ToText.BeginsWith(directory.ToText) then
 		      descendents.Append(child)
 		    end
 		  next
@@ -199,7 +199,7 @@ Protected Class ZipArchive
 
 	#tag Method, Flags = &h1
 		Protected Function IsIgnored(item as ZipEntry) As Boolean
-		  for each ignore as String in IgnoresOnExtract
+		  for each ignore as string in IgnoresOnExtract
 		    if Ignore.EndsWith("/") and item.LocalName.BeginsWith(ignore) then
 		      return true
 		    elseif item.LocalName = ignore then
@@ -518,7 +518,7 @@ Protected Class ZipArchive
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		IgnoresOnExtract() As String
+		IgnoresOnExtract() As Text
 	#tag EndProperty
 
 	#tag Property, Flags = &h21

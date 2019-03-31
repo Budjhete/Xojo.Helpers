@@ -288,11 +288,11 @@ End
 		    end
 		  #endif
 		  
-		  dest_ = SpecialFolder.Temporary.Child(RandomString(10))
+		  dest_ = Xojo.IO.SpecialFolder.Temporary.Child(TextExtra.RandomText(10))
 		  dest_.CreateAsFolder
 		  
 		  #if TargetMacOS
-		    dim extract as new DiskImageUnarchiver(temp_, dest_)
+		    dim extract as new DiskImageUnarchiver(temp_.oldFolderItem, dest_.oldFolderItem)
 		    
 		    AddHandler extract.Finish, AddressOf UnarchiveMacFinish
 		    AddHandler extract.Fail, AddressOf UnarchiveMacFail
@@ -335,8 +335,8 @@ End
 		    oldLauncher.RecursiveDelete()
 		  end if
 		  
-		  mArchive.CopyFileTo(SpecialFolder.Temporary)
-		  mArchive = SpecialFolder.Temporary.Child(mArchive.Name)
+		  mArchive.CopyTo(Xojo.IO.SpecialFolder.Temporary)
+		  mArchive = SpecialFolder.Temporary.XojoFolderItem.Child(mArchive.Name)
 		End Sub
 	#tag EndMethod
 
@@ -401,8 +401,8 @@ End
 		    end if
 		    
 		  #elseif TargetMacOS
-		    dim zip as ZipArchive = ZipArchive.Open(mArchive, true)
-		    zip.ExtractAll(mArchive.Parent, true)
+		    dim zip as ZipArchive = ZipArchive.Open(mArchive.oldFolderItem, true)
+		    zip.ExtractAll(mArchive.Parent.oldFolderItem, true)
 		    zip.Close()
 		    
 		    mRelauncher = mArchive.Parent.Child("relaunch.app")
@@ -410,7 +410,7 @@ End
 		    
 		    mRelauncher.RecursivePermissions(&o777)
 		    
-		    mRelauncher.Launch(Str(App.PID) + " """+relaunchItem_.ShellPath+"""")
+		    mRelauncher.oldFolderItem.Launch(Str(App.PID) + " """+relaunchItem_.oldFolderItem.ShellPath+"""")
 		    
 		  #else 'TargetLinux
 		    dim zip as ZipArchive = ZipArchive.Open(mArchive, true)
@@ -469,12 +469,12 @@ End
 		  
 		  Super.Show
 		  
-		  dim ext as String = item_.FileURL.Mid(item_.FileURL.LastIndexOf(".")+1)
+		  dim ext as Text = item_.FileURL.Mid(item_.FileURL.LastIndexOf(".")+1)
 		  
-		  temp_ = SpecialFolder.Temporary.Child(RandomString(10) + "-part." + ext)
+		  temp_ = Xojo.IO.SpecialFolder.Temporary.Child(TextExtra.RandomText(10) + "-part." + ext)
 		  
 		  request.SetRequestHeader("User-Agent", Appcast.FullVersionName)
-		  request.Get(item_.FileURL, temp_)
+		  request.Get(item_.FileURL, temp_.OldFolderItem)
 		End Sub
 	#tag EndMethod
 
@@ -510,7 +510,7 @@ End
 		Protected Sub UnarchiveLinFinish(extract as ZipImageUnarchiver)
 		  PrepareRelauncher()
 		  
-		  relaunchItem_ = App.ExecutableFile
+		  relaunchItem_ = App.ExecutableFile.XojoFolderItem
 		  
 		  UnarchiveFinish()
 		End Sub
@@ -527,26 +527,25 @@ End
 		Protected Sub UnarchiveMacFinish(extract as DiskImageUnarchiver)
 		  PrepareRelauncher()
 		  
-		  for i as Integer = 1 to dest_.Count
-		    dim child as FolderItem = dest_.Item(i)
+		  for each child as Xojo.IO.FolderItem in dest_.Children
 		    
-		    if child.Directory and child.Name.EndsWith(".app") then
-		      dim currentApp as FolderItem = App.ExecutableFile.Parent(".app")
+		    if child.IsFolder and child.Name.EndsWith(".app") then
+		      dim currentApp as Xojo.IO.FolderItem = App.ExecutableFile.XojoFolderItem.Parent(".app")
 		      if currentApp = nil then
 		        Raise new RuntimeException()
 		      end
 		      
-		      dim destFolder as FolderItem = currentApp.Parent()
+		      dim destFolder as Xojo.IO.FolderItem = currentApp.Parent()
 		      
 		      #if not DebugBuild
 		        child.Name = currentApp.Name
 		      #endif
 		      
-		      currentApp.Name = SpecialFolder.Trash.UniqueFolderItemName(currentApp.BaseName, "."+currentApp.Extension)
+		      currentApp.Name = SpecialFolder.Trash.XojoFolderItem.UniqueFolderItemName(currentApp.BaseName, "."+currentApp.Extension)
 		      
-		      currentApp.MoveFileTo(SpecialFolder.Trash)
+		      currentApp.MoveTo(SpecialFolder.Trash.XojoFolderItem)
 		      
-		      child.CopyFileTo(destFolder)
+		      child.CopyTo(destFolder)
 		      
 		      relaunchItem_ = destFolder.Child(child.Name)
 		    end
@@ -571,7 +570,7 @@ End
 		  PrepareRelauncher()
 		  
 		  'relaunchItem_ = SpecialFolder.Applications.Child("Budjhete").Child("Budjhete.exe")
-		  relaunchItem_ = App.ExecutableFile
+		  relaunchItem_ = App.ExecutableFile.XojoFolderItem
 		  
 		  UnarchiveFinish()
 		End Sub
@@ -579,7 +578,7 @@ End
 
 
 	#tag Property, Flags = &h1
-		Protected dest_ As FolderItem
+		Protected dest_ As Xojo.IO.FolderItem
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
@@ -587,7 +586,7 @@ End
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
-		Protected mArchive As FolderItem
+		Protected mArchive As Xojo.IO.FolderItem
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
@@ -595,11 +594,11 @@ End
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
-		Protected mRelauncher As FolderItem
+		Protected mRelauncher As Xojo.IO.FolderItem
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
-		Protected relaunchItem_ As FolderItem = nil
+		Protected relaunchItem_ As Xojo.IO.FolderItem = nil
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -607,7 +606,7 @@ End
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
-		Protected temp_ As FolderItem
+		Protected temp_ As Xojo.IO.FolderItem
 	#tag EndProperty
 
 

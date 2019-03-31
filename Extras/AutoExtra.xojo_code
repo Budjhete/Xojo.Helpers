@@ -27,15 +27,15 @@ Protected Module AutoExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function BooleanValue(Extends pAuto As Auto) As Boolean
+		Function AutoBooleanValue(Extends pAuto As Auto) As Boolean
 		  Dim v as Boolean
 		  v = pAuto
 		  Return v
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function CurrencyValue(Extends pAuto As Auto) As Currency
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+		Function AutoCurrencyValue(Extends pAuto As Auto) As Currency
 		  Dim v as Currency
 		  v = pAuto
 		  Return v
@@ -43,15 +43,15 @@ Protected Module AutoExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function DateValue(Extends pAuto As Auto) As Xojo.Core.Date
+		Function AutoDateValue(Extends pAuto As Auto) As Xojo.Core.Date
 		  Dim v as Xojo.Core.Date
-		  v = date.FromText(pAuto)
+		  v = Xojo.Core.date.FromText(pAuto)
 		  Return v
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function DoubleValue(Extends pAuto As Auto) As Double
+		Function AutoDoubleValue(Extends pAuto As Auto) As Double
 		  Dim v as Double
 		  v = pAuto
 		  Return v
@@ -59,8 +59,24 @@ Protected Module AutoExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function IntegerValue(Extends pAuto As Auto) As Integer
+		Function AutoIntegerValue(Extends pAuto As Auto) As Integer
 		  Dim v as integer
+		  v = pAuto
+		  Return v
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function AutoStringValue(Extends pAuto As Auto) As String
+		  Dim v as Text
+		  v = pAuto
+		  Return v
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function AutoTextValue(Extends pAuto As Auto) As Text
+		  Dim v as Text
 		  v = pAuto
 		  Return v
 		End Function
@@ -105,14 +121,6 @@ Protected Module AutoExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function TextValue(Extends pAuto As Auto) As Text
-		  Dim v as Text
-		  v = pAuto
-		  Return v
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function Type(Extends pAuto As Auto) As integer
 		  Using Xojo.Introspection
 		  dim t as TypeInfo = GetType(pAuto)
@@ -135,6 +143,41 @@ Protected Module AutoExtra
 		  Case GetTypeInfo(Object)
 		    Return 9
 		  End Select
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function VariantAuto(Extends pVariant As Variant) As Auto
+		  Dim dType As Integer = VarType(pVariant)
+		  Dim a As Auto
+		  
+		  Select case dType
+		    
+		  case 0 //    TypeNil
+		    return nil  
+		  case 2, 3 //   TypeInt32
+		    a = pVariant.IntegerValue
+		  case 4, 5 //   TypeSingle
+		    a = pVariant.DoubleValue
+		  case 6 //   TypeCurrency
+		    a = pVariant.CurrencyValue
+		  case 7 //   TypeDate
+		    a = pVariant.DateValue
+		  case 8 //   TypeString
+		    a = pVariant.StringValue
+		  case 9 //   TypeObject
+		    a = pVariant.ObjectValue
+		  case 11 //   TypeBoolean
+		    a = pVariant.BooleanValue
+		  case 16 //   TypeColor
+		    a = pVariant.ColorValue
+		  case 37 //   TypeText
+		    a = pVariant.TextValue
+		  else
+		    a = nil
+		    
+		  End Select
+		  Return a
 		End Function
 	#tag EndMethod
 

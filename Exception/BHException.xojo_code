@@ -81,7 +81,7 @@ Inherits RuntimeException
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = false
 		Sub Constructor(message as Text, ParamArray variables as Pair)
 		  // Generic constructor for an exception
 		  //
@@ -175,31 +175,22 @@ Inherits RuntimeException
 		  // @param message: Message of the exception
 		  // @param variables: Variables that will be replaced in message
 		  for each variable as Pair in variables
-		    message = message.ReplaceAll(str(variable.Left), str(variable.Right))
+		    message = message.ReplaceAll(variable.Left.TextValue, variable.Right.TextValue)
 		  next
 		  
 		  Me.ErrorMessage = message
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub SetMessage(message as Text, ParamArray variables as Pair)
-		  // Set the message of the exception
-		  //
-		  // @param message: Message of the exception
-		  // @param variables: Variables that will be replaced in message
-		  SetMessage(message, variables)
-		End Sub
-	#tag EndMethod
-
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Sub SetMessage(message as Text, variables as Xojo.Core.Dictionary)
+		  Using Xojo.Core
 		  // Set the message of the exception
 		  //
 		  // @param message: Message of the exception
 		  // @param variables: Variables that will be replaced in message
 		  for each variable as DictionaryEntry in variables
-		    message = message.ReplaceAll(variable.Key.TextValue, variable.Value.TextValue)
+		    message = message.ReplaceAll(variable.Key.AutoTextValue, variable.Value.AutoTextValue)
 		  next
 		  
 		  Me.ErrorMessage = message

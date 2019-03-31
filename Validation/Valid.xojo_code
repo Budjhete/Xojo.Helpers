@@ -1,7 +1,7 @@
 #tag Module
 Protected Module Valid
 	#tag Method, Flags = &h0
-		Function Alpha(value as String) As Boolean
+		Function Alpha(value as Text) As Boolean
 		  return ValidRegex(value, "^[A-Za-zÇçŒœÄËÏÖÜäëïöüÀÈÌÒÙàèìòùÂÊÎÔÛâêîôûÁÉÍÓÚáéíóú]++$")
 		End Function
 	#tag EndMethod
@@ -14,30 +14,30 @@ Protected Module Valid
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function AlphaNumeric(value as String) As Boolean
+		Function AlphaNumeric(value as Text) As Boolean
 		  return ValidRegex(value, "^[A-Za-z0-9ÇçŒœÄËÏÖÜäëïöüÀÈÌÒÙàèìòùÂÊÎÔÛâêîôûÁÉÍÓÚáéíóú]+$")
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function AlphaNumericDash(value as String) As Boolean
+		Function AlphaNumericDash(value as Text) As Boolean
 		  return ValidRegex(value, "^[,.A-Za-z0-9_ÇçŒœÄËÏÖÜäëïöüÀÈÌÒÙàèìòùÂÊÎÔÛâêîôûÁÉÍÓÚáéíóú_-]+$")
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Decimal(value as String, decimals as Integer = 0, digits as Integer = 0) As Boolean
-		  dim decimals_mask, digits_mask as String
+		Function Decimal(value as Text, decimals as Integer = 0, digits as Integer = 0) As Boolean
+		  dim decimals_mask, digits_mask as Text
 		  
 		  if decimals > 0 then
-		    decimals_mask = "{"+Str(decimals)+"}"
+		    decimals_mask = "{"+decimals.ToText+"}"
 		  else
 		    decimals_mask = "+"
 		  end
 		  
 		  
 		  if digits > 0 then
-		    digits_mask = "{"+Str(digits)+"}"
+		    digits_mask = "{"+digits.ToText+"}"
 		  else
 		    digits_mask = "+"
 		  end
@@ -47,13 +47,13 @@ Protected Module Valid
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Digit(value as String) As Boolean
+		Function Digit(value as Text) As Boolean
 		  return ValidRegex(value, "^[0-9]++$")
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Email(value as String) As Boolean
+		Function Email(value as Text) As Boolean
 		  Return ValidRegex(value, "^[0-9A-Za-z._%+-]+@[0-9A-Za-z.-]+\.[A-Za-z]{2,6}$")
 		  
 		End Function
@@ -72,8 +72,8 @@ Protected Module Valid
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ExactLength(value as String, length as Integer) As Boolean
-		  Return value.Len = length
+		Function ExactLength(value as Text, length as Integer) As Boolean
+		  Return value.Length = length
 		End Function
 	#tag EndMethod
 
@@ -102,28 +102,28 @@ Protected Module Valid
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Numeric(value as String) As Boolean
+		Function Numeric(value as Text) As Boolean
 		  Return ValidRegex(value, "^-?+(?=.*[0-9])[0-9]*+[\.,]?+[0-9]*+$")
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function NumericDash(value as String) As Boolean
+		Function NumericDash(value as Text) As Boolean
 		  return ValidRegex(value, "^[,.0-9_-]+$")
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Phone(value as String) As Boolean
+		Function Phone(value as Text) As Boolean
 		  // Garder les chiffres seulement : preg_replace('/\D+/', '', $number);
-		  Dim numbers As String = value.ReplaceAllRegExp("\D+", "")
+		  Dim numbers As Text = value.ReplaceAllRegExp("\D+", "")
 		  
 		  Return ((Valid.ExactLength(numbers, 7) Or Valid.ExactLength(numbers, 10) Or Valid.ExactLength(numbers, 11) Or Valid.ExactLength(numbers, 14) Or Valid.ExactLength(numbers, 15)) And Valid.Digit(numbers) And Not value.Test("[a-zA-Z]"))
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Positive(value as String) As Boolean
+		Function Positive(value as Text) As Boolean
 		  Return ValidRegex(value, "^(?=.*[0-9])[0-9]*+[\.,]?+[0-9]*+$")
 		End Function
 	#tag EndMethod
@@ -135,7 +135,7 @@ Protected Module Valid
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function URL(value as String) As Boolean
+		Function URL(value as Text) As Boolean
 		  Return ValidRegex(value, "^([a-zA-Z]+://)?([a-zA-Z0-9]+\.)+[a-zA-Z]+(:[0-9]+)?/?.*$")
 		  
 		  // Regex de Kohana, un peu trop intense pour nos besoins : http://kohanaframework.org/3.2/guide/api/Valid#url
@@ -144,20 +144,20 @@ Protected Module Valid
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ValidDate(value as String) As Boolean
+		Function ValidDate(value as Text) As Boolean
 		  // @See : http://www.regular-expressions.info/dates.html
 		  Return ValidRegex(value, "^(19|20)\d\d([- /.])(0[1-9]|1[012])\2(0[1-9]|[12][0-9]|3[01])$")
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ValidRegex(value As String, expression As String, params As String = "") As Boolean
+		Function ValidRegex(value As Text, expression As Text, params As Text = "") As Boolean
 		  return value.test(expression, params)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ZipCode(value As String) As Boolean
+		Function ZipCode(value As Text) As Boolean
 		  // @See : http://swiki.fromdev.com/2009/04/handy-regular-expressions-zippostal.html
 		  Return ValidRegex(value, "(^([0-9]{5})$)|(^[ABCEGHJKLMNPRSTVXYabceghjklmnprstvxy]{1}\d{1}[A-Za-z]{1} *\d{1}[A-Za-z]{1}\d{1}$)")
 		End Function

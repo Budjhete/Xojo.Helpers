@@ -1,6 +1,31 @@
 #tag Module
 Protected Module FolderItemExtra
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function BaseName(Extends fi as FolderItem) As Text
+		  dim pos as Integer = fi.Name.InStrReverse(".")
+		  
+		  if pos = 0 then
+		    return fi.Name.ToText
+		  end
+		  
+		  return fi.Name.Left(pos-1).ToText
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function BaseName(Extends fi as Xojo.IO.FolderItem) As Text
+		  Using Xojo.IO
+		  dim pos as Integer = fi.Name.InStrReverse(".")
+		  
+		  if pos = 0 then
+		    return fi.Name
+		  end
+		  
+		  return fi.Name.Left(pos-1)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function CountVisible(extends folder as FolderItem) As Integer
 		  Dim count As Integer = folder.Count
 		  dim realCount as integer = 0
@@ -13,37 +38,67 @@ Protected Module FolderItemExtra
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function Extension(Extends fi as FolderItem) As Text
+		  dim pos as Integer = fi.Name.InStrReverse(".")
+		  
+		  if pos = 0 then
+		    return ""
+		  end
+		  
+		  return fi.Name.ToText.Mid(pos+1)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function Extension(Extends fi as Xojo.IO.FolderItem) As Text
+		  dim pos as Integer = fi.Name.InStrReverse(".")
+		  
+		  if pos = 0 then
+		    return ""
+		  end
+		  
+		  return fi.Name.Mid(pos+1)
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function RealType(extends folder as FolderItem) As FileType
-		  If Folder.Name.EndsWith(DocumentsTypes.Pdf.Extensions.Split(";")) Then
+		Function OldFolderItem(Extends fi as Xojo.IO.FolderItem) As FolderItem
+		  Return New FolderItem(fi.Path, FolderItem.PathTypeNative)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+		Function RealType(extends folder as Xojo.IO.FolderItem) As FileType
+		  If Folder.Name.EndsWith(DocumentsTypes.Pdf.Extensions.ToText.Split(";")) Then
 		    Return DocumentsTypes.Pdf
 		  End If
 		  
-		  If Folder.Name.EndsWith(DocumentsTypes.Rtf.Extensions.Split(";"))Then
+		  If Folder.Name.EndsWith(DocumentsTypes.Rtf.Extensions.ToText.Split(";"))Then
 		    Return DocumentsTypes.RTF
 		  End If
 		  
-		  If Folder.Name.EndsWith(DocumentsTypes.Zip.Extensions.Split(";")) Then
+		  If Folder.Name.EndsWith(DocumentsTypes.Zip.Extensions.ToText.Split(";")) Then
 		    Return DocumentsTypes.Zip
 		  End If
 		  
-		  If Folder.Name.EndsWith(DocumentsTypes.ApplicationMsword.Extensions.Split(";")) Then
+		  If Folder.Name.EndsWith(DocumentsTypes.ApplicationMsword.Extensions.ToText.Split(";")) Then
 		    Return DocumentsTypes.ApplicationMsWord
 		  End If
 		  
-		  If Folder.Name.EndsWith(DocumentsTypes.ApplicationVndMsExcel.Extensions.Split(";")) Then
+		  If Folder.Name.EndsWith(DocumentsTypes.ApplicationVndMsExcel.Extensions.ToText.Split(";")) Then
 		    Return DocumentsTypes.ApplicationVndMsExcel
 		  End If
 		  
-		  If Folder.Name.EndsWith(DocumentsTypes.TextHtml.Extensions.Split(";")) Then
+		  If Folder.Name.EndsWith(DocumentsTypes.TextHtml.Extensions.ToText.Split(";")) Then
 		    Return DocumentsTypes.TextHtml
 		  End If
 		  
-		  If Folder.Name.EndsWith(DocumentsTypes.Png.Extensions.Split(";")) Then
+		  If Folder.Name.EndsWith(DocumentsTypes.Png.Extensions.ToText.Split(";")) Then
 		    Return DocumentsTypes.Png
 		  End If
 		  
-		  If Folder.Name.EndsWith(DocumentsTypes.Jpeg.Extensions.Split(";")) Then
+		  If Folder.Name.EndsWith(DocumentsTypes.Jpeg.Extensions.Split(";").ToText) Then
 		    Return DocumentsTypes.Jpeg
 		  End If
 		End Function
@@ -76,6 +131,33 @@ Protected Module FolderItemExtra
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+		Sub RecursiveDelete(extends folder as Xojo.Io.FolderItem)
+		  Dim fi As Xojo.Io.FolderItem
+		  
+		  For Each f As Xojo.Io.FolderItem In folder.Children
+		    fi = f
+		    
+		    If fi.IsFolder Then
+		      fi.RecursiveDelete()
+		    Else
+		      #If TargetLinux
+		        fi.Delete
+		      #Else
+		        fi.MoveTo(New Xojo.IO.FolderItem(SpecialFolder.Trash.NativePath.ToText))
+		      #Endif
+		      
+		      
+		    End If
+		  Next
+		  #If TargetLinux
+		    folder.Delete
+		  #Else
+		    folder.MoveTo(New Xojo.IO.FolderItem(SpecialFolder.Trash.NativePath.ToText))
+		  #Endif
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub RecursivePermissions(extends folder as FolderItem, permissions as Integer)
 		  folder.Permissions = permissions
@@ -87,8 +169,19 @@ Protected Module FolderItemExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function RelativeTo(Extends fi as FolderItem, path as Text) As FolderItem
-		  dim chunks() as String = path.Split("/")
+		Sub RecursivePermissions(extends folder as Xojo.IO.FolderItem, permissions as Integer)
+		  Dim d as FolderItem = folder.oldFolderItem
+		  d.Permissions = permissions
+		  
+		  for each Item as Xojo.IO.FolderItem in folder.Children
+		    Item.RecursivePermissions(permissions)
+		  next
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function RelativeTo(Extends fi as Xojo.IO.FolderItem, path as Text) As Xojo.IO.FolderItem
+		  dim chunks() as Text = path.Split("/")
 		  for i as Integer = 0 to UBound(chunks)
 		    if not fi.Exists then
 		      return nil
@@ -102,7 +195,29 @@ Protected Module FolderItemExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function UniqueFolderItem(extends parent as FolderItem, basename as Text, suffixe as Text = "") As FolderItem
+		Function TrueItem(Extends fi as Xojo.IO.FolderItem, pIndex as Integer) As Xojo.IO.FolderItem
+		  // Base 1
+		  
+		  Dim i as integer = 1
+		  for Each ffi as Xojo.IO.FolderItem in fi.Children(false)
+		    
+		    if i = pIndex then
+		      if ffi.Exists OR NOT ffi.IsFolder then
+		        Return ffi
+		      else
+		        i = i + 1
+		      end
+		    else
+		      i = i + 1
+		    end
+		  next
+		  
+		  return Nil
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function UniqueFolderItem(extends parent as Xojo.IO.FolderItem, basename as Text, suffixe as Text = "") As Xojo.IO.FolderItem
 		  return parent.Child(parent.UniqueFolderItemName(basename, suffixe))
 		End Function
 	#tag EndMethod
@@ -110,7 +225,7 @@ Protected Module FolderItemExtra
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function UniqueFolderItemName(extends parent as FolderItem, basename as Text, suffixe as Text = "") As Text
 		  dim i as Integer
-		  dim f as Text
+		  dim f as string
 		  try
 		    i = 1
 		    dim file as FolderItem = parent.Child(basename+suffixe)
@@ -130,18 +245,62 @@ Protected Module FolderItemExtra
 		      end
 		    wend
 		    i = i + 1000
-		    return file.Name
+		    return file.Name.ToText
 		    
 		  Catch err as NilObjectException
-		    dim s as Text = "Crash à unique folder à l'étape : " + i.ToText + EndOfLine + _
+		    dim s as string = "Crash à unique folder à l'étape : " + str(i) + EndOfLine + _
 		    "dossier : " + parent.NativePath  + EndOfLine + _
 		    "file : " + f  + EndOfLine + _
 		    "basename : " + basename + EndOfLine + _
 		    "suffix : " + suffixe
 		    
+		    Raise new BHApplicationException(s.totext)
+		    System.DebugLog s
+		  End Try
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function UniqueFolderItemName(extends parent as Xojo.IO.FolderItem, basename as Text, suffixe as Text = "") As Text
+		  dim i as Integer
+		  dim f as Text
+		  try
+		    i = 1
+		    dim file as Xojo.IO.FolderItem = parent.Child(basename+suffixe)
+		    f = file.Path
+		    i = 2
+		    Dim fileNumber As Integer = 1
+		    i = 3
+		    ' On crée un fichier unique
+		    while file.Exists()
+		      i = i+1
+		      file = parent.Child(basename + "-"+fileNumber.ToText+suffixe)
+		      fileNumber = fileNumber + 1
+		      
+		      if fileNumber = 100 then
+		        i = i + 100
+		        Raise new BHApplicationException(kImpossibleDeGenererUnFichierUnique)
+		      end
+		    wend
+		    i = i + 1000
+		    return file.Name
+		    
+		  Catch err as NilObjectException
+		    dim s as Text = "Crash à unique folder à l'étape : " + i.ToText + EndOfLine_ + _
+		    "dossier : " + parent.Path  + EndOfLine_ + _
+		    "file : " + f  + EndOfLine_ + _
+		    "basename : " + basename + EndOfLine_ + _
+		    "suffix : " + suffixe
+		    
 		    Raise new BHApplicationException(s)
 		    System.DebugLog s
 		  End Try
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function XojoFolderItem(Extends fi as FolderItem) As Xojo.IO.FolderItem
+		  Return New Xojo.IO.FolderItem(fi.NativePath.ToText)
 		End Function
 	#tag EndMethod
 

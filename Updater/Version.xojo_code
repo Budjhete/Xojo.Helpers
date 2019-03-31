@@ -68,11 +68,11 @@ Protected Class Version
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ToString() As String
-		  dim version as String = Str(Major) + "." + Str(Minor)
+		Function ToString() As Text
+		  dim version as Text = Major.ToText + "." + Minor.ToText
 		  
 		  if bug > 0 then
-		    version = version + "." + Str(bug)
+		    version = version + "." + bug.ToText
 		  end
 		  
 		  return version

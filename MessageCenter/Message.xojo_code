@@ -1,8 +1,8 @@
 #tag Class
 Protected Class Message
-Inherits Dictionary
+Inherits Xojo.Core.Dictionary
 	#tag Method, Flags = &h0
-		Sub Constructor(type as Variant, sender as Object = nil)
+		Sub Constructor(type as Variant = nil, sender as Object = nil)
 		  mType = type
 		  mSender = Sender
 		  
@@ -51,8 +51,8 @@ Inherits Dictionary
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ToString() As String
-		  return mType.StringValue + "(" + Me.Join("&", "=") + ")"
+		Function ToString() As Text
+		  return mType.AutoTextValue + "(" + me.Join("&", "=") + ")"
 		End Function
 	#tag EndMethod
 
@@ -73,17 +73,11 @@ Inherits Dictionary
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
-		Protected mType As Variant
+		Protected mType As Auto
 	#tag EndProperty
 
 
 	#tag ViewBehavior
-		#tag ViewProperty
-			Name="BinCount"
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
-		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Count"
 			Group="Behavior"
