@@ -210,7 +210,7 @@ Protected Class Updater
 			  Me.UpdateConfig.Set("Frequency", value)
 			End Set
 		#tag EndSetter
-		Frequency As String
+		Frequency As Text
 	#tag EndComputedProperty
 
 	#tag ComputedProperty, Flags = &h0
@@ -274,8 +274,6 @@ Protected Class Updater
 	#tag ComputedProperty, Flags = &h1
 		#tag Getter
 			Get
-			  Using Xojo.Core
-			  
 			  If Not App.Configuration.HasKey("Updates") Then
 			    App.Configuration.Value("Updates") = New Dictionary
 			  End If
@@ -290,7 +288,7 @@ Protected Class Updater
 			  App.Configuration.Value("Updates") = value
 			End Set
 		#tag EndSetter
-		Protected UpdateConfig As Xojo.Core.Dictionary
+		Protected UpdateConfig As Dictionary
 	#tag EndComputedProperty
 
 	#tag Property, Flags = &h21
@@ -320,7 +318,7 @@ Protected Class Updater
 		#tag ViewProperty
 			Name="Frequency"
 			Group="Behavior"
-			Type="String"
+			Type="Text"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty

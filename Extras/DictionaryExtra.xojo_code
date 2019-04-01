@@ -20,6 +20,13 @@ Protected Module DictionaryExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function GetBoolean(Extends pDictionary As Dictionary, pKey As Variant, pDefault As Boolean) As Boolean
+		  Dim b as Boolean = pDictionary.Lookup(pKey, pDefault)
+		  Return b
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function GetBoolean(Extends pDictionary As Xojo.Core.Dictionary, pKey As Auto) As Boolean
 		  Dim b as Boolean = pDictionary.Value(pKey)
 		  Return b
@@ -34,6 +41,20 @@ Protected Module DictionaryExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function GetDate(Extends pDictionary As Dictionary, pKey As Variant) As Xojo.Core.Date
+		  dim d as Xojo.Core.Date = pDictionary.Value(pKey)
+		  Return d
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function GetDate(Extends pDictionary As Dictionary, pKey As Variant, pDefault As Xojo.Core.Date) As Xojo.Core.Date
+		  dim d as Xojo.Core.Date = pDictionary.Lookup(pKey, pDefault)
+		  Return d
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function GetDate(Extends pDictionary As Xojo.Core.Dictionary, pKey As Auto) As Xojo.Core.Date
 		  dim d as Xojo.Core.Date = pDictionary.Value(pKey)
 		  Return d
@@ -44,6 +65,19 @@ Protected Module DictionaryExtra
 		Function GetDate(Extends pDictionary As Xojo.Core.Dictionary, pKey As Auto, pDefault As Xojo.Core.Date) As Xojo.Core.Date
 		  dim d as Xojo.Core.Date = pDictionary.Lookup(pKey, pDefault)
 		  Return d
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function GetDictionary(Extends pDictionary As Dictionary, pKey As variant) As Dictionary
+		  dim d as Dictionary = pDictionary.Value(pKey)
+		  Return d
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function GetDictionary(Extends pDictionary As Dictionary, pKey As Variant, pDefault As Dictionary) As Dictionary
+		  Return Dictionary(pDictionary.Value(pKey, pDefault))
 		End Function
 	#tag EndMethod
 
@@ -90,15 +124,22 @@ Protected Module DictionaryExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function GetString(Extends pDictionary As Xojo.Core.Dictionary, pKey As Auto) As Text
+		Function GetString(Extends pDictionary As Dictionary, pKey As Text) As Text
 		  Dim t as text = pDictionary.Value(pKey)
 		  Return t
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function GetString(Extends pDictionary As Xojo.Core.Dictionary, pKey As Auto, pDefault As Text) As Text
+		Function GetString(Extends pDictionary As Dictionary, pKey As Text, pDefault As Text) As Text
 		  Dim t as text = pDictionary.Lookup(pKey, pDefault)
+		  Return t
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function GetString(Extends pDictionary As Xojo.Core.Dictionary, pKey As Text) As Text
+		  Dim t as text = pDictionary.Value(pKey)
 		  Return t
 		End Function
 	#tag EndMethod
@@ -154,6 +195,12 @@ Protected Module DictionaryExtra
 		  Next
 		  
 		  Return pJSONItem
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function JSONValue(Extends pDictionaries() As Xojo.Core.Dictionary) As Text
+		  return Xojo.Data.GenerateJSON(pDictionaries)
 		End Function
 	#tag EndMethod
 
@@ -221,11 +268,25 @@ Protected Module DictionaryExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub Set(Extends pDictionary As Dictionary, pKey As Variant, pValue As Variant)
+		  // @deprecated complètement inutile
+		  
+		  pDictionary.Value(pKey) = pValue
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub Set(Extends pDictionary As Xojo.Core.Dictionary, pKey As Auto, pValue As Auto)
 		  // @deprecated complètement inutile
 		  
 		  pDictionary.Value(pKey) = pValue
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function Value(Extends pDictionary as Dictionary, pKey as variant, pDefault as Variant) As Auto
+		  return pDictionary.Lookup(pKey, pDefault)
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -242,6 +303,18 @@ Protected Module DictionaryExtra
 		  Next
 		  
 		  Return values
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function XojoDictionary(Extends pDictionary as Dictionary) As Xojo.Core.Dictionary
+		  Dim pNewDictionary As New Xojo.Core.Dictionary
+		  
+		  For Each pKey As String In pDictionary.Keys
+		    pNewDictionary.Value(pKey) = pDictionary.Value(pKey) 
+		  Next
+		  
+		  Return pNewDictionary
 		End Function
 	#tag EndMethod
 
