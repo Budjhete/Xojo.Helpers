@@ -379,7 +379,7 @@ Protected Module DateExtra
 
 	#tag Method, Flags = &h0
 		Function SQLDate(Extends d as Xojo.Core.Date) As Text
-		  return d.ToText.Left(11)
+		  return d.ToText.Left(10)  // zéro base ?
 		End Function
 	#tag EndMethod
 
@@ -426,7 +426,7 @@ Protected Module DateExtra
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function XojoDateValue(Extends pVariant As Variant) As Xojo.Core.Date
 		  
-		  Return xojo.core.date.FromText(pVariant.DateValue.SQLDateTime.ToText)
+		  Return xojo.core.date.FromText(pVariant.StringValue.ToText)
 		End Function
 	#tag EndMethod
 

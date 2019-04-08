@@ -73,6 +73,28 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function ConvertToHex(Source As Xojo.Core.MemoryBlock) As Text
+		  Xojo.Core
+		  
+		  Dim ReturnValue As Text
+		  Dim OneBitHex As Text
+		  For i As Integer=0 To Source.Size-1
+		    
+		    Dim b As UInt8 = Source.UInt8Value(i)
+		    OneBitHex=b.ToHex(2)
+		    
+		    If i<>0 Then
+		      If OneBitHex.Length=1 Then OneBitHex="0" + OneBitHex
+		    End If
+		    
+		    ReturnValue=ReturnValue+OneBitHex
+		  Next
+		  
+		  Return ReturnValue.Lowercase
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub CopyFileorFolder(source as Xojo.IO.FolderItem, destination as Xojo.IO.FolderItem)
 		  Using Xojo.IO
 		  Dim i as Integer
@@ -466,14 +488,9 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Int(str As Text) As Integer
-		  Return str.toInt
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function isArray(value As Auto) As Boolean
 		  Using Xojo.Introspection
+		  if value=nil then Return false
 		  Return Xojo.Introspection.GetType(value).isArray
 		End Function
 	#tag EndMethod
@@ -653,7 +670,9 @@ Protected Module Helpers
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function StringMD5(str As Text) As Text
-		  return ConvertToHex(Xojo.Core.TextEncoding.UTF8.ConvertDataToText(Xojo.Crypto.MD5(Xojo.Core.TextEncoding.UTF8.ConvertTextToData(str)))).Lowercase.Padding(32, "0", PaddingAlignment.Left)
+		  Dim uData as Xojo.Core.MemoryBlock = Xojo.Core.TextEncoding.UTF8.ConvertTextToData(str)
+		  Dim uMD5 as Xojo.Core.MemoryBlock = Xojo.Crypto.MD5(uData)
+		  return ConvertToHex(uMD5).Lowercase.Padding(32, "0", PaddingAlignment.Left)
 		End Function
 	#tag EndMethod
 
@@ -717,16 +736,6 @@ Protected Module Helpers
 		  cd.TotalSeconds = i
 		  
 		  Return cd
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = false
-		Function Utf8StringValue(Extends field as DatabaseField, default as Text = "") As Text
-		  if field.Value.IsNull() then
-		    return default
-		  end
-		  
-		  return field.StringValue.DefineEncoding(Encodings.UTF8)
 		End Function
 	#tag EndMethod
 

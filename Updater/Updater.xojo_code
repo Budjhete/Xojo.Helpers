@@ -201,7 +201,7 @@ Protected Class Updater
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  return Me.UpdateConfig.GetString("Frequency", "Daily")
+			  return Me.UpdateConfig.GetText("Frequency", "Daily")
 			  
 			End Get
 		#tag EndGetter

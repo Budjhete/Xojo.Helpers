@@ -38,6 +38,14 @@ Protected Module FolderItemExtra
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Sub CreateAsFolderIfNotExist(Extends fi as Xojo.IO.FolderItem)
+		  Using Xojo.IO
+		  if fi.Exists then return
+		  fi.CreateAsFolder
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Function Extension(Extends fi as FolderItem) As Text
 		  dim pos as Integer = fi.Name.InStrReverse(".")

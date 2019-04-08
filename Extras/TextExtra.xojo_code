@@ -239,7 +239,9 @@ Protected Module TextExtra
 		  
 		  Dim pAuto As Text = pString.ReplaceAll(" ", "")
 		  
-		  Return pAuto.CurrencyValue
+		  if pAuto="" then Return 0.0
+		  
+		  Return Currency.FromText(pAuto)
 		End Function
 	#tag EndMethod
 
@@ -267,9 +269,17 @@ Protected Module TextExtra
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function DecodeBase64(Extends aText As Text) As Text
-		  Dim str as string = aText
+		  #Pragma BreakOnExceptions False
 		  
-		  return DecodeBase64(str).ToText
+		  Dim str as string = aText
+		  dim decoded as string = DecodeBase64(str, Encodings.UTF8)
+		  dim t as text
+		  Try
+		    t = decoded.ToText
+		    Return t
+		  Catch
+		    Return ""
+		  End Try
 		End Function
 	#tag EndMethod
 
@@ -286,6 +296,16 @@ Protected Module TextExtra
 		  
 		  Declare Function initWithData Lib FoundationLib Selector "initWithData:encoding:" (obj_id As Ptr, data As Ptr, Encoding As Integer) As CFStringRef
 		  Return initWithData(alloc(NSClassFromString("NSString")), mData, NSUTF8StringEncoding)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function DecodeBase64MemoryBlock(Extends aText As Text) As MemoryBlock
+		  #Pragma BreakOnExceptions False
+		  
+		  Dim str as string = aText
+		  dim XMB as MemoryBlock = DecodeBase64(str, Encodings.UTF8)
+		  return xmb
 		End Function
 	#tag EndMethod
 
@@ -503,13 +523,26 @@ Protected Module TextExtra
 	#tag Method, Flags = &h0
 		Function HexToInt(Extends str as Text) As Integer
 		  dim t as text = "&h"+str
-		  return T.toInt
+		  return T.IntegerValue
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		Function Hyphenate(Extends str as Text) As Text
 		  return str.Clean.Lowercase.ReplaceAll(" ", "-")
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function InStrRegEx(Extends str as Text, pattern as Text, params as Text = "") As Integer
+		  dim match as RegExMatch = str.Search("^(.*?)"+pattern, params)
+		  if match = nil then
+		    return 0
+		  end
+		  
+		  return (match.SubExpressionString(1).Len+1)
+		  
+		  
 		End Function
 	#tag EndMethod
 
@@ -523,19 +556,6 @@ Protected Module TextExtra
 		  end
 		  
 		  return (match.SubExpressionString(1).Length+1)
-		  
-		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function InStrRegEx(Extends str as Text, pattern as Text, params as Text = "") As Integer
-		  dim match as RegExMatch = str.Search("^(.*?)"+pattern, params)
-		  if match = nil then
-		    return 0
-		  end
-		  
-		  return (match.SubExpressionString(1).Len+1)
 		  
 		  
 		End Function
@@ -565,7 +585,8 @@ Protected Module TextExtra
 
 	#tag Method, Flags = &h0
 		Function IntegerValue(Extends pString As Text) As Integer
-		  return pString.toInt
+		  if pString = "" then Return -1
+		  return Integer.FromText(pString)
 		End Function
 	#tag EndMethod
 
@@ -580,6 +601,8 @@ Protected Module TextExtra
 
 	#tag Method, Flags = &h0
 		Function isNumeric(extends s As Text) As Boolean
+		  #Pragma BreakOnExceptions False
+		  
 		  Using Xojo.core
 		  
 		  Dim value As Integer
@@ -706,7 +729,7 @@ Protected Module TextExtra
 		  str = str.ReplaceAll(",", ".")
 		  str = str.ReplaceAllRegExp("[^\d\.]+", "")
 		  
-		  return str.toInt.ToText
+		  return str.IntegerValue.ToText
 		End Function
 	#tag EndMethod
 
@@ -1186,12 +1209,6 @@ Protected Module TextExtra
 	#tag Method, Flags = &h0
 		Function toDouble(Extends str as Text) As Double
 		  return Double.FromText(str)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function toInt(Extends str as Text) As Integer
-		  return Integer.FromText(str)
 		End Function
 	#tag EndMethod
 

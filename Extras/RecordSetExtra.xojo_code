@@ -7,6 +7,16 @@ Protected Module RecordSetExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function Utf8StringValue(Extends field as DatabaseField, default as Text = "") As Text
+		  if field.Value.IsNull() then
+		    return default
+		  end
+		  
+		  return field.StringValue.DefineEncoding(Encodings.UTF8).ToText
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function XojoDateValue(Extends pValue as DatabaseField) As Xojo.Core.Date
 		  Return Xojo.Core.Date.FromText(pValue.DateValue.SQLDateTime.ToText)
 		End Function

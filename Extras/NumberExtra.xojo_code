@@ -73,7 +73,7 @@ Protected Module NumberExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function MoneyValue(Extends pCurrency As Currency, pFormat As Text = "-#0.00", pUnit As Text = "") As Text
+		Function MoneyValue(Extends pCurrency As Currency, pFormat As Text = "#0.00", pUnit As Text = "") As Text
 		  If pUnit.Length > 1 Then
 		    pUnit = " " + pUnit
 		  End If
@@ -83,7 +83,7 @@ Protected Module NumberExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function MoneyValue(Extends pDouble As Double, pFormat As Text = "-#0.00", pUnit As Text = "") As Text
+		Function MoneyValue(Extends pDouble As Double, pFormat As Text = "#0.00", pUnit As Text = "") As Text
 		  If pUnit.Length > 1 Then
 		    pUnit = " " + pUnit
 		  End If
@@ -93,7 +93,7 @@ Protected Module NumberExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function MoneyValue(Extends pInteger As Integer, pFormat As Text = "-#0.00", pUnit As Text = "") As Text
+		Function MoneyValue(Extends pInteger As Integer, pFormat As Text = "#0.00", pUnit As Text = "") As Text
 		  If pUnit.Length > 1 Then
 		    pUnit = " " + pUnit
 		  End If
@@ -110,7 +110,7 @@ Protected Module NumberExtra
 		  // @deprecated les pourcentages sont des Double, pas des Currency
 		  //Return Format(pCurrency, "-0.00")
 		  
-		  Return pCurrency.ToText(Locale.Raw)
+		  Return pCurrency.ToText() // Locale.Raw
 		  
 		End Function
 	#tag EndMethod
@@ -188,20 +188,42 @@ Protected Module NumberExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function StringValue(Extends pDouble As Double) As Text
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function StringValue(Extends pDouble As Double) As String
 		  Return pDouble.ToText()
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function StringValue(Extends pInteger As Integer) As Text
+		Function StringValue(Extends pInteger As Integer) As String
 		  Return pInteger.ToText()
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function StringValue(Extends pInteger as Integer, pLength as Integer) As Text
+		Function StringValue(Extends pInteger as Integer, pLength as Integer) As String
+		  dim formatstring as Text
+		  for i as Integer = 1 to pLength
+		    formatstring = formatstring + "0"
+		  next
+		  Return pInteger.ToText(Xojo.Core.Locale.Raw, formatstring) //formatstring
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function TextValue(Extends pDouble As Double) As Text
+		  Return pDouble.ToText()
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function TextValue(Extends pInteger As Integer) As Text
+		  Return pInteger.ToText()
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function TextValue(Extends pInteger as Integer, pLength as Integer) As Text
 		  dim formatstring as Text
 		  for i as Integer = 1 to pLength
 		    formatstring = formatstring + "0"

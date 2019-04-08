@@ -110,6 +110,13 @@ Protected Module DictionaryExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function GetInteger(Extends pDictionary As Dictionary, pKey As Auto) As Integer
+		  Dim i as integer =  pDictionary.Value(pKey)
+		  Return i
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function GetInteger(Extends pDictionary As Xojo.Core.Dictionary, pKey As Auto) As Integer
 		  Dim i as integer =  pDictionary.Value(pKey)
 		  Return i
@@ -123,16 +130,16 @@ Protected Module DictionaryExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function GetString(Extends pDictionary As Dictionary, pKey As Text) As Text
-		  Dim t as text = pDictionary.Value(pKey)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function GetString(Extends pDictionary As Dictionary, pKey As String) As String
+		  Dim t as string = pDictionary.Value(pKey)
 		  Return t
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function GetString(Extends pDictionary As Dictionary, pKey As Text, pDefault As Text) As Text
-		  Dim t as text = pDictionary.Lookup(pKey, pDefault)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function GetString(Extends pDictionary As Dictionary, pKey As String, pDefault As String) As String
+		  Dim t as String = pDictionary.Lookup(pKey, pDefault)
 		  Return t
 		End Function
 	#tag EndMethod
@@ -148,6 +155,37 @@ Protected Module DictionaryExtra
 		Function GetString(Extends pDictionary As Xojo.Core.Dictionary, pKey As Text, pDefault As Text) As Text
 		  Dim t as text = pDictionary.Lookup(pKey, pDefault)
 		  Return t
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function GetText(Extends pDictionary As Dictionary, pKey As Text) As Text
+		  #if TargetIOS then
+		    Dim t as Text = pDictionary.Value(pKey)
+		    Return t
+		  #else
+		    Dim s as String = pKey
+		    Dim d as string = pDictionary.Value(s)
+		    Return d.ToText
+		    
+		  #endif
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function GetText(Extends pDictionary As Dictionary, pKey As Text, pDefault As Text) As Text
+		  
+		  
+		  #if TargetIOS then
+		    Dim t as Text = pDictionary.Lookup(pKey, pDefault)
+		    Return t
+		  #else
+		    Dim p as String = pKey
+		    Dim d as string = pDefault
+		    Dim s as string = pDictionary.Lookup(p, d)
+		    Return s.ToText
+		    
+		  #endif
 		End Function
 	#tag EndMethod
 
