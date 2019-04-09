@@ -41,19 +41,19 @@ Protected Class AppcastItem
 		#tag ViewProperty
 			Name="Date"
 			Group="Behavior"
-			Type="String"
+			Type="Text"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Description"
 			Group="Behavior"
-			Type="String"
+			Type="Text"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="FileURL"
 			Group="Behavior"
-			Type="String"
+			Type="Text"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -79,13 +79,13 @@ Protected Class AppcastItem
 		#tag ViewProperty
 			Name="MD5Signature"
 			Group="Behavior"
-			Type="String"
+			Type="Text"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="MinimumSystemVersion"
 			Group="Behavior"
-			Type="String"
+			Type="Text"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -97,7 +97,7 @@ Protected Class AppcastItem
 		#tag ViewProperty
 			Name="ReleaseNotesURL"
 			Group="Behavior"
-			Type="String"
+			Type="Text"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -109,7 +109,7 @@ Protected Class AppcastItem
 		#tag ViewProperty
 			Name="Title"
 			Group="Behavior"
-			Type="String"
+			Type="Text"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty

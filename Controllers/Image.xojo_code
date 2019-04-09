@@ -1,7 +1,7 @@
 #tag Class
 Protected Class Image
 	#tag Method, Flags = &h0
-		 Shared Function Thumbnail(pPicture As Picture, pWidth As Integer, pHeight As Integer) As Picture
+		Shared Function Thumbnail(pPicture As Picture, pWidth As Integer, pHeight As Integer) As Picture
 		  // TODO : Garder des trucs en cache
 		  // If mThumbnail <> Nil And mThumbnail.Width = pWidth And mThumbnail.Height = pHeight Then
 		  // Return mThumbnail

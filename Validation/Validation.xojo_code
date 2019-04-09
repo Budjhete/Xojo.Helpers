@@ -186,7 +186,7 @@ Protected Class Validation
 		#tag ViewProperty
 			Name="RuleRegex"
 			Group="Behavior"
-			Type="String"
+			Type="Text"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty

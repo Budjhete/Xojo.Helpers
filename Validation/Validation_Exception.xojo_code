@@ -3,6 +3,11 @@ Protected Class Validation_Exception
 Inherits BHApplicationException
 	#tag ViewBehavior
 		#tag ViewProperty
+			Name="ErrorMessage"
+			Group="Behavior"
+			Type="Text"
+		#tag EndViewProperty
+		#tag ViewProperty
 			Name="ErrorNumber"
 			Group="Behavior"
 			InitialValue="0"
@@ -25,7 +30,7 @@ Inherits BHApplicationException
 		#tag ViewProperty
 			Name="Location"
 			Group="Behavior"
-			Type="String"
+			Type="Text"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty

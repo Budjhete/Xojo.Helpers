@@ -6,7 +6,7 @@ Protected Module AutoExtra
 		  dim t as TypeInfo = GetType(pAuto)
 		  
 		  Select case t.ArrayElementType
-		  case GetTypeInfo(Integer)
+		  case GetTypeInfo(Integer), GetTypeInfo(Int32)
 		    Return 3
 		  case GetTypeInfo(Double)
 		    Return 5
@@ -23,6 +23,10 @@ Protected Module AutoExtra
 		  Case GetTypeInfo(Object)
 		    Return 9
 		  End Select
+		  
+		  
+		  if pAuto isa Xojo.Core.Date then return 17
+		  if t.IsClass then Return 10
 		End Function
 	#tag EndMethod
 
@@ -272,6 +276,42 @@ Protected Module AutoExtra
 		  
 		  if pAuto isa Xojo.Core.Date then return 17
 		  if t.IsClass then Return 10
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function TypeText(Extends pAuto As Auto) As Text
+		  Using Xojo.Introspection
+		  if pAuto=nil then Return "NULL"
+		  dim t as TypeInfo = GetType(pAuto)
+		  
+		  Select case t
+		  case GetTypeInfo(Integer)
+		    Return "Integer"
+		  case GetTypeInfo(Int32)
+		    Return "Integer32"
+		  case GetTypeInfo(Double)
+		    Return "Double"
+		  Case GetTypeInfo(Text)
+		    Return "Text"
+		  Case GetTypeInfo(String)
+		    Return "String"
+		  Case GetTypeInfo(Currency)
+		    Return "Currency"
+		  Case GetTypeInfo(Boolean)
+		    Return "Boolean"
+		    
+		    'Case GetTypeInfo(Array)
+		    'Return 4096
+		    'Case GetTypeInfo(Color)
+		    'return 16
+		  Case GetTypeInfo(Object)
+		    Return "Object"
+		    
+		  End Select
+		  
+		  if pAuto isa Xojo.Core.Date then return "XojoDate"
+		  if t.IsClass then Return "Class"
 		End Function
 	#tag EndMethod
 
