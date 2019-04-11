@@ -379,6 +379,7 @@ Protected Module DateExtra
 
 	#tag Method, Flags = &h0
 		Function SQLDate(Extends d as Xojo.Core.Date) As Text
+		  if d=nil then Return ""
 		  return d.ToText.Left(10)  // zéro base ?
 		End Function
 	#tag EndMethod

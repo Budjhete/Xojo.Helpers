@@ -92,12 +92,15 @@ Protected Module AutoExtra
 		    Return Xojo.Core.Date.Now
 		  end if
 		  
-		  
 		  Select case pAuto.Type
 		  Case 37 // text
 		    Return Xojo.Core.date.FromText(pAuto.AutoTextValue)
 		  Case 17
 		    Return pAuto
+		  case 10
+		    dim d as new date
+		    d = pAuto
+		    Return Xojo.Core.date.FromText(d.SQLDateTime.ToText)
 		  End Select
 		End Function
 	#tag EndMethod

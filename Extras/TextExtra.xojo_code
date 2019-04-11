@@ -490,7 +490,7 @@ Protected Module TextExtra
 		Function Format(Extends pString As Text, pReplacements As Xojo.Core.Dictionary) As Text
 		  Using Xojo.Core
 		  For Each pRepl As DictionaryEntry In pReplacements
-		    pString = pString.ReplaceAll("{" + pRepl.Key + "}", pRepl.Value)
+		    pString = pString.ReplaceAll("{" + pRepl.Key.AutoTextValue + "}", pRepl.Value.AutoTextValue)
 		  Next
 		  
 		  Return pString
