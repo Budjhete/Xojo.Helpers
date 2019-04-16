@@ -36,7 +36,7 @@ Protected Module NumberExtra
 		    pUnit = " " + pUnit
 		  End If
 		  
-		  Return pCurrency.Format("-###,##0.00#####" + pUnit)
+		  Return pCurrency.Format("##0.00#####" + pUnit)
 		End Function
 	#tag EndMethod
 

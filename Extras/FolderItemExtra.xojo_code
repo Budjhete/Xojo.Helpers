@@ -47,14 +47,14 @@ Protected Module FolderItemExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Extension(Extends fi as FolderItem) As Text
+		Function Extension(Extends fi as FolderItem) As String
 		  dim pos as Integer = fi.Name.InStrReverse(".")
 		  
 		  if pos = 0 then
 		    return ""
 		  end
 		  
-		  return fi.Name.ToText.Mid(pos+1)
+		  return fi.Name.Mid(pos+1)
 		End Function
 	#tag EndMethod
 

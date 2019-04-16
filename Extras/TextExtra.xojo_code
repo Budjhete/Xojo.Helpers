@@ -235,13 +235,19 @@ Protected Module TextExtra
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function CurrencyValue(Extends pString As Text) As Currency
+		  #Pragma BreakOnExceptions False
+		  
 		  pString = pString.ReplaceAll(" ", "")
 		  
 		  Dim pAuto As Text = pString.ReplaceAll(" ", "")
 		  
 		  if pAuto="" then Return 0.0
 		  
-		  Return Currency.FromText(pAuto)
+		  Try
+		    return Currency.FromText(pAuto)
+		  Catch e As Xojo.Core.BadDataException
+		    Return 0.0
+		  End Try
 		End Function
 	#tag EndMethod
 
@@ -330,9 +336,11 @@ Protected Module TextExtra
 		Function DoubleValue(Extends pString As Text) As Double
 		  pString = pString.ReplaceAll(" ", "")
 		  
-		  Dim pAuto As text = pString.ReplaceAll(" ", "")
+		  Dim pAuto As Text = pString.ReplaceAll(" ", "")
 		  
-		  Return pAuto.DoubleValue
+		  if pAuto="" then Return 0.0
+		  
+		  Return Double.FromText(pAuto)
 		End Function
 	#tag EndMethod
 

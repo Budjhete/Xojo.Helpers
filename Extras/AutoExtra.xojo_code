@@ -67,7 +67,8 @@ Protected Module AutoExtra
 		  case 3 // integer
 		    Return pAuto.AutoTextValue.CurrencyValue
 		  case 5 // Double
-		    Return pAuto.AutoDoubleValue.ToText.CurrencyValue
+		    dim c as Currency = pAuto
+		    Return c
 		  Case 37 // text
 		    Return pAuto.AutoTextValue.CurrencyValue
 		  Case 6 // Currency
@@ -197,7 +198,7 @@ Protected Module AutoExtra
 		    Return pAuto
 		  Case 8 // String
 		    dim s as string = pAuto
-		    Return s.ToText
+		    Return s.DefineEncoding(Encodings.UTF8).ToText
 		  Case 6 // Currency
 		    Return pAuto.AutoCurrencyValue.ToText
 		    
@@ -236,6 +237,8 @@ Protected Module AutoExtra
 		    Dim pObj as Object
 		    pObj = pAuto
 		    Return pObj = nil
+		  else
+		    Return true
 		  End Select
 		End Function
 	#tag EndMethod

@@ -7,11 +7,11 @@ Protected Module DateExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub BeginOfTheDay(Extends d As Xojo.Core.Date)
-		  d.Hour(0)
-		  d.Minute(0)
-		  d.Second(0)
-		End Sub
+		Function BeginOfTheDay(Extends d As Xojo.Core.Date) As Xojo.Core.Date
+		  d = d.Hour(0)
+		  d = d.Minute(0)
+		  return d.Second(0)
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -36,10 +36,9 @@ Protected Module DateExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Day(Extends d as Xojo.Core.Date, pDay as integer)
-		  dim nD as New Xojo.Core.Date(d.Year, d.Month, pDay, d.Hour, d.Minute, d.Second, d.Nanosecond, d.TimeZone)
-		  d = nD
-		End Sub
+		Function Day(Extends d as Xojo.Core.Date, pDay as integer) As Xojo.Core.Date
+		  return New Xojo.Core.Date(d.Year, d.Month, pDay, d.Hour, d.Minute, d.Second, d.Nanosecond, d.TimeZone)
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -57,23 +56,24 @@ Protected Module DateExtra
 	#tag Method, Flags = &h0
 		Function DaysInMonth(Extends d as Xojo.Core.Date) As Integer
 		  dim d1 as Xojo.Core.Date = d
-		  d1.Day(1)
+		  d1 = d1.Day(1)
 		  
 		  dim d2 as Xojo.Core.Date = d1
-		  d2.Month(d2.Month + 1)
-		  d2.Day(d2.Day - 1)
+		  d2 = d2.Month(d2.Month + 1)
+		  d2 = d2.Day(d2.Day - 1)
 		  
 		  return (d2.Day - d1.Day) + 1
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub EndOfTheDay(Extends d As Xojo.Core.Date)
+		Function EndOfTheDay(Extends d As Xojo.Core.Date) As Xojo.Core.Date
+		  d = d.Hour(23)
+		  d = d.Minute(59)
+		  d = d.Second(59)
 		  
-		  d.Hour(23)
-		  d.Minute(59)
-		  d.Second(59)
-		End Sub
+		  Return d
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -85,10 +85,10 @@ Protected Module DateExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Hour(Extends d as Xojo.Core.Date, pHour as integer)
-		  dim nD as New Xojo.Core.Date(d.Year, d.Month, d.Day, pHour, d.Minute, d.Second, d.Nanosecond, d.TimeZone)
-		  d = nD
-		End Sub
+		Function Hour(Extends d as Xojo.Core.Date, pHour as integer) As Xojo.Core.Date
+		  Return New Xojo.Core.Date(d.Year, d.Month, d.Day, pHour, d.Minute, d.Second, d.Nanosecond, d.TimeZone)
+		  
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -160,11 +160,11 @@ Protected Module DateExtra
 	#tag Method, Flags = &h0
 		Function LastQuarterEnd(Extends d As Xojo.Core.Date, firstDay As Xojo.Core.Date = Nil) As Xojo.Core.Date
 		  dim start as Xojo.Core.Date = d.QuarterEnd(firstDay)
-		  start.Month(start.Month - 3)
-		  start.day(start.day - 1)
-		  start.Hour(23)
-		  start.Minute(59)
-		  start.Second(59)
+		  start = start.Month(start.Month - 3)
+		  start = start.day(start.day - 1)
+		  start = start.Hour(23)
+		  start = start.Minute(59)
+		  start = start.Second(59)
 		  return start
 		  
 		End Function
@@ -173,10 +173,10 @@ Protected Module DateExtra
 	#tag Method, Flags = &h0
 		Function LastQuarterStart(Extends d As Xojo.Core.Date, firstDay As Xojo.Core.Date = Nil) As Xojo.Core.Date
 		  dim start as Xojo.Core.Date = d.QuarterStart(firstDay)
-		  start.Month(start.Month - 3)
-		  start.Hour(0)
-		  start.Minute(0)
-		  start.Second(1)
+		  start = start.Month(start.Month - 3)
+		  start = start.Hour(0)
+		  start = start.Minute(0)
+		  start = start.Second(1)
 		  return start
 		  
 		End Function
@@ -185,10 +185,10 @@ Protected Module DateExtra
 	#tag Method, Flags = &h0
 		Function LastYearEnd(Extends d As Xojo.Core.Date, firstDay As Xojo.Core.Date = nil) As Xojo.Core.Date
 		  dim aDate as Xojo.Core.Date = d.YearEnd(firstDay)
-		  aDate.Year(aDate.Year - 1)
-		  aDate.Hour(23)
-		  aDate.Minute(59)
-		  aDate.Second(59)
+		  aDate = aDate.Year(aDate.Year - 1)
+		  aDate = aDate.Hour(23)
+		  aDate = aDate.Minute(59)
+		  aDate = aDate.Second(59)
 		  
 		  return aDate
 		End Function
@@ -197,10 +197,10 @@ Protected Module DateExtra
 	#tag Method, Flags = &h0
 		Function LastYearStart(Extends d As Xojo.Core.Date, firstDay As Xojo.Core.Date = nil) As Xojo.Core.Date
 		  dim aDate as Xojo.Core.Date = d.YearStart(firstDay)
-		  aDate.Year(aDate.Year - 1)
-		  aDate.Hour(0)
-		  aDate.Minute(0)
-		  aDate.Second(1)
+		  aDate = aDate.Year(aDate.Year - 1)
+		  aDate = aDate.Hour(0)
+		  aDate = aDate.Minute(0)
+		  aDate = aDate.Second(1)
 		  
 		  
 		  return aDate
@@ -215,17 +215,15 @@ Protected Module DateExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Minute(Extends d as Xojo.Core.Date, pMinute as integer)
-		  dim nD as New Xojo.Core.Date(d.Year, d.Month, d.Day, d.Hour, pMinute, d.Second, d.Nanosecond, d.TimeZone)
-		  d = nD
-		End Sub
+		Function Minute(Extends d as Xojo.Core.Date, pMinute as integer) As Xojo.Core.Date
+		  Return New Xojo.Core.Date(d.Year, d.Month, d.Day, d.Hour, pMinute, d.Second, d.Nanosecond, d.TimeZone)
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Month(Extends d as Xojo.Core.Date, pMonth as integer)
-		  dim nD as New Xojo.Core.Date(d.Year, pMonth, d.Day, d.Hour, d.Minute, d.Second, d.Nanosecond, d.TimeZone)
-		  d = nD
-		End Sub
+		Function Month(Extends d as Xojo.Core.Date, pMonth as integer) As Xojo.Core.Date
+		  Return New Xojo.Core.Date(d.Year, pMonth, d.Day, d.Hour, d.Minute, d.Second, d.Nanosecond, d.TimeZone)
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -256,18 +254,17 @@ Protected Module DateExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Nanosecond(Extends d as Xojo.Core.Date, pNanosecond as integer)
-		  dim nD as New Xojo.Core.Date(d.Year, d.Month, d.Day, d.Hour, d.Minute, d.Second, pNanosecond, d.TimeZone)
-		  d = nD
-		End Sub
+		Function Nanosecond(Extends d as Xojo.Core.Date, pNanosecond as integer) As Xojo.Core.Date
+		  return New Xojo.Core.Date(d.Year, d.Month, d.Day, d.Hour, d.Minute, d.Second, pNanosecond, d.TimeZone)
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		Function NextQuarterEnd(Extends d As Xojo.Core.Date, firstDay As Xojo.Core.Date = Nil) As Xojo.Core.Date
-		  d.Month(d.Month + 3)
-		  d.Hour(23)
-		  d.Minute(59)
-		  d.Second(59)
+		  d = d.Month(d.Month + 3)
+		  d = d.Hour(23)
+		  d = d.Minute(59)
+		  d = d.Second(59)
 		  return d.QuarterEnd(firstDay)
 		  
 		End Function
@@ -275,10 +272,10 @@ Protected Module DateExtra
 
 	#tag Method, Flags = &h0
 		Function NextQuarterStart(Extends d As Xojo.Core.Date, firstDay As Xojo.Core.Date = Nil) As Xojo.Core.Date
-		  d.Month(d.Month + 3)
-		  d.Hour(0)
-		  d.Minute(0)
-		  d.Second(1)
+		  d = d.Month(d.Month + 3)
+		  d = d.Hour(0)
+		  d = d.Minute(0)
+		  d = d.Second(1)
 		  return d.QuarterStart(firstDay)
 		  
 		End Function
@@ -286,8 +283,7 @@ Protected Module DateExtra
 
 	#tag Method, Flags = &h0
 		Function NextYear(Extends d As Xojo.Core.Date) As Xojo.Core.Date
-		  d.Year(d.Year + 1)
-		  return d
+		  return d.Year(d.Year + 1)
 		  
 		End Function
 	#tag EndMethod
@@ -307,9 +303,9 @@ Protected Module DateExtra
 		  q3 = q1
 		  q4 = q1
 		  
-		  q2.Month(q2.Month + 3)
-		  q3.Month(q3.Month + 6)
-		  q4.Month(q4.Month + 9)
+		  q2 = q2.Month(q2.Month + 3)
+		  q3 = q3.Month(q3.Month + 6)
+		  q4 = q4.Month(q4.Month + 9)
 		  
 		  if d < q2 then
 		    return 1
@@ -327,10 +323,10 @@ Protected Module DateExtra
 	#tag Method, Flags = &h0
 		Function QuarterEnd(Extends d As Xojo.Core.Date, firstDay As Xojo.Core.Date = Nil) As Xojo.Core.Date
 		  dim ThisQuarterEnd As Xojo.Core.Date = d.QuarterStart(firstDay)
-		  ThisQuarterEnd.Month(ThisQuarterEnd.Month + 3)
-		  ThisQuarterEnd.Hour(23)
-		  ThisQuarterEnd.Minute(59)
-		  ThisQuarterEnd.Second(59)
+		  ThisQuarterEnd = ThisQuarterEnd.Month(ThisQuarterEnd.Month + 3)
+		  ThisQuarterEnd = ThisQuarterEnd.Hour(23)
+		  ThisQuarterEnd = ThisQuarterEnd.Minute(59)
+		  ThisQuarterEnd = ThisQuarterEnd.Second(59)
 		  return ThisQuarterEnd
 		  
 		  
@@ -343,7 +339,7 @@ Protected Module DateExtra
 		  
 		  dim quarterStart as Xojo.Core.Date = firstDay
 		  
-		  quarterStart.Month(quarterStart.Month + 3 * (d.Quarter(firstDay) - 1))
+		  quarterStart = quarterStart.Month(quarterStart.Month + 3 * (d.Quarter(firstDay) - 1))
 		  
 		  return quarterStart
 		  
@@ -371,10 +367,10 @@ Protected Module DateExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Second(Extends d as Xojo.Core.Date, pSecond as integer)
-		  dim nD as New Xojo.Core.Date(d.Year, d.Month, d.Day, d.Hour, d.Minute, pSecond, d.Nanosecond, d.TimeZone)
-		  d = nD
-		End Sub
+		Function Second(Extends d as Xojo.Core.Date, pSecond as integer) As Xojo.Core.Date
+		  Return New Xojo.Core.Date(d.Year, d.Month, d.Day, d.Hour, d.Minute, pSecond, d.Nanosecond, d.TimeZone)
+		  
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -432,10 +428,9 @@ Protected Module DateExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Year(Extends d as Xojo.Core.Date, pYear as integer)
-		  dim nD as New Xojo.Core.Date(pYear, d.Month, d.Day, d.Hour, d.Minute, d.Second, d.Nanosecond, d.TimeZone)
-		  d = nD
-		End Sub
+		Function Year(Extends d as Xojo.Core.Date, pYear as integer) As Xojo.Core.Date
+		  return New Xojo.Core.Date(pYear, d.Month, d.Day, d.Hour, d.Minute, d.Second, d.Nanosecond, d.TimeZone)
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
