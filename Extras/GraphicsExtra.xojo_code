@@ -87,7 +87,7 @@ Protected Module GraphicsExtra
 		  dim pX, pY as Integer
 		  
 		  dim cWidths() as Integer
-		  dim cNames() as Text = list.InitialValue.Split(Tabulation)
+		  dim cNames() as String = list.InitialValue.Split(Tabulation)
 		  dim size as Integer
 		  
 		  pX = 0
@@ -193,11 +193,11 @@ Protected Module GraphicsExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub DrawString(Extends g as Graphics, text as Text, x as Integer, y as Integer, width as Integer, align as TextAlign, alignOnPivot as Boolean = true)
+		Sub DrawString(Extends g as Graphics, pText as String, x as Integer, y as Integer, width as Integer, align as TextAlign, alignOnPivot as Boolean = true)
 		  if align = TextAlign.Left then
-		    g.DrawString(text, x, y, width)
+		    g.DrawString(pText, x, y, width)
 		  else
-		    dim lines() as Text = g.Wrap(text, width)
+		    dim lines() as String = g.Wrap(pText, width)
 		    
 		    for i as Integer = 0 to lines.Ubound
 		      dim lineWidth as Integer = g.StringWidth(lines(i))
@@ -216,8 +216,8 @@ Protected Module GraphicsExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub DrawString(Extends g as Graphics, text as Text, x as Integer, y as Integer, align as TextAlign)
-		  dim lines() as Text = text.Split(EndOfLine)
+		Sub DrawString(Extends g as Graphics, text as String, x as Integer, y as Integer, align as TextAlign)
+		  dim lines() as String = text.Split(EndOfLine)
 		  
 		  for i as Integer = 0 to lines.Ubound
 		    if align = TextAlign.Left then
@@ -250,12 +250,12 @@ Protected Module GraphicsExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function Wrap(Extends g as Graphics, text as Text, width as Integer) As Text()
-		  dim lines() as Text
-		  dim para() as Text = text.Split(EndOfLine)
+		Function Wrap(Extends g as Graphics, pText as String, width as Integer) As String()
+		  dim lines() as String
+		  dim para() as String = pText.Split(EndOfLine)
 		  
 		  for p as Integer = 0 to para.Ubound
-		    dim ret() as Text = g.WrapLine(para(p), width)
+		    dim ret() as String = g.WrapLine(para(p), width)
 		    
 		    for i as Integer = 0 to ret.Ubound
 		      lines.Append(ret(i))
@@ -284,16 +284,16 @@ Protected Module GraphicsExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function WrapLine(Extends g as Graphics, line as Text, width as Integer) As Text()
-		  dim lines() as Text
+		Function WrapLine(Extends g as Graphics, line as String, width as Integer) As String()
+		  dim lines() as String
 		  
 		  if g.StringWidth(line) <= width then
 		    lines.Append(line)
 		    return lines
 		  end
 		  
-		  dim words() as Text = line.Split(" ")
-		  dim buffer, tmp as Text
+		  dim words() as String = line.Split(" ")
+		  dim buffer, tmp as String
 		  
 		  for w as Integer = 0 to words.Ubound
 		    if buffer = "" then
