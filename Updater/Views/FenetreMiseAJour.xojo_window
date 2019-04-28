@@ -300,7 +300,7 @@ End
 		    extract.Start
 		    
 		  #elseif TargetWin32
-		    dim extract as new ZipImageUnarchiver(temp_, dest_)
+		    dim extract as new ZipImageUnarchiver(temp_.oldFolderItem, dest_.oldFolderItem)
 		    
 		    AddHandler extract.Finish, AddressOf UnarchiveWinFinish
 		    AddHandler extract.Fail, AddressOf UnarchiveWinFail
@@ -308,7 +308,7 @@ End
 		    extract.Start
 		    
 		  #else 'TargetLinux
-		    dim extract as new ZipImageUnarchiver(temp_, dest_)
+		    dim extract as new ZipImageUnarchiver(temp_.oldFolderItem, dest_.oldFolderItem)
 		    
 		    AddHandler extract.Finish, AddressOf UnarchiveLinFinish
 		    AddHandler extract.Fail, AddressOf UnarchiveLinFail
@@ -345,7 +345,7 @@ End
 		  #if TargetWin32
 		    
 		    if mEstInstaller then
-		      temp_.Launch()
+		      temp_.oldFolderItem.Launch()
 		      Quit()
 		      
 		      return
@@ -359,8 +359,8 @@ End
 		  end
 		  
 		  #if TargetWin32
-		    dim zip as ZipArchive = ZipArchive.Open(mArchive, true)
-		    zip.ExtractAll(mArchive.Parent)
+		    dim zip as ZipArchive = ZipArchive.Open(mArchive.oldFolderItem, true)
+		    zip.ExtractAll(mArchive.oldFolderItem.Parent)
 		    zip.Close()
 		    
 		    mRelauncher = mArchive.Parent.Child("relaunch.exe")
@@ -378,12 +378,12 @@ End
 		    info.Long( 8 ) = self.Handle
 		    if System.IsFunctionAvailable( "ShellExecuteExW", "Shell32" ) then
 		      verb.WString( 0 ) = "runas"
-		      file.WString( 0 ) = mRelauncher.NativePath
-		      args.WString( 0 ) = Str(App.PID) + " """+relaunchItem_.ShellPath+""" """ + dest_.ShellPath+ """"
+		      file.WString( 0 ) = mRelauncher.oldFolderItem.NativePath
+		      args.WString( 0 ) = Str(App.PID) + " """+relaunchItem_.oldFolderItem.ShellPath+""" """ + dest_.oldFolderItem.ShellPath+ """"
 		    else
 		      verb.CString( 0 ) = "runas"
-		      file.CString( 0 ) = mRelauncher.NativePath
-		      args.CString( 0 ) = Str(App.PID) + " """+relaunchItem_.ShellPath+""" """ + dest_.ShellPath+ """"
+		      file.CString( 0 ) = mRelauncher.oldFolderItem.NativePath
+		      args.CString( 0 ) = Str(App.PID) + " """+relaunchItem_.oldFolderItem.ShellPath+""" """ + dest_.oldFolderItem.ShellPath+ """"
 		      
 		    end if
 		    info.Ptr( 12 ) = verb
@@ -413,18 +413,18 @@ End
 		    mRelauncher.oldFolderItem.Launch(Str(App.PID) + " """+relaunchItem_.oldFolderItem.ShellPath+"""")
 		    
 		  #else 'TargetLinux
-		    dim zip as ZipArchive = ZipArchive.Open(mArchive, true)
-		    zip.ExtractAll(mArchive.Parent)
+		    dim zip as ZipArchive = ZipArchive.Open(mArchive.oldFolderItem, true)
+		    zip.ExtractAll(mArchive.Parent.oldFolderItem)
 		    zip.Close()
 		    
 		    mRelauncher = mArchive.Parent.Child("relaunch")
 		    mArchive.Delete()
 		    
 		    mRelauncher = mRelauncher.Parent.Child("relaunch")
-		    mRelauncher.Permissions = &o777
+		    mRelauncher.RecursivePermissions(&o777)
 		    'MsgBox(mRelauncher.AbsolutePath + " " + Str(App.PID) + " """+relaunchItem_.ShellPath+""" """ + dest_.ShellPath+ """")
 		    
-		    mRelauncher.Launch(Str(App.PID) + " """+relaunchItem_.ShellPath+""" """ + dest_.ShellPath+ """")
+		    mRelauncher.oldFolderItem.Launch(Str(App.PID) + " """+relaunchItem_.oldFolderItem.ShellPath+""" """ + dest_.oldFolderItem.ShellPath+ """")
 		  #endif
 		  
 		  ForceQuit()

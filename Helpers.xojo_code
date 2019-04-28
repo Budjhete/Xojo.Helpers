@@ -221,12 +221,12 @@ Protected Module Helpers
 		      end if
 		    end if
 		    
-		    str = " Build " + Str( info.Long( 12 ) )
+		    str = " Build " + info.Long( 12 ).ToText
 		    
 		    if System.IsFunctionAvailable( "GetVersionExW", "Kernel32" ) then
-		      str = str + " " + Trim( info.WString( 20 ) )
+		      str = str + " " + Trim( info.WString( 20 ) ).ToText
 		    else
-		      str = str + " " + Trim( info.CString( 20 ) )
+		      str = str + " " + Trim( info.CString( 20 ) ).ToText
 		    end if
 		    
 		    os = os + str
@@ -237,7 +237,7 @@ Protected Module Helpers
 		    shell.execute("cat /etc/issue")
 		    
 		    If shell.errorCode = 0 then
-		      return shell.result
+		      return shell.result.ToText
 		    else
 		      return "Linux"
 		    end if
@@ -621,7 +621,7 @@ Protected Module Helpers
 		  if f <>  nil then
 		    if f.Exists then
 		      #IF TargetWin32 then
-		        cmd  = "explorer.exe /select,"+ chr(34)+ f.NativePath+ chr(34)
+		        cmd  = "explorer.exe /select,"+ chr(34).ToText+ f.NativePath.ToText+ chr(34).ToText
 		        shell1.execute(cmd)
 		      #elseIf TargetMachO or TargetMacOS then
 		        cmd  = "Open -R "+  f.NativePath.ToText
@@ -642,7 +642,7 @@ Protected Module Helpers
 		  if f <>  nil then
 		    if f.Exists then
 		      #IF TargetWin32 then
-		        cmd  = "explorer.exe /select,"+ chr(34)+ f.Path+ chr(34)
+		        cmd  = "explorer.exe /select,"+ chr(34).ToText+ f.Path+ chr(34).ToText
 		        shell1.execute(cmd)
 		      #elseIf TargetMachO or TargetMacOS then
 		        cmd  = "Open -R "+  f.Path
