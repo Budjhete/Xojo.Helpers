@@ -12,12 +12,21 @@ Protected Module NumberExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function BooleanValue(Extends pInt As Integer) As Boolean
 		  
 		  Dim pVariant As Variant = pInt
 		  
 		  Return pVariant.BooleanValue
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target32Bit or Target64Bit))
+		Function BooleanValue(Extends pInt As Integer) As Boolean
+		  
+		  Dim pVariant As Auto = pInt
+		  
+		  Return pVariant
 		End Function
 	#tag EndMethod
 
@@ -194,13 +203,13 @@ Protected Module NumberExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function StringValue(Extends pInteger As Integer) As String
 		  Return pInteger.ToText()
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function StringValue(Extends pInteger as Integer, pLength as Integer) As String
 		  dim formatstring as Text
 		  for i as Integer = 1 to pLength

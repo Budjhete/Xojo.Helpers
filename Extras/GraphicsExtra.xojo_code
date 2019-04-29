@@ -269,7 +269,7 @@ Protected Module GraphicsExtra
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target32Bit or Target64Bit))
 		Function Wrap(Extends g as iOSGraphics, text as Text, width as Integer) As Text()
 		  dim lines() as Text
-		  dim para() as Text = text.Split(EndOfLine)
+		  dim para() as Text = text.Split(EndOfLine_)
 		  
 		  for p as Integer = 0 to para.Ubound
 		    dim ret() as Text = g.WrapLine(para(p), width)

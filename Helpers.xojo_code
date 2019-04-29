@@ -334,7 +334,7 @@ Protected Module Helpers
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function GetResourceFolder() As Xojo.io.FolderItem
 		  #if TargetLinux
 		    return new Xojo.IO.FolderItem(App.ExecutableFile.Parent.Child("Resources").NativePath.ToText)
@@ -343,7 +343,7 @@ Protected Module Helpers
 		  #elseif TargetMacOS
 		    return new Xojo.IO.FolderItem(App.ExecutableFile.Parent.Parent.Child("Resources").NativePath.ToText)
 		  #Elseif TargetIOS
-		    Return new Xojo.IO.FolderItem(SpecialFolder.GetResource("Resources").NativePath.ToText)
+		    Return new Xojo.IO.FolderItem(SpecialFolder.GetResource("Resources").Path)
 		  #endif
 		End Function
 	#tag EndMethod
@@ -698,7 +698,7 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function SubExpressionText(Extends pExp as RegExMatch, pID as Integer) As Text
+		Function SubExpressionText(Extends pExp as JKRegEx.RegExMatch, pID as Integer) As Text
 		  Return pExp.SubExpressionString(pID).ToText
 		End Function
 	#tag EndMethod

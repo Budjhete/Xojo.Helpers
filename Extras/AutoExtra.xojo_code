@@ -38,7 +38,8 @@ Protected Module AutoExtra
 		  
 		  Select case pAuto.Type
 		  case 3 // integer
-		    Return pAuto.AutoIntegerValue.BooleanValue
+		    dim i as integer = pAuto.AutoIntegerValue
+		    Return i.BooleanValue
 		  case 5 // Double
 		    Return pAuto.AutoDoubleValue.ToText.IntegerValue.BooleanValue
 		  Case 37 // text
@@ -87,7 +88,7 @@ Protected Module AutoExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function AutoDateValue(Extends pAuto As Auto) As Xojo.Core.Date
 		  if pAuto = nil then
 		    Return Xojo.Core.Date.Now
@@ -99,7 +100,11 @@ Protected Module AutoExtra
 		  Case 17
 		    Return pAuto
 		  case 10
-		    dim d as new date
+		    #if TargetIOS
+		      Dim d as date
+		    #else
+		      dim d as new date
+		    #endif
 		    d = pAuto
 		    Return Xojo.Core.date.FromText(d.SQLDateTime.ToText)
 		  End Select
@@ -196,9 +201,11 @@ Protected Module AutoExtra
 		    Return pAuto.AutoDoubleValue.ToText
 		  Case 37 // text
 		    Return pAuto
-		  Case 8 // String
-		    dim s as string = pAuto
-		    Return s.DefineEncoding(Encodings.UTF8).ToText
+		  case 8 // String
+		    #if not TargetIOS
+		      dim s as string = pAuto
+		      Return s.DefineEncoding(Encodings.UTF8).ToText
+		    #endif
 		  Case 6 // Currency
 		    Return pAuto.AutoCurrencyValue.ToText
 		    
@@ -251,7 +258,7 @@ Protected Module AutoExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function Type(Extends pAuto As Auto) As integer
 		  Using Xojo.Introspection
 		  if pAuto=nil then Return 0
@@ -285,7 +292,39 @@ Protected Module AutoExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target32Bit or Target64Bit))
+		Function Type(Extends pAuto As Auto) As integer
+		  Using Xojo.Introspection
+		  if pAuto=nil then Return 0
+		  dim t as TypeInfo = GetType(pAuto)
+		  
+		  Select case t
+		  case GetTypeInfo(Integer), GetTypeInfo(Int32)
+		    Return 3
+		  case GetTypeInfo(Double)
+		    Return 5
+		  Case GetTypeInfo(Text)
+		    Return 37
+		  Case GetTypeInfo(Currency)
+		    Return 6
+		  Case GetTypeInfo(Boolean)
+		    Return 11
+		    
+		    'Case GetTypeInfo(Array)
+		    'Return 4096
+		    'Case GetTypeInfo(Color)
+		    'return 16
+		  Case GetTypeInfo(Object)
+		    Return 9
+		    
+		  End Select
+		  
+		  if pAuto isa Xojo.Core.Date then return 17
+		  if t.IsClass then Return 10
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function TypeText(Extends pAuto As Auto) As Text
 		  Using Xojo.Introspection
 		  if pAuto=nil then Return "NULL"
@@ -302,6 +341,40 @@ Protected Module AutoExtra
 		    Return "Text"
 		  Case GetTypeInfo(String)
 		    Return "String"
+		  Case GetTypeInfo(Currency)
+		    Return "Currency"
+		  Case GetTypeInfo(Boolean)
+		    Return "Boolean"
+		    
+		    'Case GetTypeInfo(Array)
+		    'Return 4096
+		    'Case GetTypeInfo(Color)
+		    'return 16
+		  Case GetTypeInfo(Object)
+		    Return "Object"
+		    
+		  End Select
+		  
+		  if pAuto isa Xojo.Core.Date then return "XojoDate"
+		  if t.IsClass then Return "Class"
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target32Bit or Target64Bit))
+		Function TypeText(Extends pAuto As Auto) As Text
+		  Using Xojo.Introspection
+		  if pAuto=nil then Return "NULL"
+		  dim t as TypeInfo = GetType(pAuto)
+		  
+		  Select case t
+		  case GetTypeInfo(Integer)
+		    Return "Integer"
+		  case GetTypeInfo(Int32)
+		    Return "Integer32"
+		  case GetTypeInfo(Double)
+		    Return "Double"
+		  Case GetTypeInfo(Text)
+		    Return "Text"
 		  Case GetTypeInfo(Currency)
 		    Return "Currency"
 		  Case GetTypeInfo(Boolean)

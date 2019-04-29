@@ -1130,15 +1130,15 @@ Protected Module TextExtra
 		    
 		    Select Case match.SubExpressionString(1)
 		    Case "s"
-		      replace = arg.TextValue
+		      replace = arg.AutoTextValue
 		    Case "d"
-		      replace = arg.IntegerValue.ToText
+		      replace = arg.AutoIntegerValue.ToText
 		    Case "f"
-		      replace = arg.DoubleValue.ToText
+		      replace = arg.AutoDoubleValue.ToText
 		    Case "u"
-		      replace = arg.IntegerValue.ToText
+		      replace = arg.AutoIntegerValue.ToText
 		    Case "c"
-		      replace = Text.FromUnicodeCodepoint(arg.IntegerValue)
+		      replace = Text.FromUnicodeCodepoint(arg.AutoIntegerValue)
 		    Case "b"
 		      ' Integer -> binaire
 		    Case "o"
@@ -1220,13 +1220,19 @@ Protected Module TextExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function ToSrings(Extends str() as Text) As String()
 		  dim s() as string
 		  for each t as text in str
 		    s.Append(t)
 		  next
 		  Return s
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function ToText(Extends str as Text) As Text
+		  return str
 		End Function
 	#tag EndMethod
 

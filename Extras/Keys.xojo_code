@@ -6,7 +6,7 @@ Protected Module Keys
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
+	#tag Method, Flags = &h1, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Protected Function IsEntrer(char As String) As Boolean
 		  return IsEntrer(char.Asc)
 		End Function
