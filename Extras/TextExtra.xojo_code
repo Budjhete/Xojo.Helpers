@@ -804,7 +804,7 @@ Protected Module TextExtra
 		  Dim pFromS() as text = pFrom.Split(",")
 		  Dim pToS() as Text = pTo.Split(",")
 		  For pIndex As Integer = 0 To pFromS.Ubound
-		    pString = pString.ReplaceAll(pFromS(pIndex), pToS(pIndex))
+		    pString = pString.ReplaceAll(pFromS(pIndex), pToS(pIndex), text.CompareCaseSensitive)
 		  next
 		  
 		  return pString
