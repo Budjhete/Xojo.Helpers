@@ -230,7 +230,7 @@ Protected Module AutoExtra
 		  dim t as TypeInfo = GetType(pAuto)
 		  
 		  Select case t
-		  case GetTypeInfo(Integer)
+		  case GetTypeInfo(Integer), GetTypeInfo(Int32)
 		    return pAuto = 0
 		  case GetTypeInfo(Double)
 		    return pAuto = 0
@@ -265,7 +265,7 @@ Protected Module AutoExtra
 		  dim t as TypeInfo = GetType(pAuto)
 		  
 		  Select case t
-		  case GetTypeInfo(Integer), GetTypeInfo(Int32)
+		  case GetTypeInfo(Integer), GetTypeInfo(Int32), GetTypeInfo(UInteger)
 		    Return 3
 		  case GetTypeInfo(Double)
 		    Return 5
