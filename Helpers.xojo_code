@@ -97,7 +97,7 @@ Protected Module Helpers
 	#tag Method, Flags = &h0
 		Sub CopyFileorFolder(source as Xojo.IO.FolderItem, destination as Xojo.IO.FolderItem)
 		  Using Xojo.IO
-		  Dim i as Integer
+		  'Dim i as Integer
 		  Dim newFolder as FolderItem
 		  
 		  If source.IsFolder then

@@ -118,7 +118,7 @@ Protected Module DateExtra
 	#tag Method, Flags = &h0
 		Function IsToday(Extends d as Xojo.Core.Date) As Boolean
 		  // Return True if this date is the same day as today.
-		  Dim now As Xojo.Core.Date
+		  'Dim now As Xojo.Core.Date
 		  return DatesMatch( d, Xojo.Core.date.Now )
 		End Function
 	#tag EndMethod
