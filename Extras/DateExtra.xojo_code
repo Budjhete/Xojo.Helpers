@@ -58,9 +58,16 @@ Protected Module DateExtra
 		  dim d1 as Xojo.Core.Date = d
 		  d1 = d1.Day(1)
 		  
+		  dim iaddmonth as new Xojo.Core.DateInterval
+		  iaddmonth.Months = 1
+		  
+		  dim irrDay as new Xojo.Core.DateInterval
+		  irrDay.Days = 1
+		  
 		  dim d2 as Xojo.Core.Date = d1
-		  d2 = d2.Month(d2.Month + 1)
-		  d2 = d2.Day(d2.Day - 1)
+		  d2 = d2.Operator_Add(iaddmonth)
+		  
+		  d2 = d2.Operator_Subtract(irrDay)
 		  
 		  return (d2.Day - d1.Day) + 1
 		End Function

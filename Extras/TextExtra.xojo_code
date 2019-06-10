@@ -244,9 +244,9 @@ Protected Module TextExtra
 		  if pAuto="" then Return 0.0
 		  
 		  Try
-		    return Currency.FromText(pAuto)
+		    return Double.FromText(pAuto)
 		  Catch e As Xojo.Core.BadDataException
-		    Return 0.0
+		    Return 0.00
 		  End Try
 		End Function
 	#tag EndMethod

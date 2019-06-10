@@ -45,7 +45,7 @@ Protected Module AutoExtra
 		  Case 37 // text
 		    dim t as text = pAuto
 		    
-		    Return t = "true" or t = "TRUE" or t = "True"
+		    Return t = "true" or t = "TRUE" or t = "True" or t="1"
 		    
 		  Case 6 // Currency
 		    Return pAuto.AutoCurrencyValue.ToText.IntegerValue.BooleanValue
