@@ -143,7 +143,7 @@ Protected Module AutoExtra
 	#tag Method, Flags = &h0
 		Function AutoIntegerValue(Extends pAuto As Auto) As Integer
 		  if pAuto = nil then
-		    Return -1
+		    Return 0
 		  end if
 		  
 		  Select case pAuto.Type
@@ -237,7 +237,7 @@ Protected Module AutoExtra
 		  Case GetTypeInfo(Text)
 		    return pAuto = ""
 		  Case GetTypeInfo(Currency)
-		    return pAuto = 0
+		    return pAuto = Nil
 		  Case GetTypeInfo(Boolean)
 		    return pAuto
 		  Case GetTypeInfo(Object)
