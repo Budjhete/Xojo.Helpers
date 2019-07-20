@@ -239,7 +239,7 @@ Protected Module TextExtra
 		  
 		  pString = pString.ReplaceAll(" ", "")
 		  
-		  Dim pAuto As Text = pString.ReplaceAll(" ", "")
+		  Dim pAuto As Text = pString.ReplaceAll(",", ".")
 		  
 		  if pAuto="" then Return 0.0
 		  

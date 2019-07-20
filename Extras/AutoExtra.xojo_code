@@ -231,11 +231,11 @@ Protected Module AutoExtra
 		  
 		  Select case t
 		  case GetTypeInfo(Integer), GetTypeInfo(Int32)
-		    return pAuto = 0
+		    return pAuto = nil
 		  case GetTypeInfo(Double)
-		    return pAuto = 0
+		    return pAuto = nil
 		  Case GetTypeInfo(Text)
-		    return pAuto = ""
+		    return pAuto = nil
 		  Case GetTypeInfo(Currency)
 		    return pAuto = Nil
 		  Case GetTypeInfo(Boolean)
