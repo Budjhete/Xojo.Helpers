@@ -185,7 +185,7 @@ Protected Module TextExtra
 
 	#tag Method, Flags = &h0
 		Function Contains(Extends str as Text, search as Text) As Boolean
-		  return str.IndexOf(search) > 0
+		  return str.IndexOf(search) > -1
 		End Function
 	#tag EndMethod
 
