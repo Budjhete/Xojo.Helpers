@@ -287,6 +287,8 @@ Protected Module AutoExtra
 		    
 		  End Select
 		  
+		  
+		  if pAuto.IsArray then Return 4096
 		  if pAuto isa Xojo.Core.Date then return 17
 		  if t.IsClass then Return 10
 		End Function
