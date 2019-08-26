@@ -772,7 +772,7 @@ Protected Module TextExtra
 		  
 		  for i = 1 To len
 		    
-		    start = Xojo.Math.RandomInt(1, nbChars)
+		    start = Xojo.Math.RandomInt(1, nbChars)-1
 		    num = source.Mid( start, 1 )
 		    str = str + num
 		  Next
@@ -1221,7 +1221,13 @@ Protected Module TextExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function ToSrings(Extends str() as Text) As String()
+		Function ToString(Extends str as Text) As String
+		  Return str
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function ToStrings(Extends str() as Text) As String()
 		  dim s() as string
 		  for each t as text in str
 		    s.Append(t)
