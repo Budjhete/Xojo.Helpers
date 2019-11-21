@@ -69,12 +69,6 @@ Protected Module StringExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function BeginsWith(Extends str as String, search as String) As Boolean
-		  return (str.Left(search.Len) = search)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function BooleanValue(Extends pString As String) As Boolean
 		  pString = pString.ReplaceAll(" ", "")
 		  
@@ -270,12 +264,6 @@ Protected Module StringExtra
 		      Return true
 		    end if // you need StringExtra.Contains
 		  next
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function EndsWith(Extends str as String, search as String) As Boolean
-		  return (str.Right(search.Len) = search)
 		End Function
 	#tag EndMethod
 
