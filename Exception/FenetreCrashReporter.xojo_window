@@ -202,6 +202,7 @@ Begin Window FenetreCrashReporter
       Format          =   ""
       Height          =   100
       HelpTag         =   ""
+      ignoreChange    =   False
       Index           =   -2147483648
       Italic          =   False
       Left            =   20
@@ -215,7 +216,7 @@ Begin Window FenetreCrashReporter
       MaxLength       =   0
       mError          =   ""
       MinLength       =   0
-      NotEmpty        =   False
+      NotEmpty        =   True
       Numeric         =   False
       Password        =   False
       Phone           =   False
@@ -309,20 +310,21 @@ Begin Window FenetreCrashReporter
       BackColor       =   &cFFFFFF00
       Bold            =   False
       Border          =   True
-      CueText         =   "kVousPouvezAussiMettreVotreNumeroDeTelephone"
+      CueText         =   ""
       Dash            =   False
       DataField       =   ""
       DataSource      =   ""
       Date            =   False
       Decimal         =   False
       Digit           =   False
-      Email           =   False
+      Email           =   True
       Enabled         =   True
       ErrorColor      =   &cFFC3B700
       ExactLength     =   0
       Format          =   ""
       Height          =   22
       HelpTag         =   ""
+      ignoreChange    =   False
       Index           =   -2147483648
       Italic          =   False
       Left            =   20
@@ -500,6 +502,10 @@ End
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
+		eMailFrom As String
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
 		excp As RuntimeException
 	#tag EndProperty
 
@@ -558,9 +564,9 @@ End
 	#tag EndEvent
 	#tag Event
 		Sub TextChange()
-		  //if me.Check then
-		  bEnvoyer.Enabled = true
-		  //end if
+		  if me.Check then
+		    bEnvoyer.Enabled = true
+		  end if
 		End Sub
 	#tag EndEvent
 #tag EndEvents
@@ -629,6 +635,9 @@ End
 		  else
 		    
 		  end if
+		  
+		  post.Value("CompagnieEmail") = ""
+		  
 		  
 		  if tComment.Text <> "" then
 		    post.Value("Comments") = tComment.Text
