@@ -40,45 +40,67 @@ Protected Class ZipFileEntry
 	#tag ViewBehavior
 		#tag ViewProperty
 			Name="Comment"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="String"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="CompressedSize"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Uint32"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Crc32"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Uint32"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Filename"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="String"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="FileOffset"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="UInt32"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="FileSize"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Uint32"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="HeaderOffset"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Uint32"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="HeaderSize"
+			Visible=false
 			Group="Behavior"
+			InitialValue=""
 			Type="Uint32"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Index"
@@ -86,6 +108,7 @@ Protected Class ZipFileEntry
 			Group="ID"
 			InitialValue="-2147483648"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Left"
@@ -93,18 +116,23 @@ Protected Class ZipFileEntry
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true
 			Group="ID"
+			InitialValue=""
 			Type="String"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Super"
 			Visible=true
 			Group="ID"
+			InitialValue=""
 			Type="String"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Top"
@@ -112,6 +140,7 @@ Protected Class ZipFileEntry
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

@@ -12,6 +12,8 @@
 		Description=
 		MimeType=
 		Imported=True
+		HandlerRank=&h9
+		UTIPhysicalType=public.data
 	#tag EndFileType
 
 	#tag FileType
@@ -23,10 +25,12 @@
 		MacType=TEXT
 		Name=application/rtf
 		UTI=public.rtf
-		UTIConformsTo=public.text
+		UTIConformsTo=public.text,public.data
 		Description=
 		MimeType=
 		Imported=True
+		HandlerRank=&h9
+		UTIPhysicalType=public.data
 	#tag EndFileType
 
 	#tag FileType
@@ -38,10 +42,12 @@
 		MacType=Mp3 
 		Name=audio/mp3
 		UTI=public.mp3
-		UTIConformsTo=public.audio
+		UTIConformsTo=public.audio,public.data
 		Description=
 		MimeType=
 		Imported=True
+		HandlerRank=&h9
+		UTIPhysicalType=public.data
 	#tag EndFileType
 
 	#tag FileType
@@ -57,6 +63,8 @@
 		Description=
 		MimeType=
 		Imported=True
+		HandlerRank=&h9
+		UTIPhysicalType=public.data
 	#tag EndFileType
 
 	#tag FileType
@@ -68,10 +76,12 @@
 		MacType=MPEG
 		Name=video/mpeg
 		UTI=public.mpeg
-		UTIConformsTo=public.movie
+		UTIConformsTo=public.movie,public.data
 		Description=
 		MimeType=
 		Imported=True
+		HandlerRank=&h9
+		UTIPhysicalType=public.data
 	#tag EndFileType
 
 	#tag FileType
@@ -83,10 +93,12 @@
 		MacType=TEXT
 		Name=text/html
 		UTI=public.html
-		UTIConformsTo=
+		UTIConformsTo=,public.data
 		Description=
 		MimeType=
 		Imported=True
+		HandlerRank=&h9
+		UTIPhysicalType=public.data
 	#tag EndFileType
 
 	#tag FileType
@@ -98,10 +110,12 @@
 		MacType=WDBN
 		Name=application/msword
 		UTI=com.microsoft.word.doc
-		UTIConformsTo=
+		UTIConformsTo=,public.data
 		Description=
 		MimeType=
 		Imported=True
+		HandlerRank=&h9
+		UTIPhysicalType=public.data
 	#tag EndFileType
 
 	#tag FileType
@@ -113,10 +127,12 @@
 		MacType=XLS 
 		Name=application/vnd.ms-excel
 		UTI=com.microsoft.excel.xls
-		UTIConformsTo=
+		UTIConformsTo=,public.data
 		Description=
 		MimeType=
 		Imported=True
+		HandlerRank=&h9
+		UTIPhysicalType=public.data
 	#tag EndFileType
 
 	#tag FileType
@@ -128,10 +144,12 @@
 		MacType=ZIP
 		Name=application/zip
 		UTI=com.pkware.zip-archive
-		UTIConformsTo=
+		UTIConformsTo=,public.data
 		Description=
 		MimeType=
 		Imported=True
+		HandlerRank=&h9
+		UTIPhysicalType=public.data
 	#tag EndFileType
 
 	#tag FileType
@@ -143,10 +161,12 @@
 		MacType=JPEG
 		Name=image/jpeg
 		UTI=public.jpeg
-		UTIConformsTo=public.image
+		UTIConformsTo=public.image,public.data
 		Description=
 		MimeType=
 		Imported=True
+		HandlerRank=&h9
+		UTIPhysicalType=public.data
 	#tag EndFileType
 
 	#tag FileType
@@ -158,10 +178,12 @@
 		MacType=PNGf
 		Name=image/png
 		UTI=public.png
-		UTIConformsTo=public.image
+		UTIConformsTo=public.image,public.data
 		Description=
 		MimeType=
 		Imported=True
+		HandlerRank=&h9
+		UTIPhysicalType=public.data
 	#tag EndFileType
 
 #tag EndFileTypeSet
