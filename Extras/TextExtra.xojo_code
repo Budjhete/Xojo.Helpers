@@ -103,7 +103,7 @@ Protected Module TextExtra
 
 	#tag Method, Flags = &h0
 		Function Capitalize(extends s as Text) As Text
-		  dim first as Text = s.CharAt(1)
+		  dim first as Text = s.CharAt(0) // 0 base on text, 1 base on string
 		  
 		  if first.asc < 97 or first.Asc > 122 then
 		    return s
@@ -114,7 +114,7 @@ Protected Module TextExtra
 		  #else
 		    first = Chr(first.Asc - &h20).ToText
 		  #endif
-		  return first + s.Mid(2)
+		  return first + s.Mid(1)
 		End Function
 	#tag EndMethod
 
