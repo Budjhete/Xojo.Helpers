@@ -876,6 +876,8 @@ Protected Module StringExtra
 		  For each ss as string in s
 		    tss.Append(ss.ToText)
 		  Next
+		  
+		  return tss
 		End Function
 	#tag EndMethod
 

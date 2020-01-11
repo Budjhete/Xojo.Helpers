@@ -25,7 +25,7 @@
 		MacType=TEXT
 		Name=application/rtf
 		UTI=public.rtf
-		UTIConformsTo=public.text,public.data
+		UTIConformsTo=public.text, public.data
 		Description=
 		MimeType=
 		Imported=True
@@ -42,7 +42,7 @@
 		MacType=Mp3 
 		Name=audio/mp3
 		UTI=public.mp3
-		UTIConformsTo=public.audio,public.data
+		UTIConformsTo=public.audio, public.data
 		Description=
 		MimeType=
 		Imported=True
@@ -76,7 +76,7 @@
 		MacType=MPEG
 		Name=video/mpeg
 		UTI=public.mpeg
-		UTIConformsTo=public.movie,public.data
+		UTIConformsTo=public.movie, public.data
 		Description=
 		MimeType=
 		Imported=True
@@ -93,7 +93,7 @@
 		MacType=TEXT
 		Name=text/html
 		UTI=public.html
-		UTIConformsTo=,public.data
+		UTIConformsTo=, public.data
 		Description=
 		MimeType=
 		Imported=True
@@ -110,7 +110,7 @@
 		MacType=WDBN
 		Name=application/msword
 		UTI=com.microsoft.word.doc
-		UTIConformsTo=,public.data
+		UTIConformsTo=, public.data
 		Description=
 		MimeType=
 		Imported=True
@@ -127,7 +127,7 @@
 		MacType=XLS 
 		Name=application/vnd.ms-excel
 		UTI=com.microsoft.excel.xls
-		UTIConformsTo=,public.data
+		UTIConformsTo=, public.data
 		Description=
 		MimeType=
 		Imported=True
@@ -144,7 +144,7 @@
 		MacType=ZIP
 		Name=application/zip
 		UTI=com.pkware.zip-archive
-		UTIConformsTo=,public.data
+		UTIConformsTo=, public.data
 		Description=
 		MimeType=
 		Imported=True
@@ -178,7 +178,7 @@
 		MacType=PNGf
 		Name=image/png
 		UTI=public.png
-		UTIConformsTo=public.image,public.data
+		UTIConformsTo=public.image, public.data
 		Description=
 		MimeType=
 		Imported=True

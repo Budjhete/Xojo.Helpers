@@ -255,7 +255,7 @@ Begin Window FenetreNouvelleVersion
       Top             =   552
       Transparent     =   False
       Underline       =   False
-      Value           =   "False"
+      Value           =   False
       Visible         =   True
       Width           =   846
    End
