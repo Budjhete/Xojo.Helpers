@@ -33,7 +33,8 @@ Protected Class MessageCenter
 	#tag Method, Flags = &h0
 		Sub Register(receiver as MessageReceiver, msgType as Auto)
 		  if IsRegistered(receiver, msgType) then
-		    Raise new BHApplicationException(kReceveurDejaEnregistre) // BUG 1075
+		    return
+		    //Raise new BHApplicationException(kReceveurDejaEnregistre) // BUG 1075
 		  end
 		  
 		  dim receivers() as Object
