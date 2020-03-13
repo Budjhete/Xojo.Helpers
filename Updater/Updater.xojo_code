@@ -305,7 +305,7 @@ Protected Class Updater
 	#tag Constant, Name = CHANNEL_UNSTABLE, Type = Text, Dynamic = False, Default = \"genesis", Scope = Public
 	#tag EndConstant
 
-	#tag Constant, Name = kAppcastUrl, Type = Text, Dynamic = False, Default = \"http://app.kanjo.ca/download/appcast.xml", Scope = Protected
+	#tag Constant, Name = kAppcastUrl, Type = Text, Dynamic = False, Default = \"https://app.kanjo.ca/download/appcast.xml", Scope = Protected
 	#tag EndConstant
 
 

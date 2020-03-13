@@ -128,7 +128,7 @@ Begin Window FenetreMiseAJour
       Index           =   -2147483648
       InitialParent   =   ""
       IsConnected     =   False
-      LastErrorCode   =   0
+      LastErrorCode   =   "0"
       LocalAddress    =   ""
       LockedInPosition=   False
       Port            =   0

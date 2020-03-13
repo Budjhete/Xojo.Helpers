@@ -96,7 +96,11 @@ Protected Module AutoExtra
 		  
 		  Select case pAuto.Type
 		  Case 37 // text
-		    Return Xojo.Core.date.FromText(pAuto.AutoTextValue)
+		    if pAuto.AutoTextValue.Length>9 then
+		      Return Xojo.Core.date.FromText(pAuto.AutoTextValue)
+		    else
+		      Return Xojo.Core.Date.Now
+		    end if
 		  Case 17
 		    Return pAuto
 		  case 10
