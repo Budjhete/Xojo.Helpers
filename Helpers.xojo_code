@@ -707,7 +707,13 @@ Protected Module Helpers
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetWeb and (Target64Bit)) or  (TargetDesktop and (Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target64Bit))
+		Function SubExpressionText(Extends pExp as JKRegEx.RegExMatch, pID as Integer) As Text
+		  Return pExp.SubExpressionString(pID).ToText
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetWeb and (Target64Bit)) or  (TargetDesktop and (Target64Bit))
 		Function SubExpressionText(Extends pExp as RegExMatch, pID as Integer) As Text
 		  Return pExp.SubExpressionString(pID).ToText
 		End Function
