@@ -242,6 +242,12 @@ Protected Module DateExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function MonthName(Extends d as Date) As Text
+		  return kMonths.NthField(",", d.month)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function MonthName(Extends d as Xojo.Core.Date) As Text
 		  return kMonths.NthField(",", d.month)
 		End Function
