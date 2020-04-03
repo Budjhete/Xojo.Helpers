@@ -294,7 +294,9 @@ Protected Module AutoExtra
 		  
 		  if pAuto.IsArray then Return 4096
 		  if pAuto isa Xojo.Core.Date then return 17
+		  if pAuto IsA Xojo.Core.Dictionary then Return 12
 		  if t.IsClass then Return 10
+		  
 		End Function
 	#tag EndMethod
 

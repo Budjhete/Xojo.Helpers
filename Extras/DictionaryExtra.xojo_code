@@ -19,6 +19,16 @@ Protected Module DictionaryExtra
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function EagerlyEvaluateIterable(obj As Xojo.Core.Iterable) As auto()
+		  Var results() As Auto
+		  For Each item As Auto In obj
+		    results.Append(item)
+		  Next
+		  Return results
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function GetBoolean(Extends pDictionary As Dictionary, pKey As Variant, pDefault As Boolean) As Boolean
 		  Dim b as Boolean = pDictionary.Lookup(pKey, pDefault)
@@ -201,6 +211,47 @@ Protected Module DictionaryExtra
 		  
 		  
 		  return Text.Join(pairs, pairSep)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function JSONCompatible(Extends pDictionary As Xojo.Core.Dictionary) As Xojo.Core.Dictionary
+		  Using Xojo.Core
+		  
+		  For Each pEntry As DictionaryEntry In EagerlyEvaluateIterable(pDictionary)
+		    
+		    Dim pValue As Auto = pEntry.Value
+		    
+		    
+		    
+		    Select Case pValue.Type
+		      
+		    Case 12
+		      dim dd as Xojo.Core.Dictionary = pValue
+		      pDictionary.Value(pEntry.Key) = dd.jsoncompatible
+		      
+		    Case 17
+		      pDictionary.Value(pEntry.Key)  = pValue.AutoDateValue.SQLDateTime
+		      
+		    case 6
+		      
+		      pDictionary.Value(pEntry.Key)  = pValue.AutoDoubleValue
+		      
+		      
+		    End Select
+		    
+		  Next
+		  
+		  Return pDictionary
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function JSONText(Extends pDictionary As Xojo.Core.Dictionary) As Text
+		  Using Xojo.Core
+		  
+		  
+		  Return xojo.data.GenerateJSON(pDictionary.JSONCompatible)
 		End Function
 	#tag EndMethod
 
