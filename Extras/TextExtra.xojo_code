@@ -1025,6 +1025,15 @@ Protected Module TextExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function SlugalizeButKeepDots(Extends pString as Text) As Text
+		  Return pString.ReplaceAccents. _
+		  ReplaceAllRegExp("[^0-9a-zA-Z.-]+", " "). _ // replace non-word and space by space
+		  Trim. _ // trim beginning and ending spaces
+		  ReplaceAll(" ", "-")
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function SplitAndKeep(Extends source as Text, delimiter as Text = " ") As Text()
 		  dim parts() as Text
 		  

@@ -148,7 +148,11 @@ Protected Module DateExtra
 
 	#tag Method, Flags = &h0
 		Function LastMonthEnd(Extends d As Xojo.Core.Date) As Xojo.Core.Date
-		  dim aDate As new Xojo.Core.Date(IIF(d.Month = 1, d.Year - 1, d.Year), IIF(d.Month = 1, 12, d.Month - 1), d.DaysInMonth(), 23, 59, 59,  Xojo.Core.TimeZone.Current)
+		  Dim y as integer = IIF(d.Month = 1, d.Year - 1, d.Year)
+		  Dim m as integer = IIF(d.Month = 1, 12, d.Month - 1)
+		  dim ddd as new xojo.core.date(y, m, 1,2,3,4, xojo.core.TimeZone.Current)
+		  dim dd as integer = ddd.DaysInMonth()
+		  dim aDate As new Xojo.Core.Date(y, m, dd, 23, 59, 59,  Xojo.Core.TimeZone.Current)
 		  
 		  
 		  return aDate// 31 decembre de l'annee
@@ -249,7 +253,7 @@ Protected Module DateExtra
 
 	#tag Method, Flags = &h0
 		Function MonthName(Extends d as Xojo.Core.Date) As Text
-		  return kMonths.NthField(",", d.month)
+		  return kMonths.NthField(",", d.month-1)
 		End Function
 	#tag EndMethod
 
