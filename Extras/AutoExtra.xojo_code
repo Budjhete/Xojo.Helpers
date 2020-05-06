@@ -278,7 +278,7 @@ Protected Module AutoExtra
 		    pObj = pAuto
 		    Return pObj = nil
 		  else
-		    Return true
+		    Return pAuto = nil
 		  End Select
 		End Function
 	#tag EndMethod

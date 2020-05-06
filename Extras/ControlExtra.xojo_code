@@ -405,7 +405,7 @@ Protected Module ControlExtra
 		    return nil
 		  end
 		  
-		  return popup.RowTag(popup.ListIndex)
+		  return popup.RowTagAt(popup.ListIndex)
 		End Function
 	#tag EndMethod
 
