@@ -255,7 +255,7 @@ Protected Module DictionaryExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetDesktop and (Target32Bit or Target64Bit))
 		Function JSONValue(Extends pDictionary As Dictionary) As JSONItem
 		  Dim pJSONItem As New JSONItem
 		  
