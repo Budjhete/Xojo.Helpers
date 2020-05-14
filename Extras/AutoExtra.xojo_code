@@ -173,11 +173,40 @@ Protected Module AutoExtra
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function AutoIntegerValueNilMinusOne(Extends pAuto As Auto) As Integer
+		  if pAuto = nil then
+		    Return -1
+		  end if
+		  
+		  Select case pAuto.Type
+		  case 3 // integer
+		    Return pAuto
+		  case 5 // Double
+		    Return pAuto.AutoDoubleValue.ToText.IntegerValue
+		  Case 37 // text
+		    Return pAuto.AutoTextValue.IntegerValue
+		  Case 6 // Currency
+		    Return pAuto.AutoCurrencyValue.ToText.IntegerValue
+		    
+		  Case 11 // Boolean
+		    if pAuto.AutoBooleanValue then
+		      Return 1
+		    else
+		      Return 0
+		    end if
+		    
+		  Case 9 // Object
+		    Return -1
+		  End Select
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function AutoStringValue(Extends pAuto As Auto) As String
 		  Select case pAuto.Type
 		  case 3 // integer
-		    Return pAuto.AutoIntegerValue.ToText
+		    Return pAuto.AutoIntegerValueNilMinusOne.ToText
 		  case 5 // Double
 		    Return pAuto.AutoDoubleValue.ToText
 		  Case 37 // text
@@ -249,7 +278,7 @@ Protected Module AutoExtra
 		    pObj = pAuto
 		    Return pObj = nil
 		  else
-		    Return true
+		    Return pAuto = nil
 		  End Select
 		End Function
 	#tag EndMethod

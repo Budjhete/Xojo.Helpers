@@ -403,12 +403,6 @@ Protected Module StringExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function IndexOf(Extends str as String, find as String) As Integer
-		  return str.InStr(find)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function InStrRegEx(Extends str as String, pattern as String, params as String = "") As Integer
 		  dim match as RegExMatch = str.Search("^(.*?)"+pattern, params)
 		  if match = nil then
