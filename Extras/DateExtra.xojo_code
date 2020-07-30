@@ -245,7 +245,7 @@ Protected Module DateExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function MonthName(Extends d as Date) As Text
 		  return kMonths.NthField(",", d.month)
 		End Function
