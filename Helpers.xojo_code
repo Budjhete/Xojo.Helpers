@@ -285,7 +285,7 @@ Protected Module Helpers
 		    MessageBox.Show
 		    
 		  #else
-		    MsgBox(title+EndOfLine+EndOfLine+message)
+		    MessageBox(title+EndOfLine+EndOfLine+message)
 		  #endif
 		End Sub
 	#tag EndMethod
