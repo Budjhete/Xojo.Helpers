@@ -129,14 +129,6 @@ Inherits FolderItem
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="Alias"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
 			Name="AutoRelease"
 			Visible=false
 			Group="Behavior"
@@ -150,14 +142,6 @@ Inherits FolderItem
 			Group="Behavior"
 			InitialValue="0"
 			Type="Integer"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="Directory"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Boolean"
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -214,14 +198,6 @@ Inherits FolderItem
 			Group="Behavior"
 			InitialValue="0"
 			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="LastErrorCode"
-			Visible=false
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty

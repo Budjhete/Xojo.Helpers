@@ -23,7 +23,10 @@ Protected Module NumberExtra
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target32Bit or Target64Bit))
 		Function BooleanValue(Extends pInt As Integer) As Boolean
-		  return pInt=1
+		  
+		  Dim pVariant As Auto = pInt
+		  
+		  Return pVariant
 		End Function
 	#tag EndMethod
 

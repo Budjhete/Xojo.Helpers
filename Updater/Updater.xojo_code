@@ -271,6 +271,21 @@ Protected Class Updater
 		ShowPrerelease As Boolean
 	#tag EndComputedProperty
 
+	#tag ComputedProperty, Flags = &h0
+		#tag Getter
+			Get
+			  return Me.UpdateConfig.GetInteger("Stage", App.Final)
+			  
+			End Get
+		#tag EndGetter
+		#tag Setter
+			Set
+			  Me.UpdateConfig.Set("Stage", value)
+			End Set
+		#tag EndSetter
+		Stage As Integer
+	#tag EndComputedProperty
+
 	#tag ComputedProperty, Flags = &h1
 		#tag Getter
 			Get
@@ -371,6 +386,14 @@ Protected Class Updater
 			Visible=true
 			Group="Position"
 			InitialValue="0"
+			Type="Integer"
+			EditorType=""
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="Stage"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
 			Type="Integer"
 			EditorType=""
 		#tag EndViewProperty

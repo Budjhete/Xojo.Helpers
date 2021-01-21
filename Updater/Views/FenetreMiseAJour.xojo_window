@@ -26,13 +26,15 @@ Begin Window FenetreMiseAJour
    Visible         =   True
    Width           =   350
    Begin Label Label1
-      AutoDeactivate  =   True
+      AllowAutoDeactivate=   True
       Bold            =   True
       DataField       =   ""
       DataSource      =   ""
       Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
       Height          =   20
-      HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
@@ -49,11 +51,9 @@ Begin Window FenetreMiseAJour
       TabPanelIndex   =   0
       TabStop         =   True
       Text            =   "#kMiseAJourDuLogicielDetail"
-      TextAlign       =   0
+      TextAlignment   =   0
       TextColor       =   &c00000000
-      TextFont        =   "System"
-      TextSize        =   0.0
-      TextUnit        =   0
+      Tooltip         =   ""
       Top             =   14
       Transparent     =   False
       Underline       =   False
@@ -61,15 +61,16 @@ Begin Window FenetreMiseAJour
       Width           =   255
    End
    Begin PushButton bAction
-      AutoDeactivate  =   True
+      AllowAutoDeactivate=   True
       Bold            =   False
-      ButtonStyle     =   0
       Cancel          =   True
       Caption         =   "kCancel"
       Default         =   False
       Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
       Height          =   32
-      HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
@@ -79,13 +80,12 @@ Begin Window FenetreMiseAJour
       LockLeft        =   False
       LockRight       =   False
       LockTop         =   False
+      MacButtonStyle  =   0
       Scope           =   0
       TabIndex        =   0
       TabPanelIndex   =   0
       TabStop         =   True
-      TextFont        =   "System"
-      TextSize        =   0.0
-      TextUnit        =   0
+      Tooltip         =   ""
       Top             =   81
       Transparent     =   False
       Underline       =   False
@@ -93,10 +93,9 @@ Begin Window FenetreMiseAJour
       Width           =   91
    End
    Begin ProgressBar pProgess
-      AutoDeactivate  =   True
+      AllowAutoDeactivate=   True
       Enabled         =   True
       Height          =   20
-      HelpTag         =   ""
       Indeterminate   =   False
       Index           =   -2147483648
       InitialParent   =   ""
@@ -106,11 +105,12 @@ Begin Window FenetreMiseAJour
       LockLeft        =   True
       LockRight       =   True
       LockTop         =   True
-      Maximum         =   100
+      MaximumValue    =   100
       Scope           =   0
       TabIndex        =   2
       TabPanelIndex   =   0
       TabStop         =   "True"
+      Tooltip         =   ""
       Top             =   49
       Transparent     =   False
       Value           =   0.0
@@ -138,10 +138,9 @@ Begin Window FenetreMiseAJour
       yield           =   False
    End
    Begin ProgressWheel pExtraction
-      AutoDeactivate  =   True
+      AllowAutoDeactivate=   True
       Enabled         =   True
       Height          =   16
-      HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
       Left            =   211
@@ -154,19 +153,22 @@ Begin Window FenetreMiseAJour
       TabIndex        =   5
       TabPanelIndex   =   0
       TabStop         =   True
+      Tooltip         =   ""
       Top             =   81
       Transparent     =   False
       Visible         =   False
       Width           =   16
    End
    Begin Label lExtration
-      AutoDeactivate  =   True
+      AllowAutoDeactivate=   True
       Bold            =   False
       DataField       =   ""
       DataSource      =   ""
       Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   10.0
+      FontUnit        =   0
       Height          =   20
-      HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
@@ -183,11 +185,9 @@ Begin Window FenetreMiseAJour
       TabPanelIndex   =   0
       TabStop         =   True
       Text            =   "#kExtractionDuLogiciel"
-      TextAlign       =   2
+      TextAlignment   =   3
       TextColor       =   &c00000000
-      TextFont        =   "System"
-      TextSize        =   10.0
-      TextUnit        =   0
+      Tooltip         =   ""
       Top             =   81
       Transparent     =   False
       Underline       =   False
@@ -195,15 +195,15 @@ Begin Window FenetreMiseAJour
       Width           =   179
    End
    Begin Canvas Canvas1
-      AcceptFocus     =   False
-      AcceptTabs      =   False
-      AutoDeactivate  =   True
+      AllowAutoDeactivate=   True
+      AllowFocus      =   False
+      AllowFocusRing  =   True
+      AllowTabs       =   False
       Backdrop        =   1164708047
       DoubleBuffer    =   False
       Enabled         =   True
       EraseBackground =   "True"
       Height          =   55
-      HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
       Left            =   20
@@ -216,9 +216,9 @@ Begin Window FenetreMiseAJour
       TabIndex        =   7
       TabPanelIndex   =   0
       TabStop         =   True
+      Tooltip         =   ""
       Top             =   14
       Transparent     =   True
-      UseFocusRing    =   True
       Visible         =   True
       Width           =   43
    End
@@ -227,8 +227,8 @@ Begin Window FenetreMiseAJour
       Index           =   -2147483648
       InitialParent   =   ""
       LockedInPosition=   False
-      Mode            =   0
       Period          =   500
+      RunMode         =   0
       Scope           =   0
       TabPanelIndex   =   0
    End

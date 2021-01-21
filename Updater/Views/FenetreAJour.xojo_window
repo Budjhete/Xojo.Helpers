@@ -26,13 +26,15 @@ Begin Window FenetreAJour
    Visible         =   True
    Width           =   366
    Begin Label Label1
-      AutoDeactivate  =   True
+      AllowAutoDeactivate=   True
       Bold            =   True
       DataField       =   ""
       DataSource      =   ""
       Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
       Height          =   20
-      HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
@@ -49,11 +51,9 @@ Begin Window FenetreAJour
       TabPanelIndex   =   0
       TabStop         =   True
       Text            =   "#kAJour"
-      TextAlign       =   0
+      TextAlignment   =   0
       TextColor       =   &c00000000
-      TextFont        =   "System"
-      TextSize        =   0.0
-      TextUnit        =   0
+      Tooltip         =   ""
       Top             =   17
       Transparent     =   False
       Underline       =   False
@@ -61,13 +61,15 @@ Begin Window FenetreAJour
       Width           =   202
    End
    Begin Label lDetail
-      AutoDeactivate  =   True
+      AllowAutoDeactivate=   True
       Bold            =   False
       DataField       =   ""
       DataSource      =   ""
       Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
       Height          =   38
-      HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
@@ -84,11 +86,9 @@ Begin Window FenetreAJour
       TabPanelIndex   =   0
       TabStop         =   True
       Text            =   "kSoftwareLastVersion"
-      TextAlign       =   0
+      TextAlignment   =   0
       TextColor       =   &c00000000
-      TextFont        =   "System"
-      TextSize        =   0.0
-      TextUnit        =   0
+      Tooltip         =   ""
       Top             =   49
       Transparent     =   False
       Underline       =   False
@@ -96,15 +96,16 @@ Begin Window FenetreAJour
       Width           =   252
    End
    Begin PushButton bFermer
-      AutoDeactivate  =   True
+      AllowAutoDeactivate=   True
       Bold            =   False
-      ButtonStyle     =   0
       Cancel          =   False
       Caption         =   "kFermer"
       Default         =   False
       Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
       Height          =   32
-      HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
@@ -114,13 +115,12 @@ Begin Window FenetreAJour
       LockLeft        =   False
       LockRight       =   True
       LockTop         =   False
+      MacButtonStyle  =   0
       Scope           =   0
       TabIndex        =   0
       TabPanelIndex   =   0
       TabStop         =   True
-      TextFont        =   "System"
-      TextSize        =   0.0
-      TextUnit        =   0
+      Tooltip         =   ""
       Top             =   93
       Transparent     =   False
       Underline       =   False
@@ -128,15 +128,15 @@ Begin Window FenetreAJour
       Width           =   102
    End
    Begin Canvas Canvas1
-      AcceptFocus     =   False
-      AcceptTabs      =   False
-      AutoDeactivate  =   True
+      AllowAutoDeactivate=   True
+      AllowFocus      =   False
+      AllowFocusRing  =   True
+      AllowTabs       =   False
       Backdrop        =   1001725311
       DoubleBuffer    =   False
       Enabled         =   True
       EraseBackground =   "True"
       Height          =   68
-      HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
       Left            =   20
@@ -149,9 +149,9 @@ Begin Window FenetreAJour
       TabIndex        =   5
       TabPanelIndex   =   0
       TabStop         =   True
+      Tooltip         =   ""
       Top             =   14
       Transparent     =   True
-      UseFocusRing    =   True
       Visible         =   True
       Width           =   62
    End

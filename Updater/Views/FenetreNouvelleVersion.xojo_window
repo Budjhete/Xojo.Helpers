@@ -26,13 +26,15 @@ Begin Window FenetreNouvelleVersion
    Visible         =   True
    Width           =   886
    Begin Label Label1
-      AutoDeactivate  =   True
+      AllowAutoDeactivate=   True
       Bold            =   True
       DataField       =   ""
       DataSource      =   ""
       Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
       Height          =   20
-      HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
@@ -49,11 +51,9 @@ Begin Window FenetreNouvelleVersion
       TabPanelIndex   =   0
       TabStop         =   True
       Text            =   "#kMiseAJourDuLogicielText1"
-      TextAlign       =   0
+      TextAlignment   =   0
       TextColor       =   &c00000000
-      TextFont        =   "System"
-      TextSize        =   0.0
-      TextUnit        =   0
+      Tooltip         =   ""
       Top             =   17
       Transparent     =   False
       Underline       =   False
@@ -61,13 +61,15 @@ Begin Window FenetreNouvelleVersion
       Width           =   765
    End
    Begin Label lDetail
-      AutoDeactivate  =   True
+      AllowAutoDeactivate=   True
       Bold            =   False
       DataField       =   ""
       DataSource      =   ""
       Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
       Height          =   38
-      HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
@@ -84,11 +86,9 @@ Begin Window FenetreNouvelleVersion
       TabPanelIndex   =   0
       TabStop         =   True
       Text            =   "#kMiseAJourDuLogicielText2"
-      TextAlign       =   0
+      TextAlignment   =   0
       TextColor       =   &c00000000
-      TextFont        =   "System"
-      TextSize        =   0.0
-      TextUnit        =   0
+      Tooltip         =   ""
       Top             =   49
       Transparent     =   False
       Underline       =   False
@@ -96,13 +96,15 @@ Begin Window FenetreNouvelleVersion
       Width           =   773
    End
    Begin Label Label3
-      AutoDeactivate  =   True
+      AllowAutoDeactivate=   True
       Bold            =   True
       DataField       =   ""
       DataSource      =   ""
       Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   10.0
+      FontUnit        =   0
       Height          =   16
-      HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
@@ -119,11 +121,9 @@ Begin Window FenetreNouvelleVersion
       TabPanelIndex   =   0
       TabStop         =   True
       Text            =   "#kNotesVersion_"
-      TextAlign       =   0
+      TextAlignment   =   0
       TextColor       =   &c00000000
-      TextFont        =   "System"
-      TextSize        =   10.0
-      TextUnit        =   0
+      Tooltip         =   ""
       Top             =   98
       Transparent     =   False
       Underline       =   False
@@ -131,15 +131,16 @@ Begin Window FenetreNouvelleVersion
       Width           =   106
    End
    Begin PushButton bUpdate
-      AutoDeactivate  =   True
+      AllowAutoDeactivate=   True
       Bold            =   False
-      ButtonStyle     =   0
       Cancel          =   False
       Caption         =   "kMettreAJour"
       Default         =   True
       Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
       Height          =   20
-      HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
@@ -149,13 +150,12 @@ Begin Window FenetreNouvelleVersion
       LockLeft        =   False
       LockRight       =   True
       LockTop         =   False
+      MacButtonStyle  =   0
       Scope           =   0
       TabIndex        =   0
       TabPanelIndex   =   0
       TabStop         =   True
-      TextFont        =   "System"
-      TextSize        =   0.0
-      TextUnit        =   0
+      Tooltip         =   ""
       Top             =   584
       Transparent     =   False
       Underline       =   False
@@ -163,15 +163,16 @@ Begin Window FenetreNouvelleVersion
       Width           =   117
    End
    Begin PushButton bLater
-      AutoDeactivate  =   True
+      AllowAutoDeactivate=   True
       Bold            =   False
-      ButtonStyle     =   0
       Cancel          =   True
       Caption         =   "kRappelerUlterieurement"
       Default         =   False
       Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
       Height          =   20
-      HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
@@ -181,13 +182,12 @@ Begin Window FenetreNouvelleVersion
       LockLeft        =   False
       LockRight       =   True
       LockTop         =   False
+      MacButtonStyle  =   0
       Scope           =   0
       TabIndex        =   0
       TabPanelIndex   =   0
       TabStop         =   True
-      TextFont        =   "System"
-      TextSize        =   0.0
-      TextUnit        =   0
+      Tooltip         =   ""
       Top             =   584
       Transparent     =   False
       Underline       =   False
@@ -195,15 +195,16 @@ Begin Window FenetreNouvelleVersion
       Width           =   179
    End
    Begin PushButton bSkip
-      AutoDeactivate  =   True
+      AllowAutoDeactivate=   True
       Bold            =   False
-      ButtonStyle     =   0
       Cancel          =   False
       Caption         =   "kPasserCetteVersion"
       Default         =   False
       Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
       Height          =   20
-      HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
@@ -213,13 +214,12 @@ Begin Window FenetreNouvelleVersion
       LockLeft        =   True
       LockRight       =   False
       LockTop         =   False
+      MacButtonStyle  =   0
       Scope           =   0
       TabIndex        =   0
       TabPanelIndex   =   0
       TabStop         =   True
-      TextFont        =   "System"
-      TextSize        =   0.0
-      TextUnit        =   0
+      Tooltip         =   ""
       Top             =   584
       Transparent     =   False
       Underline       =   False
@@ -227,14 +227,16 @@ Begin Window FenetreNouvelleVersion
       Width           =   162
    End
    Begin CheckBox cAuto
-      AutoDeactivate  =   True
+      AllowAutoDeactivate=   True
       Bold            =   False
       Caption         =   "#kAutomatiquementMettreAJour"
       DataField       =   ""
       DataSource      =   ""
       Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
       Height          =   20
-      HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
@@ -245,28 +247,28 @@ Begin Window FenetreNouvelleVersion
       LockRight       =   True
       LockTop         =   False
       Scope           =   0
-      State           =   0
       TabIndex        =   7
       TabPanelIndex   =   0
       TabStop         =   True
-      TextFont        =   "System"
-      TextSize        =   0.0
-      TextUnit        =   0
+      Tooltip         =   ""
       Top             =   552
       Transparent     =   False
       Underline       =   False
       Value           =   False
       Visible         =   True
+      VisualState     =   0
       Width           =   846
    End
    Begin BHLink LinWithoutGtkLink
-      AutoDeactivate  =   True
+      AllowAutoDeactivate=   True
       Bold            =   False
       DataField       =   ""
       DataSource      =   ""
       Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
       Height          =   32
-      HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
@@ -283,11 +285,9 @@ Begin Window FenetreNouvelleVersion
       TabPanelIndex   =   0
       TabStop         =   True
       Text            =   "Untitled"
-      TextAlign       =   0
+      TextAlignment   =   0
       TextColor       =   &c00000000
-      TextFont        =   "System"
-      TextSize        =   0.0
-      TextUnit        =   0
+      Tooltip         =   ""
       Top             =   95
       Transparent     =   False
       Underline       =   False
@@ -299,21 +299,21 @@ Begin Window FenetreNouvelleVersion
       Index           =   -2147483648
       InitialParent   =   ""
       LockedInPosition=   False
-      Mode            =   2
       Period          =   250
+      RunMode         =   2
       Scope           =   0
       TabPanelIndex   =   0
    End
    Begin Canvas Canvas1
-      AcceptFocus     =   False
-      AcceptTabs      =   False
-      AutoDeactivate  =   True
+      AllowAutoDeactivate=   True
+      AllowFocus      =   False
+      AllowFocusRing  =   True
+      AllowTabs       =   False
       Backdrop        =   1001725311
       DoubleBuffer    =   False
       Enabled         =   True
       EraseBackground =   "True"
       Height          =   68
-      HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
       Left            =   20
@@ -326,20 +326,19 @@ Begin Window FenetreNouvelleVersion
       TabIndex        =   10
       TabPanelIndex   =   0
       TabStop         =   True
+      Tooltip         =   ""
       Top             =   14
       Transparent     =   True
-      UseFocusRing    =   True
       Visible         =   True
       Width           =   61
    End
    Begin Rectangle Rectangle1
-      AutoDeactivate  =   True
-      BorderWidth     =   1.0
+      AllowAutoDeactivate=   True
+      BorderThickness =   1.0
       BottomRightColor=   &c00000000
       Enabled         =   True
       FillColor       =   &cFFFFFF00
       Height          =   422
-      HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
       Left            =   20
@@ -352,16 +351,16 @@ Begin Window FenetreNouvelleVersion
       TabIndex        =   8
       TabPanelIndex   =   0
       TabStop         =   "True"
+      Tooltip         =   ""
       Top             =   118
       TopLeftColor    =   &c00000000
       Transparent     =   False
       Visible         =   True
       Width           =   846
       Begin HTMLViewer hNotes
-         AutoDeactivate  =   True
+         AllowAutoDeactivate=   True
          Enabled         =   True
          Height          =   420
-         HelpTag         =   ""
          Index           =   -2147483648
          InitialParent   =   "Rectangle1"
          Left            =   20
@@ -375,21 +374,23 @@ Begin Window FenetreNouvelleVersion
          TabIndex        =   0
          TabPanelIndex   =   0
          TabStop         =   True
+         Tooltip         =   ""
          Top             =   118
          Visible         =   True
          Width           =   844
       End
    End
    Begin PushButton bManuel
-      AutoDeactivate  =   True
+      AllowAutoDeactivate=   True
       Bold            =   False
-      ButtonStyle     =   0
       Cancel          =   False
       Caption         =   "kMiseAJourManuel"
       Default         =   False
       Enabled         =   True
+      FontName        =   "System"
+      FontSize        =   0.0
+      FontUnit        =   0
       Height          =   20
-      HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
@@ -399,13 +400,12 @@ Begin Window FenetreNouvelleVersion
       LockLeft        =   True
       LockRight       =   False
       LockTop         =   False
+      MacButtonStyle  =   0
       Scope           =   0
       TabIndex        =   0
       TabPanelIndex   =   0
       TabStop         =   True
-      TextFont        =   "System"
-      TextSize        =   0.0
-      TextUnit        =   0
+      Tooltip         =   ""
       Top             =   584
       Transparent     =   False
       Underline       =   False

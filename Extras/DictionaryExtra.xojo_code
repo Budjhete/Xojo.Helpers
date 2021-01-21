@@ -59,7 +59,12 @@ Protected Module DictionaryExtra
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function GetDate(Extends pDictionary As Dictionary, pKey As Variant, pDefault As Xojo.Core.Date) As Xojo.Core.Date
-		  dim d as Xojo.Core.Date = pDictionary.Lookup(pKey, pDefault)
+		  dim d as Xojo.Core.Date
+		  try
+		    d = pDictionary.Lookup(pKey, pDefault)
+		  Catch
+		    d = nil
+		  end try
 		  Return d
 		End Function
 	#tag EndMethod
@@ -120,8 +125,15 @@ Protected Module DictionaryExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function GetInteger(Extends pDictionary As Dictionary, pKey As Auto) As Integer
+		Function GetInteger(Extends pDictionary As Dictionary, pKey As Variant) As Integer
 		  Dim i as integer =  pDictionary.Value(pKey)
+		  Return i
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function GetInteger(Extends pDictionary as Dictionary, pKey as Variant, Default as Integer) As Integer
+		  Dim i as integer =  pDictionary.Value(pKey, Default)
 		  Return i
 		End Function
 	#tag EndMethod
