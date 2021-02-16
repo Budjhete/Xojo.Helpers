@@ -43,7 +43,7 @@ Protected Class Updater
 
 	#tag Method, Flags = &h0
 		Sub Check()
-		  LastCheckTime = Xojo.Core.Date.now
+		  LastCheckTime = DateTime.now
 		  
 		  dim item as AppcastItem = GetNewer()
 		  if item <> nil and not Me.windowShow then
@@ -115,7 +115,7 @@ Protected Class Updater
 
 	#tag Method, Flags = &h0
 		Function IsUpdateLater(v as Version) As Boolean
-		  Using Xojo.Core
+		  
 		  
 		  if not Me.UpdateConfig.HasKey("UpdateLater") then
 		    return false
@@ -126,8 +126,8 @@ Protected Class Updater
 		    return false
 		  end
 		  
-		  dim when as Date = liste.GetDate(v.ToString)
-		  dim now as Date = Xojo.Core.Date.Now
+		  dim when as DateTime = liste.GetDate(v.ToString)
+		  dim now as DateTime = DateTime.Now
 		  
 		  return (now < when)
 		End Function
@@ -210,7 +210,7 @@ Protected Class Updater
 			  Me.UpdateConfig.Set("Frequency", value)
 			End Set
 		#tag EndSetter
-		Frequency As Text
+		Frequency As String
 	#tag EndComputedProperty
 
 	#tag ComputedProperty, Flags = &h0
@@ -241,7 +241,7 @@ Protected Class Updater
 			  Me.UpdateConfig.Set("LastCheckTime", value)
 			End Set
 		#tag EndSetter
-		LastCheckTime As Xojo.Core.Date
+		LastCheckTime As DateTime
 	#tag EndComputedProperty
 
 	#tag Property, Flags = &h21

@@ -87,7 +87,7 @@ Inherits FolderItem
 		  
 		  System.Log(System.LogLevelInformation, "Temporary resource released at " + Me.ShellPath)
 		  
-		  Me.RecursiveDelete()
+		  'Me.RecursiveDelete()
 		End Sub
 	#tag EndMethod
 

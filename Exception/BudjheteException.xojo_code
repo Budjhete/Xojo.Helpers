@@ -8,7 +8,7 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		Sub Constructor(message as Text)
+		Sub Constructor(message as String)
 		  Me.ErrorMessage = message
 		  
 		  System.DebugLog(self.ErrorMessage)
@@ -16,7 +16,7 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		Sub Constructor(message as Text, code as Integer)
+		Sub Constructor(message as String, code as Integer)
 		  Me.ErrorMessage = message
 		  mCode = code
 		  
@@ -25,7 +25,7 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		Sub Constructor(message as Text, code as Integer, location as Text)
+		Sub Constructor(message as String, code as Integer, location as String)
 		  Me.ErrorMessage = message
 		  mCode = code
 		  mLocation = location
@@ -35,7 +35,7 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function HumanReadableCode(code as Integer) As Text
+		Shared Function HumanReadableCode(code as Integer) As String
 		  select case code
 		  case E_UNDEFINED
 		    return "Undefined"
@@ -68,14 +68,14 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Location() As Text
+		Function Location() As String
 		  return mLocation
 		End Function
 	#tag EndMethod
 
 
 	#tag Property, Flags = &h0
-		ErrorMessage As Text
+		ErrorMessage As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
@@ -83,7 +83,7 @@ Inherits RuntimeException
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
-		Protected mLocation As Text
+		Protected mLocation As String
 	#tag EndProperty
 
 

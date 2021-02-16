@@ -448,11 +448,11 @@ End
 		Sub Constructor(error as RuntimeException)
 		  Me.excp = error
 		  
-		  Message = "Une exception de type "+Introspection.GetType(error).Name.totext+" n'a pas été gérée." + EndOfLine_
-		  'Message = Message + pMessage + EndOfLine_
+		  Message = "Une exception de type "+Introspection.GetType(error).Name.totext+" n'a pas été gérée." + EndOfLine
+		  'Message = Message + pMessage + EndOfLine
 		  
 		  if error.Message <> "" then
-		    Message = Message + EndOfLine_ + EndOfLine_ + "Message:"+EndOfLine_ +error.Message().ToText
+		    Message = Message + EndOfLine + EndOfLine+ "Message:"+EndOfLine + error.Message()
 		  end
 		  
 		  tInformations.Text = Message
@@ -465,14 +465,14 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		Sub Constructor(error as RuntimeException, pMessage as Text)
+		Sub Constructor(error as RuntimeException, pMessage as String)
 		  Me.excp = error
 		  
-		  Message = "Une exception de type "+Introspection.GetType(error).Name.ToText+" n'a pas été gérée." + EndOfLine_
-		  Message = Message + pMessage + EndOfLine_
+		  Message = "Une exception de type "+Introspection.GetType(error).Name.ToText+" n'a pas été gérée." + EndOfLine
+		  Message = Message + pMessage + EndOfLine
 		  
 		  if error.Message <> "" then
-		    Message = Message + EndOfLine_ + EndOfLine_ + "Message:"+EndOfLine_ +error.Message.ToText
+		    Message = Message + EndOfLine + EndOfLine+ "Message:"+EndOfLine + error.Message
 		  end
 		  
 		  tInformations.Text = Message
@@ -485,7 +485,7 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		Sub Constructor(infos as Text)
+		Sub Constructor(infos as String)
 		  Message = infos
 		  
 		  // Calling the overridden superclass constructor.
@@ -522,7 +522,7 @@ End
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private Message As Text
+		Private Message As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0

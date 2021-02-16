@@ -518,7 +518,7 @@ Protected Class ZipArchive
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		IgnoresOnExtract() As Text
+		IgnoresOnExtract() As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h21

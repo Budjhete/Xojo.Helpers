@@ -1,7 +1,7 @@
 #tag Class
 Protected Class Validation
 	#tag Method, Flags = &h0
-		Function checkValue(value as Text) As Boolean
+		Function checkValue(value as String) As Boolean
 		  if RuleDate and not Valid.Validdate(value) then
 		    return false
 		  end
@@ -100,7 +100,7 @@ Protected Class Validation
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		RuleRegex As Text
+		RuleRegex As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0

@@ -288,7 +288,7 @@ End
 		    end
 		  #endif
 		  
-		  dest_ = Xojo.IO.SpecialFolder.Temporary.Child(TextExtra.RandomText(10))
+		  dest_ = SpecialFolder.Temporary.Child(RandomString(10))
 		  dest_.CreateAsFolder
 		  
 		  #if TargetMacOS
@@ -335,7 +335,7 @@ End
 		    oldLauncher.RecursiveDelete()
 		  end if
 		  
-		  mArchive.CopyTo(Xojo.IO.SpecialFolder.Temporary)
+		  mArchive.CopyTo(SpecialFolder.Temporary)
 		  mArchive = SpecialFolder.Temporary.XojoFolderItem.Child(mArchive.Name)
 		End Sub
 	#tag EndMethod
@@ -469,9 +469,9 @@ End
 		  
 		  Super.Show
 		  
-		  dim ext as Text = item_.FileURL.Mid(item_.FileURL.LastIndexOf(".")+1)
+		  dim ext as String = item_.FileURL.Mid(item_.FileURL.LastIndexOf(".")+1)
 		  
-		  temp_ = Xojo.IO.SpecialFolder.Temporary.Child(TextExtra.RandomText(10) + "-part." + ext)
+		  temp_ = SpecialFolder.Temporary.Child(TextExtra.RandomText(10) + "-part." + ext)
 		  
 		  request.SetRequestHeader("User-Agent", Appcast.FullVersionName)
 		  request.Get(item_.FileURL, temp_.OldFolderItem)
@@ -527,15 +527,15 @@ End
 		Protected Sub UnarchiveMacFinish(extract as DiskImageUnarchiver)
 		  PrepareRelauncher()
 		  
-		  for each child as Xojo.IO.FolderItem in dest_.Children
+		  for each child as FolderItem in dest_.Children
 		    
 		    if child.IsFolder and child.Name.EndsWith(".app") then
-		      dim currentApp as Xojo.IO.FolderItem = App.ExecutableFile.XojoFolderItem.Parent(".app")
+		      dim currentApp as FolderItem = App.ExecutableFile.XojoFolderItem.Parent(".app")
 		      if currentApp = nil then
 		        Raise new RuntimeException()
 		      end
 		      
-		      dim destFolder as Xojo.IO.FolderItem = currentApp.Parent()
+		      dim destFolder as FolderItem = currentApp.Parent()
 		      
 		      #if not DebugBuild
 		        child.Name = currentApp.Name
@@ -578,7 +578,7 @@ End
 
 
 	#tag Property, Flags = &h1
-		Protected dest_ As Xojo.IO.FolderItem
+		Protected dest_ As FolderItem
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
@@ -586,7 +586,7 @@ End
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
-		Protected mArchive As Xojo.IO.FolderItem
+		Protected mArchive As FolderItem
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
@@ -594,11 +594,11 @@ End
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
-		Protected mRelauncher As Xojo.IO.FolderItem
+		Protected mRelauncher As FolderItem
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
-		Protected relaunchItem_ As Xojo.IO.FolderItem = nil
+		Protected relaunchItem_ As FolderItem = nil
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -606,7 +606,7 @@ End
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
-		Protected temp_ As Xojo.IO.FolderItem
+		Protected temp_ As FolderItem
 	#tag EndProperty
 
 

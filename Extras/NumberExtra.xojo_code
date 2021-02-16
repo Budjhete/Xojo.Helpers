@@ -31,34 +31,12 @@ Protected Module NumberExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Decimal(Extends x as Double, decimalsCount as Integer = 2) As Text
-		  dim frac as Text = "0"
-		  frac = frac.Repeat(decimalsCount)
-		  
-		  return x.ToText(Xojo.Core.Locale.Current, "#0."+frac+";-#0."+frac+";0."+frac).Replace(",", ".").Replace(" ", ",")
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function ExactMoneyValue(Extends pCurrency As Currency, pUnit As Text = "") As Text
+		Function ExactMoneyValue(Extends pCurrency as Currency, pUnit as String = "") As String
 		  If pUnit.Length > 1 Then
 		    pUnit = " " + pUnit
 		  End If
 		  
-		  Return pCurrency.Format("##0.00#####" + pUnit)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function Format(Extends pCurrency As Currency, pFormat As Text) As Text
-		  Dim pDouble as Double = Double.FromText(pCurrency.ToText)
-		  Return pDouble.ToText(Xojo.Core.Locale.Raw, pFormat)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function Format(Extends pDouble As Double, pFormat As Text) As Text
-		  Return pDouble.ToText(Xojo.Core.Locale.Current, pFormat)
+		  Return Format(pCurrency,"##0.00#####" + pUnit)
 		End Function
 	#tag EndMethod
 
@@ -82,61 +60,61 @@ Protected Module NumberExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function MoneyValue(Extends pCurrency As Currency, pFormat As Text = "#0.00", pUnit As Text = "") As Text
+		Function MoneyValue(Extends pCurrency as Currency, pFormat as String = "#0.00", pUnit as String = "") As String
 		  If pUnit.Length > 1 Then
 		    pUnit = " " + pUnit
 		  End If
 		  
-		  Return pCurrency.Format(pFormat + pUnit)
+		  Return Format(pCurrency,pFormat + pUnit)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function MoneyValue(Extends pDouble As Double, pFormat As Text = "#0.00", pUnit As Text = "") As Text
+		Function MoneyValue(Extends pDouble as Double, pFormat as String = "#0.00", pUnit as String = "") As String
 		  If pUnit.Length > 1 Then
 		    pUnit = " " + pUnit
 		  End If
 		  
-		  Return pDouble.ToText(Xojo.core.Locale.Raw, pFormat + pUnit)
+		  Return pDouble.ToString(Locale.Raw, pFormat + pUnit)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function MoneyValue(Extends pInteger As Integer, pFormat As Text = "#0.00", pUnit As Text = "") As Text
+		Function MoneyValue(Extends pInteger as Integer, pFormat as String = "#0.00", pUnit as String = "") As String
 		  If pUnit.Length > 1 Then
 		    pUnit = " " + pUnit
 		  End If
 		  
 		  
 		  
-		  Return pInteger.ToText(Xojo.Core.Locale.Raw, pFormat) + pUnit
+		  Return pInteger.ToString(Locale.Raw, pFormat) + pUnit
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function PercentValue(Extends pCurrency As Currency) As Text
-		  Using Xojo.Core
+		Function PercentValue(Extends pCurrency As Currency) As String
+		  
 		  // @deprecated les pourcentages sont des Double, pas des Currency
 		  //Return Format(pCurrency, "-0.00")
 		  
-		  Return pCurrency.ToText() // Locale.Raw
+		  Return pCurrency.ToString() // Locale.Raw
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function PercentValue(Extends pDouble As Double) As Text
+		Function PercentValue(Extends pDouble As Double) As String
 		  //Return Format(pDouble, "-0.00")
 		  
-		  Return pDouble.ToText(Xojo.Core.Locale.Raw)
+		  Return pDouble.ToString(Locale.Raw)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function PercentValue(Extends pInteger As Integer) As Text
+		Function PercentValue(Extends pInteger As Integer) As String
 		  //Return Format(pInteger, "-#")
 		  
-		  Return pInteger.ToText(Xojo.Core.Locale.Raw)
+		  Return pInteger.ToString(Locale.Raw)
 		End Function
 	#tag EndMethod
 
@@ -157,16 +135,16 @@ Protected Module NumberExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function QuantityValue(Extends pDouble As Double) As Text
-		  Using Xojo.Core
+		Function QuantityValue(Extends pDouble As Double) As String
+		  
 		  
 		  Dim pInteger As Integer = pDouble
 		  
 		  If pDouble = pInteger Then
-		    Return pDouble.ToText(Locale.Current, "-0")
+		    Return pDouble.ToString(Locale.Current, "-0")
 		  End If
 		  
-		  Return pDouble.ToText(Locale.Current, "-0.####")
+		  Return pDouble.ToString(Locale.Current, "-0.####")
 		  
 		End Function
 	#tag EndMethod
@@ -211,11 +189,11 @@ Protected Module NumberExtra
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function StringValue(Extends pInteger as Integer, pLength as Integer) As String
-		  dim formatstring as Text
+		  dim formatstring as String
 		  for i as Integer = 1 to pLength
 		    formatstring = formatstring + "0"
 		  next
-		  Return pInteger.ToText(Xojo.Core.Locale.Raw, formatstring) //formatstring
+		  Return pInteger.ToString(Locale.Raw, formatstring) //formatstring
 		End Function
 	#tag EndMethod
 
@@ -231,24 +209,24 @@ Protected Module NumberExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function TextValue(Extends pInteger as Integer, pLength as Integer) As Text
-		  dim formatstring as Text
+	#tag Method, Flags = &h0, CompatibilityFlags = false
+		Attributes( Deprecated )  Function TextValue(Extends pInteger as Integer, pLength as Integer) As Text
+		  dim formatstring as String
 		  for i as Integer = 1 to pLength
 		    formatstring = formatstring + "0"
 		  next
-		  Return pInteger.ToText(Xojo.Core.Locale.Raw, formatstring) //formatstring
+		  Return pInteger.ToText(Locale.Raw, formatstring) //formatstring
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function XSLValue(Extends pCurrency As Currency) As Text
+		Function XSLValue(Extends pCurrency As Currency) As String
 		  Return Str(pCurrency, "-#0.00").ToText
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function XSLValue(Extends pDouble As Double) As Text
+		Function XSLValue(Extends pDouble As Double) As String
 		  Return Str(pDouble, "-#0.00").ToText
 		End Function
 	#tag EndMethod
@@ -259,7 +237,7 @@ Protected Module NumberExtra
 			Get
 			  // Use pDecimale to asjust from a DB or a FILE how much decimal you need, the ajustment are live
 			  dim pDecimale as Integer = App.SystemDecimales // add this variable string or method string in APP.
-			  dim pFormat as Text = "-###"+App.SeparateurNombre+"##0"+App.SeparateurDecimalNombre+"00"
+			  dim pFormat as String = "-###"+App.SeparateurNombre+"##0"+App.SeparateurDecimalNombre+"00"
 			  
 			  Dim i As Integer
 			  
@@ -270,7 +248,7 @@ Protected Module NumberExtra
 			  return pFormat
 			End Get
 		#tag EndGetter
-		MoneyFormatPref As Text
+		MoneyFormatPref As String
 	#tag EndComputedProperty
 
 
