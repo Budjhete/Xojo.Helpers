@@ -151,14 +151,16 @@ Protected Module DictionaryExtra
 		  if pAuto = nil then
 		    Return -1
 		  end if
-		  
+		  dim tt as integer = pAuto.Type
 		  Select case pAuto.Type
-		  case 3 // integer
+		  case 2, 3 // integer
 		    Return pAuto.IntegerValue
 		  case 5 // Double
 		    Return pAuto.DoubleValue.ToText.IntegerValue
-		  Case 37 // text
+		  Case 8 // string 
 		    Return pAuto.StringValue.IntegerValue
+		  Case 37 // text
+		    Return pAuto.TextValue.IntegerValue
 		  Case 6 // Currency
 		    Return pAuto.CurrencyValue.ToText.IntegerValue
 		    
