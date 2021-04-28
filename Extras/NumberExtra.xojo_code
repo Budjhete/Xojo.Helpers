@@ -60,7 +60,7 @@ Protected Module NumberExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function MoneyValue(Extends pCurrency as Currency, pFormat as String = "#0.00", pUnit as String = "") As String
+		Function MoneyValue(Extends pCurrency as Currency, pFormat as String = "-#0.00", pUnit as String = "") As String
 		  If pUnit.Length > 1 Then
 		    pUnit = " " + pUnit
 		  End If
@@ -305,8 +305,8 @@ Protected Module NumberExtra
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
-			Type="Text"
-			EditorType=""
+			Type="String"
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Module

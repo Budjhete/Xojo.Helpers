@@ -476,7 +476,7 @@ Protected Module Helpers
 		  
 		  Dim queries() as String = sql.Split(";")
 		  For Each query as String In queries
-		    db.SQLExecute(query)
+		    db.ExecuteSQL(query)
 		    If DB.Error Then
 		      System.DebugLog "DB Error: " + db.ErrorCode.StringValue + "  " + db.ErrorMessage.ToText + EndOfLine  + EndOfLine+ "Dans cette requête : " + query
 		    Else

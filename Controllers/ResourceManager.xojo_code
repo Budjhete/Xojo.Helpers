@@ -4,11 +4,17 @@ Protected Class ResourceManager
 		Function Folder() As FolderItem
 		  #if TargetLinux
 		    return App.ExecutableFile.Parent.Child("Resources")
-		  #elseif TargetWin32
-		    return App.ExecutableFile.Parent.Child("Resources")
+		  #elseif TargetWindows
+		    return App.ExecutableFile.Parent.Child(App.ApplicationNameMBS).Child(App.ApplicationNameMBS + " Resources")
 		  #else
 		    return App.ExecutableFile.Parent.Parent.Child("Resources")
 		  #endif
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function Folder(FolderName as String) As FolderItem
+		  return SpecialFolder.Resource(FolderName)
 		End Function
 	#tag EndMethod
 

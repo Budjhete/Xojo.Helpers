@@ -171,11 +171,8 @@ Protected Module DateExtra
 	#tag Method, Flags = &h0
 		Function LastQuarterEnd(Extends d As DateTime, firstDay As DateTime = Nil) As DateTime
 		  dim start as DateTime = d.QuarterEnd(firstDay)
-		  start = start.Month(start.Month - 3)
-		  start = start.day(start.day - 1)
-		  start = start.Hour(23)
-		  start = start.Minute(59)
-		  start = start.Second(59)
+		  dim diff as new DateInterval(0, 3)
+		  start = start-diff
 		  return start
 		  
 		End Function
@@ -235,6 +232,8 @@ Protected Module DateExtra
 		Function Month(Extends d as DateTime, pMonth as integer) As DateTime
 		  if pMonth<1 then
 		    pMonth = 11+pMonth
+		  elseif pMonth > 12 then
+		    pMonth = pMonth - 12
 		  end if
 		  Return New DateTime(d.Year, pMonth, d.Day, d.Hour, d.Minute, d.Second, d.Nanosecond, d.TimeZone)
 		  

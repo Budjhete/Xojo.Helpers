@@ -235,7 +235,7 @@ Protected Module StringExtra
 		Function CurrencyValue(Extends pString As String) As Currency
 		  pString = pString.ReplaceAll(" ", "")
 		  
-		  Dim pVariant As Variant = CDbl(pString.ReplaceAll(" ", ""))
+		  Dim pVariant As Variant = CDbl(pString.ReplaceAll(",", "."))
 		  
 		  Return pVariant.CurrencyValue
 		End Function
