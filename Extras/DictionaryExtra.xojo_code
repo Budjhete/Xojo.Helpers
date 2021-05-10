@@ -228,7 +228,7 @@ Protected Module DictionaryExtra
 		  
 		  
 		  
-		  Return xojo.data.GenerateJSON(pDictionary.JSONCompatible)
+		  Return GenerateJSON(pDictionary.JSONCompatible)
 		End Function
 	#tag EndMethod
 

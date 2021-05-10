@@ -12,7 +12,7 @@ Protected Module RecordSetExtra
 		    return default
 		  end
 		  
-		  return field.StringValue.DefineEncoding(Encodings.UTF8).ToText
+		  return field.StringValue.DefineEncoding(Encodings.UTF8)
 		End Function
 	#tag EndMethod
 
