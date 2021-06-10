@@ -35,7 +35,7 @@ Protected Class Version
 		Function IntegerValue() As Integer
 		  // Get an integer representing the version relative value
 		  
-		  Return 1000000 * Me.Major + 10000 * Me.Minor + 1000* Me.Bug + Me.Release
+		  Return 1000000 * Me.Major + 10000 * Me.Minor + 1000* Me.Bug '+ Me.Release
 		  
 		End Function
 	#tag EndMethod

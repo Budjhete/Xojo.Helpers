@@ -16,7 +16,6 @@ Protected Module DateExtra
 
 	#tag Method, Flags = &h0
 		Function BeginOfTime(Extends d As DateTime) As DateTime
-		  
 		  return new DateTime(0, TimeZone.Current)
 		  
 		End Function
@@ -235,7 +234,12 @@ Protected Module DateExtra
 		  elseif pMonth > 12 then
 		    pMonth = pMonth - 12
 		  end if
-		  Return New DateTime(d.Year, pMonth, d.Day, d.Hour, d.Minute, d.Second, d.Nanosecond, d.TimeZone)
+		  dim dd as integer = d.day
+		  if pMonth = 2 and d.day > 28 then
+		    dd = 28
+		  end if
+		  
+		  Return New DateTime(d.Year, pMonth, dd, d.Hour, d.Minute, d.Second, d.Nanosecond, d.TimeZone)
 		  
 		End Function
 	#tag EndMethod
