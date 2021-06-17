@@ -399,7 +399,7 @@ Protected Module DateExtra
 
 	#tag Method, Flags = &h0
 		Function SQLTime(Extends d as DateTime) As String
-		  return d.SQLDateTime.Mid(11)
+		  return d.SQLDateTime.Middle(11)
 		End Function
 	#tag EndMethod
 
