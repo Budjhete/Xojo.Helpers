@@ -72,10 +72,9 @@ Protected Module StringExtra
 		Function BooleanValue(Extends pString As String) As Boolean
 		  pString = pString.ReplaceAll(" ", "")
 		  
-		  dim pVariant as Variant
 		  
 		  if IsNumeric(pString) then
-		    return pVariant.BooleanValue
+		    return pString.ToInteger.BooleanValue
 		  else
 		    if pString = "True" or pString = "Vrai" then
 		      return True

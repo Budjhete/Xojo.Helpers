@@ -110,6 +110,13 @@ Protected Module DateExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function IsLeapYear(extends d As DateTime) As Boolean
+		  // Return True if this date a leap year
+		  Return (((d.year MOD 4)=0) AND ((d.year MOD 100)<>0)) OR (d.year MOD 400)=0
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function IsPast(Extends d as DateTime) As Boolean
 		  return (d < DateTime.Now)
 		End Function
@@ -217,7 +224,7 @@ Protected Module DateExtra
 	#tag Method, Flags = &h0
 		Function LongishDate(extends d As DateTime) As String
 		  // Return a date in the format: <month name> <day>, <year>
-		  return d.MonthName + " " + d.Day.ToText + ", " + d.Year.ToText
+		  return d.MonthName + " " + d.Day.ToString + ", " + d.Year.ToString
 		End Function
 	#tag EndMethod
 
