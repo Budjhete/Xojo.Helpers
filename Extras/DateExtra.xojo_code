@@ -23,7 +23,7 @@ Protected Module DateExtra
 
 	#tag Method, Flags = &h0
 		Function Clone(Extends d as DateTime) As DateTime
-		  dim a as DateTime = d
+		  dim a as new DateTime(d)
 		  return a
 		End Function
 	#tag EndMethod
@@ -37,6 +37,13 @@ Protected Module DateExtra
 	#tag Method, Flags = &h0
 		Function Day(Extends d as DateTime, pDay as integer) As DateTime
 		  return New DateTime(d.Year, d.Month, pDay, d.Hour, d.Minute, d.Second, d.Nanosecond, d.TimeZone)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function DayOfWeekMonthStart(Extends d as DateTime) As Integer
+		  dim dd as new DateTime(d)
+		  return dd.MonthStart.DayOfWeek
 		End Function
 	#tag EndMethod
 
@@ -482,7 +489,7 @@ Protected Module DateExtra
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"AM"
 	#tag EndConstant
 
-	#tag Constant, Name = kDayOfWeek, Type = Text, Dynamic = True, Default = \"Sunday\x2CMonday\x2CTuesday\x2CWednesday\x2CThursday\x2CFriday\x2CSaturday", Scope = Protected
+	#tag Constant, Name = kDayOfWeek, Type = String, Dynamic = True, Default = \"Sunday\x2CMonday\x2CTuesday\x2CWednesday\x2CThursday\x2CFriday\x2CSaturday", Scope = Public
 		#Tag Instance, Platform = Any, Language = en, Definition  = \"Sunday\x2CMonday\x2CTuesday\x2CWednesday\x2CThursday\x2CFriday\x2CSaturday"
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"Dimanche\x2CLundi\x2CMardi\x2CMercredi\x2CJeudi\x2CVendredi\x2CSamedi"
 	#tag EndConstant
