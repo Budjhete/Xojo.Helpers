@@ -38,6 +38,26 @@ Protected Module Helpers
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function ColorDarker(cc as Color) As Color
+		  if color.IsDarkMode then
+		    return color.RGB(cc.Red-60, cc.Green-60, cc.Blue-60)
+		  else
+		    Return cc
+		  end if
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function ColorSwitch(cc as Color) As Color
+		  if color.IsDarkMode then
+		    return color.RGB(255-cc.Red, 255-cc.Green, 255-cc.Blue)
+		  else
+		    Return cc
+		  end if
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetDesktop and (Target32Bit or Target64Bit))
 		Function Confirm(message as String) As Boolean
 		  return (MsgBox(message, 36) = 6)
