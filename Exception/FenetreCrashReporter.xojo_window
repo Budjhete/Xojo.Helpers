@@ -22,7 +22,7 @@ Begin Window FenetreCrashReporter
    MinWidth        =   500
    Placement       =   3
    Resizeable      =   True
-   Title           =   "kRapporterProbleme"
+   Title           =   "#kRapporterProbleme"
    Visible         =   True
    Width           =   500
    Begin Label lRapporter
@@ -50,7 +50,7 @@ Begin Window FenetreCrashReporter
       TabIndex        =   3
       TabPanelIndex   =   0
       TabStop         =   True
-      Text            =   "kRapporterProblemeDetails"
+      Text            =   "#kRapporterProblemeDetails"
       TextAlignment   =   0
       TextColor       =   &c00000000
       Tooltip         =   ""
@@ -85,7 +85,7 @@ Begin Window FenetreCrashReporter
       TabIndex        =   4
       TabPanelIndex   =   0
       TabStop         =   True
-      Text            =   "kInformationsDetaillees_"
+      Text            =   "#kInformationsDetaillees_"
       TextAlignment   =   0
       TextColor       =   &c00000000
       Tooltip         =   ""
@@ -169,7 +169,7 @@ Begin Window FenetreCrashReporter
       TabIndex        =   6
       TabPanelIndex   =   0
       TabStop         =   True
-      Text            =   "kDetailsOuCommentaires_"
+      Text            =   "#kDetailsOuCommentaires_"
       TextAlignment   =   0
       TextColor       =   &c00000000
       Tooltip         =   ""
@@ -233,7 +233,6 @@ Begin Window FenetreCrashReporter
       Text            =   ""
       TextAlignment   =   0
       TextColor       =   &c00000000
-      Text_           =   ""
       Tooltip         =   ""
       Top             =   279
       Transparent     =   False
@@ -291,7 +290,7 @@ Begin Window FenetreCrashReporter
       TabIndex        =   5
       TabPanelIndex   =   0
       TabStop         =   True
-      Text            =   "kEmailObligatoire"
+      Text            =   "#kEmailObligatoire"
       TextAlignment   =   0
       TextColor       =   &c00000000
       Tooltip         =   ""
@@ -355,7 +354,6 @@ Begin Window FenetreCrashReporter
       Text            =   ""
       TextAlignment   =   0
       TextColor       =   &c00000000
-      Text_           =   ""
       Tooltip         =   ""
       Top             =   220
       Transparent     =   False
@@ -370,7 +368,7 @@ Begin Window FenetreCrashReporter
       AllowAutoDeactivate=   True
       Bold            =   False
       Cancel          =   False
-      Caption         =   "kEnvoyer"
+      Caption         =   "#kEnvoyer"
       Default         =   True
       Enabled         =   False
       FontName        =   "System"
@@ -402,7 +400,7 @@ Begin Window FenetreCrashReporter
       AllowAutoDeactivate=   True
       Bold            =   False
       Cancel          =   True
-      Caption         =   "kFermer"
+      Caption         =   "#kFermer"
       Default         =   False
       Enabled         =   True
       FontName        =   "System"
