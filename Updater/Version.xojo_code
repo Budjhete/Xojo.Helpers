@@ -35,7 +35,7 @@ Protected Class Version
 		Function IntegerValue() As Integer
 		  // Get an integer representing the version relative value
 		  
-		  Return 1000000 * Me.Major + 10000 * Me.Minor + 1000* Me.Bug + Me.Release
+		  Return 1000000 * Me.Major + 10000 * Me.Minor' + 1000* Me.Bug '+ Me.Release
 		  
 		End Function
 	#tag EndMethod
@@ -68,8 +68,8 @@ Protected Class Version
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ToString() As Text
-		  dim version as Text = Major.ToText + "." + Minor.ToText
+		Function ToString() As String
+		  dim version as String = Major.ToText + "." + Minor.ToText
 		  
 		  if bug > 0 then
 		    version = version + "." + bug.ToText

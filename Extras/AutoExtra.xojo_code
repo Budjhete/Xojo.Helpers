@@ -25,93 +25,8 @@ Protected Module AutoExtra
 		  End Select
 		  
 		  
-		  if pAuto isa Xojo.Core.Date then return 17
+		  if pAuto isa DateTime then return 17
 		  if t.IsClass then Return 10
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function AutoBooleanValue(Extends pAuto As Auto) As Boolean
-		  if pAuto = nil then
-		    Return false
-		  end if
-		  
-		  Select case pAuto.Type
-		  case 3 // integer
-		    dim i as integer = pAuto.AutoIntegerValue
-		    Return i.BooleanValue
-		  case 5 // Double
-		    Return pAuto.AutoDoubleValue.ToText.IntegerValue.BooleanValue
-		  Case 37 // text
-		    dim t as text = pAuto
-		    
-		    Return t = "true" or t = "TRUE" or t = "True" or t="1"
-		    
-		  Case 6 // Currency
-		    Return pAuto.AutoCurrencyValue.ToText.IntegerValue.BooleanValue
-		    
-		  Case 11 // Boolean
-		    Return pAuto
-		  Case 9 // Object
-		    Return false
-		  End Select
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function AutoCurrencyValue(Extends pAuto As Auto) As Currency
-		  if pAuto = nil then
-		    Return 0
-		  end if
-		  
-		  Select case pAuto.Type
-		  case 3 // integer
-		    Return pAuto.AutoTextValue.CurrencyValue
-		  case 5 // Double
-		    dim c as Currency = pAuto
-		    Return c
-		  Case 37 // text
-		    Return pAuto.AutoTextValue.CurrencyValue
-		  Case 6 // Currency
-		    Return pAuto
-		    
-		  Case 11 // Boolean
-		    if pAuto.AutoBooleanValue then
-		      Return 1
-		    else
-		      Return 0
-		    end if
-		    
-		  Case 9 // Object
-		    Return 0
-		  End Select
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function AutoDateValue(Extends pAuto As Auto) As Xojo.Core.Date
-		  if pAuto = nil then
-		    Return Xojo.Core.Date.Now
-		  end if
-		  
-		  Select case pAuto.Type
-		  Case 37 // text
-		    if pAuto.AutoTextValue.Length>9 then
-		      Return Xojo.Core.date.FromText(pAuto.AutoTextValue)
-		    else
-		      Return Xojo.Core.Date.Now
-		    end if
-		  Case 17
-		    Return pAuto
-		  case 10
-		    #if TargetIOS
-		      Dim d as date
-		    #else
-		      dim d as new date
-		    #endif
-		    d = pAuto
-		    Return Xojo.Core.date.FromText(d.SQLDateTime.ToText)
-		  End Select
 		End Function
 	#tag EndMethod
 
@@ -123,16 +38,16 @@ Protected Module AutoExtra
 		  
 		  Select case pAuto.Type
 		  case 3 // integer
-		    Return pAuto.AutoTextValue.DoubleValue
+		    Return pAuto.StringValue.DoubleValue
 		  case 5 // Double
 		    Return pAuto
 		  Case 37 // text
-		    Return pAuto.AutoTextValue.DoubleValue
+		    Return pAuto.StringValue.DoubleValue
 		  Case 6 // Currency
-		    Return pAuto.AutoTextValue.DoubleValue
+		    Return pAuto.StringValue.DoubleValue
 		    
 		  Case 11 // Boolean
-		    if pAuto.AutoBooleanValue then
+		    if pAuto.BooleanValue then
 		      Return 1
 		    else
 		      Return 0
@@ -145,108 +60,144 @@ Protected Module AutoExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function AutoIntegerValue(Extends pAuto As Auto) As Integer
+		Function BooleanValue(Extends pAuto As Auto) As Boolean
+		  if pAuto = nil then
+		    Return false
+		  end if
+		  
+		  Select case pAuto.Type
+		  case 3 // integer
+		    dim i as integer = pAuto.IntegerValue
+		    Return i.BooleanValue
+		  case 5 // Double
+		    Return pAuto.AutoDoubleValue.ToText.IntegerValue.BooleanValue
+		  Case 37 // text
+		    dim t as text = pAuto
+		    
+		    Return t = "true" or t = "TRUE" or t = "True" or t="1"
+		    
+		  Case 6 // Currency
+		    Return pAuto.CurrencyValue.ToText.IntegerValue.BooleanValue
+		    
+		  Case 11 // Boolean
+		    Return pAuto
+		  Case 9 // Object
+		    Return false
+		  End Select
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+		Function CurrencyValue(Extends pAuto As Auto) As Currency
 		  if pAuto = nil then
 		    Return 0
 		  end if
 		  
 		  Select case pAuto.Type
 		  case 3 // integer
-		    Return pAuto
+		    Return pAuto.StringValue.CurrencyValue
 		  case 5 // Double
-		    Return pAuto.AutoDoubleValue.ToText.IntegerValue
+		    dim c as Currency = pAuto
+		    Return c
 		  Case 37 // text
-		    Return pAuto.AutoTextValue.IntegerValue
+		    Return pAuto.StringValue.CurrencyValue
 		  Case 6 // Currency
-		    Return pAuto.AutoCurrencyValue.ToText.IntegerValue
+		    Return pAuto
 		    
 		  Case 11 // Boolean
-		    if pAuto.AutoBooleanValue then
+		    if pAuto.BooleanValue then
 		      Return 1
 		    else
 		      Return 0
 		    end if
 		    
 		  Case 9 // Object
-		    Return -1
+		    Return 0
 		  End Select
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function AutoIntegerValueNilMinusOne(Extends pAuto As Auto) As Integer
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+		Function DateTimeValue(Extends pAuto As Auto) As DateTime
 		  if pAuto = nil then
-		    Return -1
+		    Return DateTime.Now
 		  end if
 		  
 		  Select case pAuto.Type
-		  case 3 // integer
-		    Return pAuto
-		  case 5 // Double
-		    Return pAuto.AutoDoubleValue.ToText.IntegerValue
 		  Case 37 // text
-		    Return pAuto.AutoTextValue.IntegerValue
-		  Case 6 // Currency
-		    Return pAuto.AutoCurrencyValue.ToText.IntegerValue
-		    
-		  Case 11 // Boolean
-		    if pAuto.AutoBooleanValue then
-		      Return 1
+		    if pAuto.StringValue.Length>9 then
+		      Return DateTime.FromString(pAuto.StringValue)
 		    else
-		      Return 0
+		      Return DateTime.Now
 		    end if
-		    
-		  Case 9 // Object
-		    Return -1
-		  End Select
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function AutoStringValue(Extends pAuto As Auto) As String
-		  Select case pAuto.Type
-		  case 3 // integer
-		    Return pAuto.AutoIntegerValueNilMinusOne.ToText
-		  case 5 // Double
-		    Return pAuto.AutoDoubleValue.ToText
-		  Case 37 // text
+		  Case 17
 		    Return pAuto
-		  Case 8 // String
-		    Return pAuto
-		  Case 6 // Currency
-		    Return pAuto.AutoCurrencyValue.ToText
-		    
-		  Case 11 // Boolean
-		    Return pAuto.AutoBooleanValue.TextValue
-		    
-		  Case 9 // Object
-		    Return ""
-		  End Select
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function AutoTextValue(Extends pAuto As Auto) As Text
-		  Select case pAuto.Type
-		  case 3 // integer
-		    Return pAuto.AutoIntegerValue.ToText
-		  case 5 // Double
-		    Return pAuto.AutoDoubleValue.ToText
-		  Case 37 // text
-		    Return pAuto
-		  case 8 // String
-		    #if not TargetIOS
-		      dim s as string = pAuto
-		      Return s.DefineEncoding(Encodings.UTF8).ToText
+		  case 10
+		    #if TargetIOS
+		      Dim d as date
+		    #else
+		      dim d as new date
 		    #endif
+		    d = pAuto
+		    Return DateTime.FromString(d.SQLDateTime)
+		  End Select
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function IntegerValue(Extends pAuto As Auto) As Integer
+		  if pAuto = nil then
+		    Return 0
+		  end if
+		  
+		  Select case pAuto.Type
+		  case 3 // integer
+		    Return pAuto
+		  case 5 // Double
+		    Return pAuto.AutoDoubleValue.ToText.IntegerValue
+		  Case 37 // text
+		    Return pAuto.StringValue.IntegerValue
 		  Case 6 // Currency
-		    Return pAuto.AutoCurrencyValue.ToText
+		    Return pAuto.CurrencyValue.ToText.IntegerValue
 		    
 		  Case 11 // Boolean
-		    Return pAuto.AutoBooleanValue.TextValue
+		    if pAuto.BooleanValue then
+		      Return 1
+		    else
+		      Return 0
+		    end if
 		    
 		  Case 9 // Object
-		    Return ""
+		    Return -1
+		  End Select
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function IntegerValueNilMinusOne(Extends pAuto As Auto) As Integer
+		  if pAuto = nil then
+		    Return -1
+		  end if
+		  
+		  Select case pAuto.Type
+		  case 3 // integer
+		    Return pAuto
+		  case 5 // Double
+		    Return pAuto.AutoDoubleValue.ToText.IntegerValue
+		  Case 37 // text
+		    Return pAuto.StringValue.IntegerValue
+		  Case 6 // Currency
+		    Return pAuto.CurrencyValue.ToText.IntegerValue
+		    
+		  Case 11 // Boolean
+		    if pAuto.BooleanValue then
+		      Return 1
+		    else
+		      Return 0
+		    end if
+		    
+		  Case 9 // Object
+		    Return -1
 		  End Select
 		End Function
 	#tag EndMethod
@@ -292,6 +243,55 @@ Protected Module AutoExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function StringValue(Extends pAuto As Auto) As String
+		  Select case pAuto.Type
+		  case 3 // integer
+		    Return pAuto.IntegerValueNilMinusOne.ToString
+		  case 5 // Double
+		    Return pAuto.AutoDoubleValue.ToString
+		  Case 37 // text
+		    Return pAuto
+		  Case 8 // String
+		    Return pAuto
+		  Case 6 // Currency
+		    Return pAuto.CurrencyValue.ToString
+		    
+		  Case 11 // Boolean
+		    Return pAuto.BooleanValue.ToString
+		    
+		  Case 9 // Object
+		    Return ""
+		  End Select
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function TextValue(Extends pAuto As Auto) As Text
+		  Select case pAuto.Type
+		  case 3 // integer
+		    Return pAuto.IntegerValue.ToText
+		  case 5 // Double
+		    Return pAuto.AutoDoubleValue.ToText
+		  Case 37 // text
+		    Return pAuto
+		  case 8 // String
+		    #if not TargetIOS
+		      dim s as string = pAuto
+		      Return s.DefineEncoding(Encodings.UTF8).ToText
+		    #endif
+		  Case 6 // Currency
+		    Return pAuto.CurrencyValue.ToText
+		    
+		  Case 11 // Boolean
+		    Return pAuto.BooleanValue.TextValue
+		    
+		  Case 9 // Object
+		    Return ""
+		  End Select
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function Type(Extends pAuto As Auto) As integer
 		  Using Xojo.Introspection
 		  if pAuto=nil then Return 0
@@ -322,8 +322,8 @@ Protected Module AutoExtra
 		  
 		  
 		  if pAuto.IsArray then Return 4096
-		  if pAuto isa Xojo.Core.Date then return 17
-		  if pAuto IsA Xojo.Core.Dictionary then Return 12
+		  if pAuto isa DateTime then return 17
+		  if pAuto IsA Dictionary then Return 12
 		  if t.IsClass then Return 10
 		  
 		End Function
@@ -356,7 +356,7 @@ Protected Module AutoExtra
 		    
 		  End Select
 		  
-		  if pAuto isa Xojo.Core.Date then return 17
+		  if pAuto isa DateTime then return 17
 		  if t.IsClass then Return 10
 		End Function
 	#tag EndMethod
@@ -392,7 +392,7 @@ Protected Module AutoExtra
 		    
 		  End Select
 		  
-		  if pAuto isa Xojo.Core.Date then return "XojoDate"
+		  if pAuto isa DateTime then return "XojoDate"
 		  if t.IsClass then Return "Class"
 		End Function
 	#tag EndMethod
@@ -426,7 +426,7 @@ Protected Module AutoExtra
 		    
 		  End Select
 		  
-		  if pAuto isa Xojo.Core.Date then return "XojoDate"
+		  if pAuto isa DateTime then return "XojoDate"
 		  if t.IsClass then Return "Class"
 		End Function
 	#tag EndMethod
@@ -457,7 +457,7 @@ Protected Module AutoExtra
 		  case 16 //   TypeColor
 		    a = pVariant.ColorValue
 		  case 37 //   TypeText
-		    a = pVariant.TextValue
+		    a = pVariant.StringValue
 		  else
 		    a = nil
 		    

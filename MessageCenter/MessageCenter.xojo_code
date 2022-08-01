@@ -2,7 +2,7 @@
 Protected Class MessageCenter
 	#tag Method, Flags = &h0
 		Sub Constructor()
-		  mReceivers = new Xojo.Core.Dictionary
+		  mReceivers = new Dictionary
 		  
 		  mTimer = new Timer
 		  mTimer.Mode = Timer.ModeOff
@@ -185,7 +185,7 @@ Protected Class MessageCenter
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private mReceivers As Xojo.Core.Dictionary
+		Private mReceivers As Dictionary
 	#tag EndProperty
 
 	#tag Property, Flags = &h21

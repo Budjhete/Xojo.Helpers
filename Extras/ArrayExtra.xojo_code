@@ -39,7 +39,7 @@ Protected Module ArrayExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Append(Extends arr() As Text, arr2() As Text)
+		Sub Append(Extends arr() as String, arr2() as String)
 		  // Concatenate arr2 to arr.
 		  
 		  Dim ub2 As Integer = UBound( arr2 )
@@ -54,6 +54,14 @@ Protected Module ArrayExtra
 		  next
 		  
 		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub AppendAll(Extends  ByRef arr() as String, source() as String)
+		  for i as Integer = 0 to source.Ubound
+		    arr.Append(source(i))
+		  Next
 		End Sub
 	#tag EndMethod
 
@@ -150,10 +158,28 @@ Protected Module ArrayExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Clone(Extends arr() As Text) As Text()
+		Function Clone(Extends arr() as String) As String()
 		  // Return an independent copy of this array.
 		  
-		  Dim out() As Text
+		  Dim out() as String
+		  Dim ub As Integer = UBound( arr )
+		  if ub >= 0 then
+		    Redim out( ub )
+		    Dim index As Integer
+		    for index = 0 to ub
+		      out( index ) = arr( index )
+		    next
+		  end if
+		  return out
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function Clone(Extends arr() as Text) As Text()
+		  // Return an independent copy of this array.
+		  
+		  Dim out() as Text
 		  Dim ub As Integer = UBound( arr )
 		  if ub >= 0 then
 		    Redim out( ub )
@@ -208,9 +234,9 @@ Protected Module ArrayExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Concat(Extends arr1() As Text, arr2() As Text) As Text()
+		Function Concat(Extends arr1() as String, arr2() as String) As String()
 		  // Concatenate arr2 to arr1 and return the result as a new array.
-		  Dim out() As Text
+		  Dim out() as String
 		  Dim ub1 As Integer = UBound( arr1 )
 		  Dim ub2 As Integer = UBound( arr2 )
 		  Redim out( ub1 + ub2 + 1 )
@@ -251,7 +277,7 @@ Protected Module ArrayExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Contains(Extends arr() as Text, value as Text) As Boolean
+		Function Contains(Extends arr() as String, value as String) As Boolean
 		  for i as Integer = 0 to arr.Ubound
 		    if arr(i).Contains(value) then
 		      return true
@@ -351,7 +377,7 @@ Protected Module ArrayExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub RemoveByValue(Extends arr() as Text, value as Text)
+		Sub RemoveByValue(Extends arr() as String, value as String)
 		  for i as Integer = arr.Ubound DownTo 0
 		    if arr(i) = value then
 		      arr.Remove(i)
@@ -433,7 +459,7 @@ Protected Module ArrayExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub RemoveSlice(Extends arr() As Text, fromIndex As Integer = 0, toIndex As Integer = 0)
+		Sub RemoveSlice(Extends arr() As String, fromIndex As Integer = 0, toIndex As Integer = 0)
 		  // Deletes a portion of the array.
 		  // See "Slice Indexing" note.
 		  
@@ -507,7 +533,7 @@ Protected Module ArrayExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Reverse(Extends arr() As Text)
+		Sub Reverse(Extends arr() as String)
 		  // Reverse the order of the elements in the array, in place.
 		  
 		  Dim low, high, midpoint As Integer
@@ -516,7 +542,7 @@ Protected Module ArrayExtra
 		  
 		  midpoint = (high + 1) \ 2
 		  while low < midpoint
-		    Dim temp As Text = arr(low)
+		    Dim temp as String = arr(low)
 		    arr(low) = arr(high)
 		    arr(high) = temp
 		    low = low + 1
@@ -572,7 +598,7 @@ Protected Module ArrayExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Slice(Extends arr() As Text, fromIndex As Integer = 0, toIndex As Integer = 0) As Text()
+		Function Slice(Extends arr() As String, fromIndex As Integer = 0, toIndex As Integer = 0) As String()
 		  // Return a subset of the given array.
 		  // See "Slice Indexing" note.
 		  
@@ -582,7 +608,7 @@ Protected Module ArrayExtra
 		  Dim ub As Integer = UBound( arr )
 		  if fromIndex < 0 then fromIndex = ub + 1 + fromIndex
 		  if toIndex <= 0 then toIndex = ub + 1 + toIndex
-		  Dim out() As Text
+		  Dim out() as String
 		  Dim outbound As Integer = toIndex - fromIndex - 1
 		  Redim out( outbound )
 		  Dim index As Integer
@@ -679,7 +705,7 @@ Protected Module ArrayExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Splice(Extends arr() As Text, fromIndex As Integer, toIndex As Integer, arrayToInsert() As Text, srcFrom As Integer = 0, srcTo As Integer = 0)
+		Sub Splice(Extends arr() As String, fromIndex As Integer, toIndex As Integer, arrayToInsert() As String, srcFrom As Integer = 0, srcTo As Integer = 0)
 		  // This function replaces a section (or slice) of the base array with the contents
 		  // of another array.  The range replaced is specified with from/to indices, which
 		  // may be negative, in which case they count from the end of the array (just as

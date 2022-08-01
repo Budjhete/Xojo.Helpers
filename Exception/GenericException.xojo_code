@@ -2,14 +2,14 @@
 Protected Class GenericException
 Inherits RuntimeException
 	#tag Method, Flags = &h1000
-		Sub Constructor(message as Text)
+		Sub Constructor(message as String)
 		  ErrorMessage = message
 		End Sub
 	#tag EndMethod
 
 
 	#tag Property, Flags = &h0
-		ErrorMessage As Text
+		ErrorMessage As String
 	#tag EndProperty
 
 

@@ -1,14 +1,14 @@
 #tag Module
 Protected Module DictionaryExtra
 	#tag Method, Flags = &h0
-		Sub Clear(Extends pDictionary as Xojo.Core.Dictionary)
+		Sub Clear(Extends pDictionary as Dictionary)
 		  pDictionary.RemoveAll
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Clone(Extends pDictionary as Xojo.Core.Dictionary) As Xojo.Core.Dictionary
-		  Using Xojo.Core
+		Function Clone(Extends pDictionary as Dictionary) As Dictionary
+		  
 		  Dim pNewDictionary As New Dictionary
 		  
 		  For Each entry As DictionaryEntry In pDictionary
@@ -20,16 +20,23 @@ Protected Module DictionaryExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function EagerlyEvaluateIterable(obj As Xojo.Core.Iterable) As auto()
-		  Var results() As Auto
-		  For Each item As Auto In obj
-		    results.Append(item)
+		Function EagerlyEvaluateIterable(obj As Iterable) As variant()
+		  Var results() As Variant
+		  For Each item As Variant In obj
+		    results.add(item)
 		  Next
 		  Return results
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0
+		Function GetBoolean(Extends pDictionary As Dictionary, pKey As Variant) As Boolean
+		  Dim b as Boolean = pDictionary.Value(pKey)
+		  Return b
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function GetBoolean(Extends pDictionary As Dictionary, pKey As Variant, pDefault As Boolean) As Boolean
 		  Dim b as Boolean = pDictionary.Lookup(pKey, pDefault)
 		  Return b
@@ -37,29 +44,16 @@ Protected Module DictionaryExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function GetBoolean(Extends pDictionary As Xojo.Core.Dictionary, pKey As Auto) As Boolean
-		  Dim b as Boolean = pDictionary.Value(pKey)
-		  Return b
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function GetBoolean(Extends pDictionary As Xojo.Core.Dictionary, pKey As Auto, pDefault As Boolean) As Boolean
-		  Dim b as Boolean = pDictionary.Lookup(pKey, pDefault)
-		  Return b
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function GetDate(Extends pDictionary As Dictionary, pKey As Variant) As Xojo.Core.Date
-		  dim d as Xojo.Core.Date = pDictionary.Value(pKey)
+		Function GetDate(Extends pDictionary As Dictionary, pKey As Variant) As DateTime
+		  dim d as DateTime = pDictionary.Value(pKey)
 		  Return d
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function GetDate(Extends pDictionary As Dictionary, pKey As Variant, pDefault As Xojo.Core.Date) As Xojo.Core.Date
-		  dim d as Xojo.Core.Date
+		Function GetDate(Extends pDictionary As Dictionary, pKey As Variant, pDefault As DateTime) As DateTime
+		  #Pragma BreakOnExceptions False
+		  dim d as DateTime
 		  try
 		    d = pDictionary.Lookup(pKey, pDefault)
 		  Catch
@@ -70,83 +64,41 @@ Protected Module DictionaryExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function GetDate(Extends pDictionary As Xojo.Core.Dictionary, pKey As Auto) As Xojo.Core.Date
-		  dim d as Xojo.Core.Date = pDictionary.Value(pKey)
-		  Return d
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function GetDate(Extends pDictionary As Xojo.Core.Dictionary, pKey As Auto, pDefault As Xojo.Core.Date) As Xojo.Core.Date
-		  dim d as Xojo.Core.Date = pDictionary.Lookup(pKey, pDefault)
-		  Return d
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function GetDictionary(Extends pDictionary As Dictionary, pKey As variant) As Dictionary
 		  dim d as Dictionary = pDictionary.Value(pKey)
 		  Return d
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0
 		Function GetDictionary(Extends pDictionary As Dictionary, pKey As Variant, pDefault As Dictionary) As Dictionary
 		  Return Dictionary(pDictionary.Value(pKey, pDefault))
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function GetDictionary(Extends pDictionary As Xojo.core.Dictionary, pKey As Auto) As Xojo.core.Dictionary
-		  dim d as Xojo.Core.Dictionary = pDictionary.Value(pKey)
-		  Return d
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function GetDictionary(Extends pDictionary As Xojo.Core.Dictionary, pKey As Auto, pDefault As Xojo.Core.Dictionary) As Xojo.Core.Dictionary
-		  Dim d as Xojo.Core.Dictionary = pDictionary.Lookup(pKey, pDefault)
-		  Return d
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function GetDouble(Extends pDictionary As Xojo.Core.Dictionary, pKey As Auto) As Double
+		Function GetDouble(Extends pDictionary As Dictionary, pKey As Auto) As Double
 		  Dim d as double =  pDictionary.Value(pKey)
 		  Return d
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function GetDouble(Extends pDictionary As Xojo.Core.Dictionary, pKey As Auto, pDefault As Double) As Double
+		Function GetDouble(Extends pDictionary As Dictionary, pKey As Auto, pDefault As Double) As Double
 		  Dim d as Double =  pDictionary.Lookup(pKey, pDefault)
 		  Return d
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0
 		Function GetInteger(Extends pDictionary As Dictionary, pKey As Variant) As Integer
 		  Dim i as integer =  pDictionary.Value(pKey)
 		  Return i
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function GetInteger(Extends pDictionary as Dictionary, pKey as Variant, Default as Integer) As Integer
-		  Dim i as integer =  pDictionary.Value(pKey, Default)
-		  Return i
-		End Function
-	#tag EndMethod
-
 	#tag Method, Flags = &h0
-		Function GetInteger(Extends pDictionary As Xojo.Core.Dictionary, pKey As Auto) As Integer
-		  Dim i as integer =  pDictionary.Value(pKey)
-		  Return i
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function GetInteger(Extends pDictionary As Xojo.Core.Dictionary, pKey As Auto, pDefault As Integer) As Integer
+		Function GetInteger(Extends pDictionary As Dictionary, pKey As variant, pDefault As Integer) As Integer
 		  Dim i as integer = pDictionary.Lookup(pKey, pDefault)
 		  Return i
 		End Function
@@ -162,20 +114,6 @@ Protected Module DictionaryExtra
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function GetString(Extends pDictionary As Dictionary, pKey As String, pDefault As String) As String
 		  Dim t as String = pDictionary.Lookup(pKey, pDefault)
-		  Return t
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function GetString(Extends pDictionary As Xojo.Core.Dictionary, pKey As Text) As Text
-		  Dim t as text = pDictionary.Value(pKey)
-		  Return t
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function GetString(Extends pDictionary As Xojo.Core.Dictionary, pKey As Text, pDefault As Text) As Text
-		  Dim t as text = pDictionary.Lookup(pKey, pDefault)
 		  Return t
 		End Function
 	#tag EndMethod
@@ -197,7 +135,7 @@ Protected Module DictionaryExtra
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function GetText(Extends pDictionary As Dictionary, pKey As Text, pDefault As Text) As Text
 		  #if TargetIOS then
-		    Dim t as Text = pDictionary.Lookup(pKey, pDefault)
+		    Dim t as String = pDictionary.Lookup(pKey, pDefault)
 		    Return t
 		  #else
 		    Dim p as String = pKey
@@ -210,25 +148,52 @@ Protected Module DictionaryExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Join(Extends d as Xojo.Core.Dictionary, assignSep as Text, pairSep as Text) As Text
-		  // @deprecated est-ce vraiment utile?
+		Function IntegerValueNilMinusOne(Extends pAuto As Variant) As Integer
+		  if pAuto = nil then
+		    Return -1
+		  end if
+		  dim tt as integer = pAuto.Type
+		  Select case pAuto.Type
+		  case 2, 3 // integer
+		    Return pAuto.IntegerValue
+		  case 5 // Double
+		    Return pAuto.DoubleValue.ToText.IntegerValue
+		  Case 8 // string 
+		    Return pAuto.StringValue.IntegerValue
+		  Case 37 // text
+		    Return pAuto.TextValue.IntegerValue
+		  Case 6 // Currency
+		    Return pAuto.CurrencyValue.ToText.IntegerValue
+		    
+		  Case 11 // Boolean
+		    if pAuto.BooleanValue then
+		      Return 1
+		    else
+		      Return 0
+		    end if
+		    
+		  Case 9 // Object
+		    Return -1
+		  End Select
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function Join(Extends d as Dictionary, assignSep as string, pairSep as String) As String
+		  dim pairs() as String
 		  
-		  dim pairs() as Text
-		  
-		  for each ent as Xojo.Core.DictionaryEntry in d
-		    dim t1 as text = ent.Key
-		    dim t2 as text = ent.Value
-		    pairs.Append( t1 + assignSep + t2)
+		  for each ent as DictionaryEntry in d
+		    dim t1 as String = ent.Key
+		    dim t2 as String = ent.Value
+		    pairs.Add( t1 + assignSep + t2)
 		  next
 		  
-		  
-		  return Text.Join(pairs, pairSep)
+		  Return String.FromArray(pairs, pairSep)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function JSONCompatible(Extends pDictionary As Xojo.Core.Dictionary) As Xojo.Core.Dictionary
-		  Using Xojo.Core
+		Function JSONCompatible(Extends pDictionary As Dictionary) As Dictionary
 		  
 		  For Each pEntry As DictionaryEntry In EagerlyEvaluateIterable(pDictionary)
 		    
@@ -239,11 +204,11 @@ Protected Module DictionaryExtra
 		    Select Case pValue.Type
 		      
 		    Case 12
-		      dim dd as Xojo.Core.Dictionary = pValue
+		      dim dd as Dictionary = pValue
 		      pDictionary.Value(pEntry.Key) = dd.jsoncompatible
 		      
 		    Case 17
-		      pDictionary.Value(pEntry.Key)  = pValue.AutoDateValue.SQLDateTime
+		      pDictionary.Value(pEntry.Key)  = pValue.DateTimeValue .SQLDateTime
 		      
 		    case 6
 		      
@@ -259,54 +224,22 @@ Protected Module DictionaryExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function JSONText(Extends pDictionary As Xojo.Core.Dictionary) As Text
-		  Using Xojo.Core
+		Function JSONText(Extends pDictionary As Dictionary) As String
 		  
 		  
-		  Return xojo.data.GenerateJSON(pDictionary.JSONCompatible)
+		  
+		  Return GenerateJSON(pDictionary.JSONCompatible)
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetDesktop and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target64Bit)) or  (TargetWeb and (Target64Bit)) or  (TargetDesktop and (Target64Bit)) or  (TargetIOS and (Target64Bit))
+		Function JSONValue(Extends pDictionaries() As Dictionary) As String
+		  return GenerateJSON(pDictionaries)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = API2Only and false
 		Function JSONValue(Extends pDictionary As Dictionary) As JSONItem
-		  Dim pJSONItem As New JSONItem
-		  
-		  For Each pKey As String In pDictionary.Keys
-		    
-		    Dim pValue As Variant = pDictionary.Value(pKey)
-		    
-		    Select Case pValue
-		      
-		    Case IsA Collection
-		      pJSONItem.Value(pKey) = Collection(pValue).JSONValue
-		      
-		    Case IsA Dictionary
-		      pJSONItem.Value(pKey) = Dictionary(pValue).JSONValue
-		      
-		    Case IsA Date
-		      pJSONItem.Value(pKey) = pValue.DateValue.SQLDateTime
-		      
-		    Else
-		      pJSONItem.Value(pKey) = pValue
-		      
-		    End Select
-		    
-		  Next
-		  
-		  Return pJSONItem
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function JSONValue(Extends pDictionaries() As Xojo.Core.Dictionary) As Text
-		  return Xojo.Data.GenerateJSON(pDictionaries)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function JSONValue(Extends pDictionary As Xojo.Core.Dictionary) As JSONItem
-		  Using Xojo.Core
-		  
 		  Dim pJSONItem As New JSONItem
 		  
 		  For Each pEntry As DictionaryEntry In pDictionary
@@ -315,14 +248,14 @@ Protected Module DictionaryExtra
 		    
 		    Select Case pValue
 		      
-		    Case IsA Xojo.Core.Dictionary
-		      pJSONItem.Value(pEntry.Key.AutoIntegerValue) = pValue
+		    Case IsA Dictionary
+		      pJSONItem.Value(pEntry.Key.IntegerValue) = pValue
 		      
 		    Case IsA Date
-		      pJSONItem.Value(pEntry.Key.AutoIntegerValue) = pValue.AutoDateValue.SQLDateTime
+		      pJSONItem.Value(pEntry.Key.IntegerValue) = pValue.DateTimeValue.SQLDateTime
 		      
 		    Else
-		      pJSONItem.Value(pEntry.Key.AutoIntegerValue) = pValue
+		      pJSONItem.Value(pEntry.Key.IntegerValue) = pValue
 		      
 		    End Select
 		    
@@ -332,16 +265,16 @@ Protected Module DictionaryExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function JSONValue(Extends pDictionary As Xojo.Core.Dictionary) As Text
-		  return Xojo.Data.GenerateJSON(pDictionary)
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target64Bit)) or  (TargetWeb and (Target64Bit)) or  (TargetDesktop and (Target64Bit)) or  (TargetIOS and (Target64Bit))
+		Function JSONValue(Extends pDictionary As Dictionary) As String
+		  return GenerateJSON(pDictionary)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Keys(Extends pDictionary as Xojo.Core.Dictionary) As Auto()
-		  dim keys() as Auto
-		  For each ent as Xojo.Core.DictionaryEntry in pDictionary
+		Function Keys(Extends pDictionary as Dictionary) As Variant()
+		  dim keys() as Variant
+		  For each ent as DictionaryEntry in pDictionary
 		    keys.Append(ent.Key)
 		  Next
 		  
@@ -350,9 +283,9 @@ Protected Module DictionaryExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Sub Merge(Extends pDictionary As Xojo.Core.Dictionary, pOtherDictionary As Xojo.Core.Dictionary)
+		Sub Merge(Extends pDictionary As Dictionary, pOtherDictionary As Dictionary)
 		  // Merge another dictionary in this dictionary
-		  For Each entr As Xojo.Core.DictionaryEntry In pOtherDictionary
+		  For Each entr As DictionaryEntry In pOtherDictionary
 		    pDictionary.Value(entr.Key) = entr.Value
 		  Next
 		  
@@ -360,7 +293,7 @@ Protected Module DictionaryExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Merge(Extends pDictionary As Xojo.Core.Dictionary, pOtherDictionary As Xojo.Core.Dictionary) As Xojo.Core.Dictionary
+		Function Merge(Extends pDictionary As Dictionary, pOtherDictionary As Dictionary) As Dictionary
 		  // Merge another dictionary in a copy of this dictionary
 		  Return pDictionary.Clone.Merge(pOtherDictionary)
 		End Function
@@ -375,29 +308,15 @@ Protected Module DictionaryExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Set(Extends pDictionary As Xojo.Core.Dictionary, pKey As Auto, pValue As Auto)
-		  // @deprecated complètement inutile
-		  
-		  pDictionary.Value(pKey) = pValue
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function Value(Extends pDictionary as Dictionary, pKey as variant, pDefault as Variant) As Auto
+		Function Value(Extends pDictionary as Dictionary, pKey as Variant, pDefault as Variant) As Variant
 		  return pDictionary.Lookup(pKey, pDefault)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Value(Extends pDictionary as Xojo.Core.Dictionary, pKey as Auto, pDefault as Auto) As Auto
-		  return pDictionary.Lookup(pKey, pDefault)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function Values(Extends pDictionary as Xojo.Core.Dictionary) As Auto()
+		Function Values(Extends pDictionary as Dictionary) As Auto()
 		  dim values() as Auto
-		  For each ent as Xojo.Core.DictionaryEntry in pDictionary
+		  For each ent as DictionaryEntry in pDictionary
 		    values.Append(ent.Value)
 		  Next
 		  
@@ -406,8 +325,8 @@ Protected Module DictionaryExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function XojoDictionary(Extends pDictionary as Dictionary) As Xojo.Core.Dictionary
-		  Dim pNewDictionary As New Xojo.Core.Dictionary
+		Function XojoDictionary(Extends pDictionary as Dictionary) As Dictionary
+		  Dim pNewDictionary As New Dictionary
 		  
 		  For Each pKey As String In pDictionary.Keys
 		    pNewDictionary.Value(pKey) = pDictionary.Value(pKey) 

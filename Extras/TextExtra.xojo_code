@@ -22,6 +22,18 @@ Protected Module TextExtra
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0, CompatibilityFlags = API2Only and false
+		Attributes( Deprecated )  Function AssignVars(str as Text, vars as Dictionary) As Text
+		  
+		  
+		  for each ent as DictionaryEntry in vars
+		    str = str.ReplaceAll("$"+ent.Key, ent.Value)
+		  Next
+		  
+		  return str
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Function AssignVars(str as Text, ParamArray vars as Text) As Text
 		  dim i as Integer = 1
@@ -29,18 +41,6 @@ Protected Module TextExtra
 		    str = str.ReplaceAll("$"+i.ToText, v)
 		    i = i + 1
 		  Next
-		  return str
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function AssignVars(str as Text, vars as Xojo.Core.Dictionary) As Text
-		  Using Xojo.Core
-		  
-		  for each ent as DictionaryEntry in vars
-		    str = str.ReplaceAll("$"+ent.Key, ent.Value)
-		  Next
-		  
 		  return str
 		End Function
 	#tag EndMethod
@@ -90,7 +90,7 @@ Protected Module TextExtra
 		  dim pAuto as Auto = pString
 		  
 		  if pAuto.IsNumeric then
-		    return pAuto.AutoBooleanValue
+		    return pAuto.BooleanValue
 		  else
 		    if pString = "True" or pString = "Vrai" or pString = "1" then
 		      return True
@@ -461,9 +461,20 @@ Protected Module TextExtra
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function Format(Extends pString As Text, pReplacements As Dictionary) As Text
+		  
+		  For Each pRepl As DictionaryEntry In pReplacements
+		    pString = pString.ReplaceAll("{" + pRepl.Key.TextValue + "}", pRepl.Value.TextValue)
+		  Next
+		  
+		  Return pString
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function Format(Extends pString As Text, ParamArray pReplacements As Pair) As Text
-		  Using Xojo.Core
+		  
 		  Dim pDictionary As New Dictionary
 		  
 		  For Each pReplacement As Pair In pReplacements
@@ -491,17 +502,6 @@ Protected Module TextExtra
 	#tag Method, Flags = &h0
 		Function Format(Extends pString As Text, ParamArray pReplacements As Text) As Text
 		  Return pString.Format(pReplacements)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function Format(Extends pString As Text, pReplacements As Xojo.Core.Dictionary) As Text
-		  Using Xojo.Core
-		  For Each pRepl As DictionaryEntry In pReplacements
-		    pString = pString.ReplaceAll("{" + pRepl.Key.AutoTextValue + "}", pRepl.Value.AutoTextValue)
-		  Next
-		  
-		  Return pString
 		End Function
 	#tag EndMethod
 
@@ -611,12 +611,12 @@ Protected Module TextExtra
 		Function isNumeric(extends s As Text) As Boolean
 		  #Pragma BreakOnExceptions False
 		  
-		  Using Xojo.core
+		  
 		  
 		  Dim value As Integer
 		  Try
 		    value = Integer.FromText(s)
-		  Catch e As BadDataException
+		  Catch e As Xojo.Core.BadDataException
 		    Return False
 		  End Try
 		  
@@ -673,7 +673,7 @@ Protected Module TextExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = false
 		Function Money(Extends str as Text, default as Text = "") As Text
 		  str = str.ReplaceAll(",", ".")
 		  
@@ -691,7 +691,7 @@ Protected Module TextExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = false
 		Function MoneyPositive(Extends str as Text, default as Text = "") As Text
 		  str = str.ReplaceAll(",", ".")
 		  
@@ -709,13 +709,13 @@ Protected Module TextExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = false
 		Function MoneyValue(Extends pString As Text) As Text
 		  Return pString.CurrencyValue.MoneyValue
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = false
 		Function MoneyValue(Extends pString As Text, pUnit As Text) As Text
 		  Return pString.CurrencyValue.MoneyValue(pUnit)
 		End Function
@@ -1119,7 +1119,7 @@ Protected Module TextExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target64Bit))
 		Function Sprintf(format as Text, ParamArray args as Auto) As Text
 		  
 		  dim matches() as JKRegEx.RegExMatch = format.SearchAll("%(b|c|d|u|f|o|s|x|X)")
@@ -1139,15 +1139,15 @@ Protected Module TextExtra
 		    
 		    Select Case match.SubExpressionString(1)
 		    Case "s"
-		      replace = arg.AutoTextValue
+		      replace = arg.StringValue
 		    Case "d"
-		      replace = arg.AutoIntegerValue.ToText
+		      replace = arg.IntegerValue.ToText
 		    Case "f"
 		      replace = arg.AutoDoubleValue.ToText
 		    Case "u"
-		      replace = arg.AutoIntegerValue.ToText
+		      replace = arg.IntegerValue.ToText
 		    Case "c"
-		      replace = Text.FromUnicodeCodepoint(arg.AutoIntegerValue)
+		      replace = Text.FromUnicodeCodepoint(arg.IntegerValue)
 		    Case "b"
 		      ' Integer -> binaire
 		    Case "o"
@@ -1165,8 +1165,8 @@ Protected Module TextExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function Sprintf(format as Text, ParamArray args as Auto) As Text
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target64Bit)) or  (TargetWeb and (Target64Bit)) or  (TargetDesktop and (Target64Bit))
+		Function Sprintf(format as Text, ParamArray args as Variant) As Text
 		  
 		  dim matches() as RegExMatch = format.SearchAll("%(b|c|d|u|f|o|s|x|X)")
 		  dim match as RegExMatch
@@ -1185,15 +1185,15 @@ Protected Module TextExtra
 		    
 		    Select Case match.SubExpressionString(1)
 		    Case "s"
-		      replace = arg.AutoTextValue
+		      replace = arg.TextValue
 		    Case "d"
-		      replace = arg.AutoIntegerValue.ToText
+		      replace = arg.IntegerValue.ToText
 		    Case "f"
 		      replace = arg.AutoDoubleValue.ToText
 		    Case "u"
-		      replace = arg.AutoIntegerValue.ToText
+		      replace = arg.IntegerValue.ToText
 		    Case "c"
-		      replace = Text.FromUnicodeCodepoint(arg.AutoIntegerValue)
+		      replace = Text.FromUnicodeCodepoint(arg.IntegerValue)
 		    Case "b"
 		      ' Integer -> binaire
 		    Case "o"

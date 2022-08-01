@@ -1,7 +1,7 @@
 #tag Class
 Protected Class Appcast
 	#tag Method, Flags = &h0
-		Sub Constructor(url as Text = "")
+		Sub Constructor(url as String = "")
 		  if url <> "" then
 		    Load(url)
 		  end
@@ -105,7 +105,7 @@ Protected Class Appcast
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Load(url as Text)
+		Sub Load(url as String)
 		  mSocket = new HTTPSocket
 		  
 		  dim userAgent as String = Appcast.FullVersionName
@@ -143,7 +143,7 @@ Protected Class Appcast
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub ParseContent(Content as Text)
+		Sub ParseContent(Content as String)
 		  redim Items(-1)
 		  
 		  dim xml as new XmlDocument

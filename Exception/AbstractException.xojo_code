@@ -2,7 +2,7 @@
 Protected Class AbstractException
 Inherits RuntimeException
 	#tag Method, Flags = &h1000
-		Sub Constructor(level as Integer, message as Text)
+		Sub Constructor(level as Integer, message as String)
 		  Me.LevelCode = level
 		  Me.ErrorMessage = message
 		  
@@ -12,7 +12,7 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		Sub Constructor(level as Integer, message as Text, code as Integer)
+		Sub Constructor(level as Integer, message as String, code as Integer)
 		  Me.LevelCode = level
 		  Me.ErrorMessage = message
 		  Me.Code = code
@@ -23,7 +23,7 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		Sub Constructor(level as Integer, message as Text, code as Integer, line as Integer)
+		Sub Constructor(level as Integer, message as String, code as Integer, line as Integer)
 		  Me.LevelCode = level
 		  Me.ErrorMessage = message
 		  Me.Code = code
@@ -35,7 +35,7 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		Sub Constructor(level as Integer, message as Text, code as Integer, location as Text)
+		Sub Constructor(level as Integer, message as String, code as Integer, location as String)
 		  Me.LevelCode = level
 		  Me.ErrorMessage = message
 		  Me.Code = code
@@ -47,7 +47,7 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		Sub Constructor(level as Integer, message as Text, code as Integer, location as Text, line as Integer)
+		Sub Constructor(level as Integer, message as String, code as Integer, location as String, line as Integer)
 		  Me.LevelCode = level
 		  Me.ErrorMessage = message
 		  Me.Code = code
@@ -60,7 +60,7 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		Sub Constructor(message as Text)
+		Sub Constructor(message as String)
 		  Me.ErrorMessage = message
 		  
 		  mPrevious = Me
@@ -69,7 +69,7 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		Sub Constructor(message as Text, code as Integer)
+		Sub Constructor(message as String, code as Integer)
 		  Me.ErrorMessage = message
 		  Me.Code = code
 		  
@@ -79,7 +79,7 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		Sub Constructor(message as Text, code as Integer, line as Integer)
+		Sub Constructor(message as String, code as Integer, line as Integer)
 		  Me.ErrorMessage = message
 		  Me.Code = code
 		  Me.Line = line
@@ -90,7 +90,7 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		Sub Constructor(message as Text, code as Integer, location as Text)
+		Sub Constructor(message as String, code as Integer, location as String)
 		  Me.ErrorMessage = message
 		  Me.Code = code
 		  Me.Location = location
@@ -101,7 +101,7 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h1000
-		Sub Constructor(message as Text, code as Integer, location as Text, line as Integer)
+		Sub Constructor(message as String, code as Integer, location as String, line as Integer)
 		  Me.ErrorMessage = message
 		  Me.Code = code
 		  Me.Location = location
@@ -114,7 +114,7 @@ Inherits RuntimeException
 
 	#tag Method, Flags = &h0
 		Shared Sub HandleBasic(e as AbstractException)
-		  dim FullMessage as Text
+		  dim FullMessage as String
 		  
 		  if e.ErrorMessage <> "" then
 		    FullMessage = e.ErrorMessage
@@ -144,7 +144,7 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function HumanReadableLevel(level as Integer) As Text
+		Shared Function HumanReadableLevel(level as Integer) As String
 		  select case level
 		  case E_UNDEFINED
 		    return "Undefined"
@@ -177,7 +177,7 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Level() As Text
+		Function Level() As String
 		  // Retourne le level de l'exception sous sont format lisible (texte)
 		  //
 		  // @return Le level de l'exception au format texte.
@@ -193,10 +193,10 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function ToText() As Text
+		Function ToText() As String
 		  // Affiche tout le détail de l'exception disponible au format texte
 		  
-		  dim FullMessage as Text = Type()
+		  dim FullMessage as String = Type()
 		  
 		  if Code > 0 and LevelCode <> 0 then
 		    FullMessage = FullMessage + " [" + Level + " " + Code.ToText+"]"
@@ -242,7 +242,7 @@ Inherits RuntimeException
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Type() As Text
+		Function Type() As String
 		  // Retourne le type de la classe principale (son nom) de l'exception
 		  return Xojo.Introspection.GetType(Me).Name
 		End Function
@@ -264,7 +264,7 @@ Inherits RuntimeException
 	#tag EndComputedProperty
 
 	#tag Property, Flags = &h0
-		ErrorMessage As Text
+		ErrorMessage As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -276,7 +276,7 @@ Inherits RuntimeException
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Location As Text
+		Location As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h21

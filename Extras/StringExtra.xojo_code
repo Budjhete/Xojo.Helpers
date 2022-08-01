@@ -72,10 +72,9 @@ Protected Module StringExtra
 		Function BooleanValue(Extends pString As String) As Boolean
 		  pString = pString.ReplaceAll(" ", "")
 		  
-		  dim pVariant as Variant
 		  
 		  if IsNumeric(pString) then
-		    return pVariant.BooleanValue
+		    return pString.ToInteger.BooleanValue
 		  else
 		    if pString = "True" or pString = "Vrai" then
 		      return True
@@ -235,9 +234,25 @@ Protected Module StringExtra
 		Function CurrencyValue(Extends pString As String) As Currency
 		  pString = pString.ReplaceAll(" ", "")
 		  
-		  Dim pVariant As Variant = CDbl(pString.ReplaceAll(" ", ""))
+		  Dim pVariant As Variant = CDbl(pString.ReplaceAll(",", "."))
 		  
 		  Return pVariant.CurrencyValue
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function Decimal(Extends str as String, default as String = "") As String
+		  str = str.ReplaceAll(",", ".")
+		  
+		  if str.test("^\.\d+") then
+		    str = "0"+str
+		  elseif not str.test("^\-?\d+") then
+		    return default
+		  end
+		  
+		  str = str.ReplaceAllRegExp("[^\d\.\-]+", "")
+		  
+		  return str.DoubleValue.ToString
 		End Function
 	#tag EndMethod
 
@@ -468,15 +483,6 @@ Protected Module StringExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function IsEmpty(extends s As String) As Boolean
-		  // Return true if the string is empty.
-		  
-		  return s = ""
-		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function JoinCSV(Extends pStrings() As String) As String
 		  // RFC 4180
 		  
@@ -567,7 +573,7 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = false
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target64Bit)) or  (TargetWeb and (Target64Bit)) or  (TargetDesktop and (Target64Bit)) or  (TargetIOS and (Target64Bit))
 		Function MoneyValue(Extends pString As String, pUnit As String) As String
 		  Return pString.CurrencyValue.MoneyValue(pUnit)
 		End Function
@@ -654,7 +660,7 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = false
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target64Bit)) or  (TargetWeb and (Target64Bit)) or  (TargetDesktop and (Target64Bit)) or  (TargetIOS and (Target64Bit))
 		Function ReplaceAllRegExp(Extends str as String, pattern as String, replace as String, params as String = "") As String
 		  Dim reg as New RegEx
 		  dim opts as new RegExOptions
@@ -786,6 +792,33 @@ Protected Module StringExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function Slugalize(Extends pString as String) As String
+		  Return pString.ReplaceAccents. _
+		  ReplaceAllRegExp("[\W\s]+", " "). _ // replace non-word and space by space
+		  Trim. _ // trim beginning and ending spaces
+		  ReplaceAll(" ", "-")
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function Slugalize1(Extends pString as String) As String
+		  Return pString.ReplaceAccents. _
+		  ReplaceAllRegExp("[\W\s]+", " "). _ // replace non-word and space by space
+		  Trim. _ // trim beginning and ending spaces
+		  ReplaceAll(" ", "-")
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function SlugalizeButKeepDots(Extends pString as String) As String
+		  Return pString.ReplaceAccents. _
+		  ReplaceAllRegExp("[^0-9a-zA-Z.-]+", " "). _ // replace non-word and space by space
+		  Trim. _ // trim beginning and ending spaces
+		  ReplaceAll(" ", "-")
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function SplitAndKeep(Extends source as String, delimiter as String = " ") As String()
 		  dim parts() as String
 		  
@@ -840,6 +873,52 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0, CompatibilityFlags = API2Only and ( (TargetConsole and (Target64Bit)) or  (TargetWeb and (Target64Bit)) or  (TargetDesktop and (Target64Bit)) or  (TargetIOS and (Target64Bit)) )
+		Function Sprintf(format as String, args() as Variant) As String
+		  
+		  dim matches() as RegExMatch = format.SearchAll("%(b|c|d|u|f|o|s|x|X)")
+		  dim match as RegExMatch
+		  
+		  dim replace as String
+		  dim arg as Variant
+		  
+		  if matches.Ubound <> Ubound(args) then
+		    Raise new InvalidArgumentsException
+		  end
+		  
+		  for i as Integer = 0 to matches.Ubound
+		    replace = ""
+		    match = matches(i)
+		    arg = args(i)
+		    
+		    Select Case match.SubExpressionString(1)
+		    Case "s"
+		      replace = arg.StringValue
+		    Case "d"
+		      replace = arg.IntegerValue.ToString
+		    Case "f"
+		      replace = arg.DoubleValue.ToString
+		    Case "u"
+		      replace = arg.IntegerValue.ToString
+		    Case "c"
+		      replace = Text.FromUnicodeCodepoint(arg.IntegerValue)
+		    Case "b"
+		      ' Integer -> binaire
+		    Case "o"
+		      ' Integer -> octal
+		    Case "x"
+		      ' Integer -> hexadecimal
+		    Case "X"
+		      ' Integer -> hexadecimal
+		    End
+		    
+		    format = format.Replace(match.SubExpressionString(0), replace)
+		  next
+		  
+		  return format
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Function Test(Extends str as String, pattern as String, params as String = "") As Boolean
 		  return str.Search(pattern, params) <> nil
@@ -865,8 +944,8 @@ Protected Module StringExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ToText(Extends s() as String) As Text()
-		  dim Tss() as text
+		Function ToText(Extends s() as String) As String()
+		  dim Tss() as String
 		  For each ss as string in s
 		    tss.Append(ss.ToText)
 		  Next
