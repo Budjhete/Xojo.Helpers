@@ -289,18 +289,6 @@ Protected Module ArrayExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ItemInArray(Extends aTheArray() as integer, iPosition as Integer) As integer
-		  // PD 2002-06-20 Get integer item X from an array
-		  
-		  if (aTheArray.Count - 1) < iPosition then
-		    return -1
-		  else
-		    return aTheArray(iPosition)
-		  end if
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function Max(Extends arr() As Double) As Double
 		  // Return the greatest of the items in the array, or 0 for an empty array.
 		  Dim index, ub As Integer
