@@ -183,7 +183,7 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = API1Only or true
 		Function Contains(Extends str as String, search as String) As Boolean
 		  return str.InStr(search) > 0
 		End Function
