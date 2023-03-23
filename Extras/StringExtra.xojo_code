@@ -173,6 +173,20 @@ Protected Module StringExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function cleanJSON(Extends str as String) As String
+		  str = str.ReplaceAll(Encodings.UTF8.Chr(13), "\r") // return carriage
+		  str = str.ReplaceAll(Encodings.UTF8.Chr(12), "\f")  // form feed
+		  str = str.ReplaceAll(Encodings.UTF8.Chr(10), "\n") // new line
+		  str = str.ReplaceAll(Encodings.UTF8.Chr(9), "\t") // tab
+		  
+		  return str
+		  
+		  
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function Contains(Extends str as String, search() as String) As Boolean
 		  for i as Integer = 0 to search.Ubound
 		    if str.Contains(search(i)) then
@@ -289,6 +303,22 @@ Protected Module StringExtra
 		  end
 		  
 		  return str(str.IntegerValue)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function EscapeJSON(Extends str as String) As String
+		  'str = str.ReplaceAll("\", "\\")
+		  str = str.ReplaceAll(Encodings.UTF8.Chr(13), "\r") // return carriage
+		  str = str.ReplaceAll(Encodings.UTF8.Chr(12), "\f")  // form feed
+		  str = str.ReplaceAll(Encodings.UTF8.Chr(10), "\n") // new line
+		  str = str.ReplaceAll(Encodings.UTF8.Chr(9), "\t") // tab
+		  str = str.ReplaceAll(Encodings.UTF8.Chr(34), "\"+Encodings.UTF8.Chr(34)) // double quote
+		  
+		  return str
+		  
+		  
+		  
 		End Function
 	#tag EndMethod
 
