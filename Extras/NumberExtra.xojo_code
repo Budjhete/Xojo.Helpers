@@ -12,7 +12,7 @@ Protected Module NumberExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0
 		Function BooleanValue(Extends pInt As Integer) As Boolean
 		  
 		  Dim pVariant As Variant = pInt
@@ -21,16 +21,7 @@ Protected Module NumberExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target32Bit or Target64Bit))
-		Function BooleanValue(Extends pInt As Integer) As Boolean
-		  
-		  Dim pVariant As Auto = pInt
-		  
-		  Return pVariant
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = API1Only or true
 		Function ExactMoneyValue(Extends pCurrency as Currency, pUnit as String = "") As String
 		  If pUnit.Length > 1 Then
 		    pUnit = " " + pUnit
@@ -59,13 +50,25 @@ Protected Module NumberExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = API2Only and ( (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) )
 		Function MoneyValue(Extends pCurrency as Currency, pFormat as String = "-#0.00", pUnit as String = "") As String
 		  If pUnit.Length > 1 Then
 		    pUnit = " " + pUnit
 		  End If
 		  
 		  Return Format(pCurrency,pFormat + pUnit)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = API2Only and ( (TargetConsole and (Target64Bit)) or  (TargetDesktop and (Target64Bit)) or  (TargetIOS and (Target64Bit)) )
+		Function MoneyValue(Extends pCurrency as Currency, pFormat as String = "-#0.00", pUnit as String = "") As String
+		  If pUnit.Length > 1 Then
+		    pUnit = " " + pUnit
+		  End If
+		  
+		  dim cc as Double = pCurrency
+		  dim pp as string = pFormat + pUnit
+		  Return cc.ToString(Nil, pp)
 		End Function
 	#tag EndMethod
 
@@ -177,13 +180,13 @@ Protected Module NumberExtra
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function StringValue(Extends pDouble As Double) As String
-		  Return pDouble.ToText()
+		  Return pDouble.ToString()
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0
 		Function StringValue(Extends pInteger As Integer) As String
-		  Return pInteger.ToText()
+		  Return pInteger.ToString()
 		End Function
 	#tag EndMethod
 

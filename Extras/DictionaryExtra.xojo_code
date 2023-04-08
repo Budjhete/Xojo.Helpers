@@ -119,7 +119,7 @@ Protected Module DictionaryExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function GetText(Extends pDictionary As Dictionary, pKey As Text) As Text
+		Function GetText(Extends pDictionary As Dictionary, pKey As String) As Text
 		  #if TargetIOS then
 		    Dim t as Text = pDictionary.Value(pKey)
 		    Return t
@@ -133,9 +133,9 @@ Protected Module DictionaryExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function GetText(Extends pDictionary As Dictionary, pKey As Text, pDefault As Text) As Text
+		Function GetText(Extends pDictionary As Dictionary, pKey As String, pDefault As Text) As Text
 		  #if TargetIOS then
-		    Dim t as String = pDictionary.Lookup(pKey, pDefault)
+		    Dim t as Text = pDictionary.Lookup(pKey, pDefault)
 		    Return t
 		  #else
 		    Dim p as String = pKey
@@ -159,7 +159,7 @@ Protected Module DictionaryExtra
 		  case 5 // Double
 		    Return pAuto.DoubleValue.ToText.IntegerValue
 		  Case 8 // string 
-		    Return pAuto.StringValue.IntegerValue
+		    Return pAuto.IntegerValue
 		  Case 37 // text
 		    Return pAuto.TextValue.IntegerValue
 		  Case 6 // Currency

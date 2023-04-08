@@ -121,7 +121,7 @@ Protected Module Helpers
 		  If source.IsFolder then
 		    
 		    newFolder=destination.child(source.name)
-		    newFolder.createAsFolder
+		    newFolder.CreateFolder
 		    
 		    For Each f As FolderItem In source.Children
 		      If f.IsFolder then
@@ -296,7 +296,7 @@ Protected Module Helpers
 	#tag Method, Flags = &h0
 		Sub ErrorBox(title as String = "", message as String)
 		  #if TargetIOS then
-		    Dim MessageBox As iOSMessageBox
+		    Dim MessageBox As MobileMessageBox
 		    MessageBox.Title = title
 		    MessageBox.Message = message
 		    
@@ -361,7 +361,7 @@ Protected Module Helpers
 		  #elseif TargetMacOS
 		    return new FolderItem(App.ExecutableFile.Parent.Parent.Child("Resources").NativePath.ToText)
 		  #Elseif TargetIOS
-		    Return new FolderItem(SpecialFolder.GetResource("Resources").NativePath)
+		    Return new FolderItem(SpecialFolder.Resource("Resources").NativePath)
 		  #endif
 		End Function
 	#tag EndMethod
@@ -380,30 +380,6 @@ Protected Module Helpers
 		  next
 		  
 		  return fi
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function Hyphenate(str as String) As String
-		  'str = RemoveAccents(str)
-		  '
-		  'Dim rx As New RegEx
-		  'rx.Options.ReplaceAllMatches = True
-		  '
-		  'rx.SearchPattern = "[\W\s]+"
-		  'rx.ReplacementPattern = "-"
-		  'str = rx.Replace(str)
-		  '
-		  'rx.SearchPattern = "^[-]+"
-		  'rx.ReplacementPattern = ""
-		  'str = rx.Replace(str)
-		  '
-		  'rx.SearchPattern = "[-]+$"
-		  'str = rx.Replace(str)
-		  'return rx.Replace(str)
-		  
-		  trigger_error("La fonction «Hyphenate» est désuette.", ErrorType.Deprecated)
-		  return str.Hyphenate
 		End Function
 	#tag EndMethod
 
@@ -697,13 +673,7 @@ Protected Module Helpers
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target64Bit))
-		Function SubExpressionText(Extends pExp as JKRegEx.RegExMatch, pID as Integer) As Text
-		  Return pExp.SubExpressionString(pID).ToText
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target64Bit))
 		Function SubExpressionText(Extends pExp as RegExMatch, pID as Integer) As Text
 		  Return pExp.SubExpressionString(pID).ToText
 		End Function

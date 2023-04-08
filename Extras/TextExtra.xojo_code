@@ -83,7 +83,7 @@ Protected Module TextExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function BooleanValue(Extends pString As Text) As Boolean
 		  pString = pString.ReplaceAll(" ", "")
 		  
@@ -215,9 +215,6 @@ Protected Module TextExtra
 
 	#tag Method, Flags = &h0
 		Function CsvSplit(Extends str as Text, separator as Text = ",", enclose as Text = "", escape as Text = "\") As Text()
-		  #if TargetIOS
-		    using JKRegEx
-		  #endif
 		  dim parts() as Text = str.Split(separator)
 		  
 		  if enclose <> "" then
@@ -245,7 +242,7 @@ Protected Module TextExtra
 		  
 		  Try
 		    return Double.FromText(pAuto)
-		  Catch e As Xojo.Core.BadDataException
+		  Catch e As RuntimeException
 		    Return 0.00
 		  End Try
 		End Function
@@ -270,38 +267,6 @@ Protected Module TextExtra
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function DecodeBase6(Extends aText As Text) As Text
 		  Return DecodeBase64(aText).ToText
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function DecodeBase64(Extends aText As Text) As Text
-		  #Pragma BreakOnExceptions False
-		  
-		  Dim str as string = aText
-		  dim decoded as string = DecodeBase64(str, Encodings.UTF8)
-		  dim t as text
-		  Try
-		    t = decoded.ToText
-		    Return t
-		  Catch
-		    Return ""
-		  End Try
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target32Bit or Target64Bit))
-		Function DecodeBase64(Extends aText As Text) As Text
-		  Declare Function initWithBase64EncodedString Lib FoundationLib Selector "initWithBase64EncodedString:options:" _
-		  (obj_id As Ptr, Str As CFStringRef, options As Integer) As Ptr
-		  Declare Function alloc Lib FoundationLib Selector "alloc" (clsRef As Ptr) As Ptr
-		  Declare Function NSClassFromString Lib FoundationLib (clsName As CFStringRef) As Ptr
-		  
-		  Dim mData As Ptr = initWithBase64EncodedString(alloc(NSClassFromString("NSData")), aText, 1)
-		  
-		  Const NSUTF8StringEncoding = 4
-		  
-		  Declare Function initWithData Lib FoundationLib Selector "initWithData:encoding:" (obj_id As Ptr, data As Ptr, Encoding As Integer) As CFStringRef
-		  Return initWithData(alloc(NSClassFromString("NSString")), mData, NSUTF8StringEncoding)
 		End Function
 	#tag EndMethod
 
@@ -347,43 +312,6 @@ Protected Module TextExtra
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function EncodeBase64(Extends aText As Text) As Text
 		  Return EncodeBase64(aText).ToText
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target32Bit or Target64Bit))
-		Function EncodeBase64(Extends aText As Text) As Text
-		  Declare Function dataUsingEncoding Lib FoundationLib Selector "dataUsingEncoding:" (obj_id As Ptr, Encoding As Integer) As Ptr
-		  Declare Function stringWithString Lib FoundationLib Selector "stringWithString:" (obj_id As Ptr, Str As CFStringRef) As Ptr
-		  Declare Function NSClassFromString Lib FoundationLib (clsName As CFStringRef) As Ptr
-		  
-		  Const NSUTF8StringEncoding = 4
-		  Dim str As Ptr = stringWithString(NSClassFromString("NSString"), aText)
-		  Dim mData As ptr = dataUsingEncoding(Str,NSUTF8StringEncoding)
-		  
-		  Declare Function base64EncodedStringWithOptions Lib FoundationLib Selector "base64EncodedStringWithOptions:" _
-		  (obj_id As Ptr, options As Integer) As CFStringRef
-		  
-		  Return base64EncodedStringWithOptions(mData, 1)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target32Bit or Target64Bit))
-		Function EncodeBase64(Extends bytes As Xojo.Core.MemoryBlock) As Text
-		  Declare Function NSClassFromString Lib FoundationLib (clsName As CFStringRef) As Ptr
-		  
-		  // Convert MemoryBlock to NSData
-		  Static NSData As ptr = NSClassFromString("NSData")
-		  
-		  Declare Function alloc Lib FoundationLib selector "alloc" (clsRef As ptr) As ptr
-		  
-		  Declare Function initWithBytes_ Lib FoundationLib selector "initWithBytes:length:" (obj_id As ptr, bytes As ptr, length As UInteger) As ptr
-		  Dim nsd As Ptr = initWithBytes_(alloc(NSData), bytes.Data, bytes.Size)
-		  
-		  // Convert the bytes to Base64 encoded Text
-		  Declare Function base64EncodedStringWithOptions Lib FoundationLib Selector "base64EncodedStringWithOptions:" _
-		  (obj_id As Ptr, options As Integer) As CFStringRef
-		  
-		  Return base64EncodedStringWithOptions(nsd, 1)
 		End Function
 	#tag EndMethod
 
@@ -541,23 +469,8 @@ Protected Module TextExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0
 		Function InStrRegEx(Extends str as Text, pattern as Text, params as Text = "") As Integer
-		  dim match as RegExMatch = str.Search("^(.*?)"+pattern, params)
-		  if match = nil then
-		    return 0
-		  end
-		  
-		  return (match.SubExpressionString(1).Len+1)
-		  
-		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target32Bit or Target64Bit))
-		Function InStrRegEx(Extends str as Text, pattern as Text, params as Text = "") As Integer
-		  using JKRegEx
-		  
 		  dim match as RegExMatch = str.Search("^(.*?)"+pattern, params)
 		  if match = nil then
 		    return 0
@@ -772,7 +685,7 @@ Protected Module TextExtra
 		  
 		  for i = 1 To len
 		    
-		    start = Xojo.Math.RandomInt(1, nbChars)-1
+		    start = System.Random.InRange(1, nbChars)-1
 		    num = source.Mid( start, 1 )
 		    str = str + num
 		  Next
@@ -813,9 +726,7 @@ Protected Module TextExtra
 
 	#tag Method, Flags = &h0
 		Function ReplaceAllRegExp(Extends str as Text, pattern as Text, replace as Text, params as Text = "") As Text
-		  #if TargetIOS
-		    using JKRegEx
-		  #endif
+		  
 		  
 		  Dim reg as New RegEx
 		  dim opts as new RegExOptions
@@ -833,20 +744,14 @@ Protected Module TextExtra
 		  reg.ReplacementPattern = replace
 		  reg.Options = opts
 		  
-		  #if TargetIOS then
-		    Return reg.ReplaceAll(str)
-		  #else
-		    return reg.Replace(str).ToText
-		  #endif
+		  
+		  return reg.Replace(str).ToText
+		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		Function ReplaceRegExp(Extends str as Text, pattern as Text, replace as Text, params as Text = "") As Text
-		  #if TargetIOS
-		    using JKRegEx
-		  #endif
-		  
 		  Dim reg as New RegEx
 		  dim opts as new RegExOptions
 		  
@@ -867,12 +772,9 @@ Protected Module TextExtra
 		  reg.ReplacementPattern = replace
 		  reg.Options = opts
 		  
-		  #if TargetIOS then
-		    return reg.ReplaceAll(str)
-		  #else
-		    return reg.Replace(str).ToText
-		    
-		  #endif
+		  
+		  return reg.Replace(str).ToText
+		  
 		End Function
 	#tag EndMethod
 
@@ -898,26 +800,7 @@ Protected Module TextExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target32Bit or Target64Bit))
-		Function Search(Extends str as Text, pattern as Text, params as Text = "") As JKRegEx.RegExMatch
-		  #if TargetIOS
-		    using JKRegEx
-		  #endif
-		  Dim reg as New RegEx
-		  dim opts as new RegExOptions
-		  
-		  opts.CaseSensitive = (not params.Contains("i"))
-		  opts.DotMatchAll = params.Contains("s")
-		  opts.TreatTargetAsOneLine = (not params.Contains("m"))
-		  
-		  reg.SearchPattern = pattern
-		  reg.Options = opts
-		  
-		  return reg.search(str)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0
 		Function Search(Extends str as Text, pattern as Text, params as Text = "") As RegExMatch
 		  Dim reg as New RegEx
 		  dim opts as new RegExOptions
@@ -931,48 +814,6 @@ Protected Module TextExtra
 		  reg.Options = opts
 		  
 		  return reg.search(str)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target32Bit or Target64Bit))
-		Function SearchAll(Extends str as Text, pattern as Text, params as Text = "") As JKRegEx.RegExMatch()
-		  #if TargetIOS
-		    using JKRegEx
-		  #endif
-		  Dim reg as New RegEx
-		  dim opts as new RegExOptions
-		  dim match as RegExMatch
-		  dim matches() as RegExMatch
-		  dim doLoop as Boolean = false
-		  
-		  opts.CaseSensitive = (not params.Contains("i"))
-		  opts.DotMatchAll = params.Contains("s")
-		  #if not TargetIOS then
-		    opts.Greedy = params.Contains("U")
-		  #endif
-		  opts.TreatTargetAsOneLine = (not params.Contains("m"))
-		  
-		  reg.SearchPattern = pattern
-		  reg.Options = opts
-		  
-		  match = reg.Search(str)
-		  if match <> nil then
-		    matches.Append(match)
-		    doLoop = true
-		  end
-		  
-		  while doLoop
-		    match = reg.Search()
-		    
-		    if match <> nil then
-		      matches.Append(match)
-		    else
-		      doLoop = false
-		    end
-		  wend
-		  
-		  
-		  return matches
 		End Function
 	#tag EndMethod
 
@@ -1120,13 +961,13 @@ Protected Module TextExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target64Bit))
-		Function Sprintf(format as Text, ParamArray args as Auto) As Text
+		Function Sprintf(format as String, ParamArray args as Variant) As String
 		  
-		  dim matches() as JKRegEx.RegExMatch = format.SearchAll("%(b|c|d|u|f|o|s|x|X)")
-		  dim match as JKRegEx.RegExMatch
+		  dim matches() as RegExMatch = format.SearchAll("%(b|c|d|u|f|o|s|x|X)")
+		  dim match as RegExMatch
 		  
-		  dim replace as Text
-		  dim arg as Auto
+		  dim replace as String
+		  dim arg as Variant
 		  
 		  if matches.Ubound <> Ubound(args) then
 		    Raise new InvalidArgumentsException
@@ -1141,13 +982,13 @@ Protected Module TextExtra
 		    Case "s"
 		      replace = arg.StringValue
 		    Case "d"
-		      replace = arg.IntegerValue.ToText
+		      replace = arg.IntegerValue.ToString
 		    Case "f"
-		      replace = arg.AutoDoubleValue.ToText
+		      replace = arg.DoubleValue.ToString
 		    Case "u"
-		      replace = arg.IntegerValue.ToText
+		      replace = arg.IntegerValue.ToString
 		    Case "c"
-		      replace = Text.FromUnicodeCodepoint(arg.IntegerValue)
+		      replace = chr(arg.IntegerValue)
 		    Case "b"
 		      ' Integer -> binaire
 		    Case "o"

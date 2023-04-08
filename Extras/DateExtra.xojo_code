@@ -279,7 +279,7 @@ Protected Module DateExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function MonthNameShort(Extends d as Date) As String
+		Function MonthNameShort(Extends d as DateTime) As String
 		  return kMonthsShort.NthField(",", d.month)
 		End Function
 	#tag EndMethod
@@ -330,7 +330,7 @@ Protected Module DateExtra
 		Function Quarter(Extends d as DateTime, firstDay as DateTime = Nil) As Integer
 		  // Trimestre civil
 		  if firstDay = nil then
-		    return Ceil(d.Month / 3)
+		    return Ceiling(d.Month / 3)
 		  end
 		  
 		  dim q1, q2, q3, q4 as DateTime

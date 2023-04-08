@@ -73,7 +73,7 @@ Protected Module StringExtra
 		  pString = pString.ReplaceAll(" ", "")
 		  
 		  
-		  if IsNumeric(pString) then
+		  if pString.IsNumeric then
 		    return pString.ToInteger.BooleanValue
 		  else
 		    if pString = "True" or pString = "Vrai" then
@@ -89,27 +89,27 @@ Protected Module StringExtra
 		Function Capitalize(extends s as String) As String
 		  dim first as String = s.CharAt(1)
 		  
-		  if Asc(first) < 97 or Asc(first) > 122 then
+		  if first.Asc < 97 or first.Asc > 122 then
 		    return s
 		  end if
 		  
-		  first = Chr(Asc(first) - &h20)
-		  return first + s.Mid(2)
+		  first = Chr(first.Asc - &h20)
+		  return first + s.Middle(2)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		Function CharAt(Extends str as String, position as Integer) As String
-		  return str.Mid(position, 1)
+		  return str.Middle(position, 1)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		Sub CharAt(Extends ByRef str As String, position as Integer, Assigns char as String)
-		  if position > len(str) then
+		  if position > str.Length then
 		    raise new OutOfBoundsException
 		  end if
-		  str = Left(str, position -1) + char + Mid(str, position + 1)
+		  str = str.Left(position -1) + char + str.Middle(position + 1)
 		End Sub
 	#tag EndMethod
 
@@ -117,9 +117,9 @@ Protected Module StringExtra
 		Protected Function Chop(s As String, charsToCut As Integer) As String
 		  // Return s with the rightmost 'charsToCut' chars removed.
 		  
-		  Dim charsLeft As Integer = s.Len - charsToCut
+		  Dim charsLeft As Integer = s.Length - charsToCut
 		  if charsLeft <= 0 then return ""
-		  return s.Left( s.Len - charsToCut )
+		  return s.Left( s.Length - charsToCut )
 		  
 		End Function
 	#tag EndMethod
@@ -129,9 +129,9 @@ Protected Module StringExtra
 		  // Chops 'stringToCut' off of s, if stringToCut is found at the end.
 		  // Useful for removing file extensions, trailing punctuation, etc.
 		  
-		  Dim cutLen As Integer = stringToCut.Len
-		  if Right(s, cutLen) = stringToCut then
-		    return s.Left( s.Len - cutLen )
+		  Dim cutLen As Integer = stringToCut.Length
+		  if s.Right( cutLen) = stringToCut then
+		    return s.Left( s.Length - cutLen )
 		  else
 		    return s
 		  end if
@@ -144,9 +144,9 @@ Protected Module StringExtra
 		Protected Function ChopB(s As String, bytesToCut As Integer) As String
 		  // Return s with the rightmost 'bytesToCut' bytes removed.
 		  
-		  Dim bytesLeft As Integer = s.LenB - bytesToCut
+		  Dim bytesLeft As Integer = s.Bytes - bytesToCut
 		  if bytesLeft <= 0 then return ""
-		  return s.LeftB( s.LenB - bytesToCut )
+		  return s.LeftBytes( s.LenB - bytesToCut )
 		  
 		End Function
 	#tag EndMethod
@@ -157,8 +157,8 @@ Protected Module StringExtra
 		  // Useful for removing file extensions, trailing punctuation, etc.
 		  
 		  Dim cutLenB As Integer = stringToCut.LenB
-		  if StrComp( RightB(s, cutLenB), stringToCut, 0 ) = 0 then
-		    return s.LeftB( s.LenB - cutLenB )
+		  if StrComp( s.RightBytes(cutLenB), stringToCut, 0 ) = 0 then
+		    return s.LeftBytes( s.LenB - cutLenB )
 		  else
 		    return s
 		  end if
@@ -244,11 +244,11 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0
 		Function CurrencyValue(Extends pString As String) As Currency
 		  pString = pString.ReplaceAll(" ", "")
 		  
-		  Dim pVariant As Variant = CDbl(pString.ReplaceAll(",", "."))
+		  Dim pVariant As Variant = pString.ReplaceAll(",", ".").ToDouble
 		  
 		  Return pVariant.CurrencyValue
 		End Function
@@ -280,7 +280,7 @@ Protected Module StringExtra
 		Function DoubleValue(Extends pString As String) As Double
 		  pString = pString.ReplaceAll(" ", "")
 		  
-		  Dim pVariant As Variant = CDbl(pString.ReplaceAll(" ", ""))
+		  Dim pVariant As Variant = pString.ReplaceAll(" ", "").ToDouble
 		  
 		  Return pVariant.DoubleValue
 		End Function
@@ -342,7 +342,7 @@ Protected Module StringExtra
 
 	#tag Method, Flags = &h0
 		Function FillLeft(Extends str as String, padding As String, length As Integer) As String
-		  while Len(str) < length
+		  while str.Length < length
 		    str = padding + str
 		  wend
 		  return str
@@ -351,7 +351,7 @@ Protected Module StringExtra
 
 	#tag Method, Flags = &h0
 		Function FillRight(Extends str as String, padding As String, length As Integer) As String
-		  while Len(str) < length
+		  while str.Length < length
 		    str = str + padding
 		  wend
 		  return str
@@ -408,7 +408,7 @@ Protected Module StringExtra
 		  dim table as String = BaseTable(base)
 		  
 		  
-		  for i as Integer = str.Len DownTo 1
+		  for i as Integer = str.Length DownTo 1
 		    dim char as String = str.CharAt(i)
 		    facteur = (table.IndexOf(char) - 1)
 		    if facteur < 0 then
@@ -454,7 +454,7 @@ Protected Module StringExtra
 		    return 0
 		  end
 		  
-		  return (match.SubExpressionString(1).Len+1)
+		  return (match.SubExpressionString(1).Length+1)
 		  
 		  
 		End Function
@@ -466,7 +466,7 @@ Protected Module StringExtra
 		  // (or if startPos = -1, then from the end of the string).
 		  // If substr can't be found, returns 0.
 		  
-		  Dim srcLen As Integer = source.Len
+		  Dim srcLen As Integer = source.Length
 		  if startPos = -1 then startPos = srcLen
 		  
 		  // Here's an easy way...
@@ -475,9 +475,9 @@ Protected Module StringExtra
 		  Dim reversedSource As String = Reverse(source)
 		  Dim reversedSubstr As String = Reverse(substr)
 		  Dim reversedPos As Integer
-		  reversedPos = InStr( srcLen - startPos + 1, reversedSource, reversedSubstr )
+		  reversedPos = reversedSource.IndexOf( srcLen - startPos + 1, reversedSubstr )
 		  if reversedPos < 1 then return 0
-		  return srcLen - reversedPos - substr.Len + 2
+		  return srcLen - reversedPos - substr.Length + 2
 		  
 		End Function
 	#tag EndMethod
@@ -498,7 +498,7 @@ Protected Module StringExtra
 		  // be good enough in most cases anyway.
 		  Dim posB As Integer
 		  for posB = Min( srcLen - subLen + 1, startPosB ) downTo 1
-		    if StrComp( MidB( source, posB, subLen ), substr, 0 ) = 0 then return posB
+		    if StrComp( source.MiddleBytes( posB, subLen ), substr, 0 ) = 0 then return posB
 		  next posB
 		  
 		  return 0
@@ -523,7 +523,7 @@ Protected Module StringExtra
 		    pValues.Append(Chr(34) + pStrings(pIndex).Replace(Chr(34), Chr(34) + Chr(34)) + Chr(34))
 		  Next
 		  
-		  Return Join(pValues, ",")
+		  Return String.FromArray(pValues, ",")
 		End Function
 	#tag EndMethod
 
@@ -534,9 +534,9 @@ Protected Module StringExtra
 		    return -1
 		  end
 		  
-		  dim pos as Integer = chunks.Ubound * find.Len
+		  dim pos as Integer = chunks.Ubound * find.Length
 		  for i as Integer = 0 to (chunks.Ubound-1)
-		    pos = pos + chunks(i).Len
+		    pos = pos + chunks(i).Length
 		  next
 		  
 		  return pos
@@ -624,11 +624,11 @@ Protected Module StringExtra
 
 	#tag Method, Flags = &h0
 		Function Padding(Extends str as String, width as Integer, character as String = " ", alignment as PaddingAlignment = PaddingAlignment.Right) As String
-		  if character.Len <> 1 then
+		  if character.Length <> 1 then
 		    Raise new InvalidArgumentsException()
 		  end
 		  
-		  dim diff as Integer = (width - str.Len)
+		  dim diff as Integer = (width - str.Length)
 		  if diff <= 0 then
 		    return str
 		  end
@@ -640,7 +640,7 @@ Protected Module StringExtra
 		  else
 		    dim left as Integer = diff/2
 		    
-		    return str.FillLeft(character, str.Len+left).FillRight(character, width)
+		    return str.FillLeft(character, str.Length+left).FillRight(character, width)
 		  end
 		End Function
 	#tag EndMethod
@@ -649,12 +649,12 @@ Protected Module StringExtra
 		Function RandomString(len As Integer, source as String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890") As String
 		  Dim str, num As String
 		  Dim nbChars, start, i As Integer
-		  nbChars = source.Len( )
+		  nbChars = source.Length( )
 		  
 		  for i = 1 To len
 		    Dim r as New Random
 		    start = r.InRange(1, nbChars)
-		    num = source.Mid( start, 1 )
+		    num = source.Middle( start, 1 )
 		    str = str + num
 		  Next
 		  
@@ -682,8 +682,8 @@ Protected Module StringExtra
 		  Dim pFrom As String = "à,á,â,ã,ä,ç,è,é,ê,ë,ì,í,î,ï,ñ,ò,ó,ô,õ,ö,ù,ú,û,ü,ý,ÿ,À,Á,Â,Ã,Ä,Ç,È,É,Ê,Ë,Ì,Í,Î,Ï,Ñ,Ò,Ó,Ô,Õ,Ö,Ù,Ú,Û,Ü,Ý"
 		  Dim pTo As String = "a,a,a,a,a,c,e,e,e,e,i,i,i,i,n,o,o,o,o,o,u,u,u,u,y,y,A,A,A,A,A,C,E,E,E,E,I,I,I,I,N,O,O,O,O,O,U,U,U,U,Y"
 		  
-		  For pIndex As Integer = 0 To CountFields(pFrom, ",")
-		    pString = pString.ReplaceAll(NthField(pFrom, ",", pIndex), NthField(pTo, ",", pIndex))
+		  For pIndex As Integer = 0 To pFrom.CountFields(",")
+		    pString = pString.ReplaceAll(pFrom.NthField(",", pIndex), pTo.NthField(",", pIndex))
 		  next
 		  
 		  return pString
@@ -732,9 +732,9 @@ Protected Module StringExtra
 		Protected Function Reverse(s As String) As String
 		  // Return s with the characters in reverse order.
 		  
-		  if Len(s) < 2 then return s
+		  if s.Length < 2 then return s
 		  
-		  Dim characters() as String = Split( s, "" )
+		  Dim characters() as String = s.Split( "" )
 		  Dim leftIndex as Integer = 0
 		  Dim rightIndex as Integer = UBound(characters)
 		  #pragma BackgroundTasks False
@@ -745,7 +745,7 @@ Protected Module StringExtra
 		    leftIndex = leftIndex + 1
 		    rightIndex = rightIndex - 1
 		  Wend
-		  Return Join( characters, "" )
+		  Return String.FromArray(characters,"")
 		  
 		End Function
 	#tag EndMethod
@@ -755,14 +755,14 @@ Protected Module StringExtra
 		  // This is an extended version of RB's RTrim function that lets you specify
 		  // a set of characters to trim.
 		  
-		  Dim srcLen As Integer = source.Len
+		  Dim srcLen As Integer = source.Length
 		  Dim rightPos, i As Integer
 		  for i = srcLen DownTo 1
-		    if InStr( charsToTrim, Mid(source, i, 1) ) = 0 then exit
+		    if charsToTrim.IndexOf( source.Middle( i, 1) ) = 0 then exit
 		  next
 		  rightPos = i
 		  
-		  return Mid( source, 1, rightPos )
+		  return source.Middle( 1, rightPos )
 		  
 		End Function
 	#tag EndMethod
@@ -989,21 +989,21 @@ Protected Module StringExtra
 		  // This is an extended version of RB's Trim function that lets you specify
 		  // a set of characters to trim.
 		  
-		  Dim srcLen As Integer = source.Len
+		  Dim srcLen As Integer = source.Length
 		  Dim leftPos, i As Integer
 		  for i = 1 to srcLen
-		    if InStr( charsToTrim, Mid(source, i, 1) ) = 0 then exit
+		    if charsToTrim.IndexOf( source.Middle( i, 1) ) = 0 then exit
 		  next
 		  leftPos = i
 		  if leftPos > srcLen then return ""
 		  
 		  Dim rightPos As Integer
 		  for i = srcLen DownTo 1
-		    if InStr( charsToTrim, Mid(source, i, 1) ) = 0 then exit
+		    if charsToTrim.IndexOf( source.Middle( i, 1) ) = 0 then exit
 		  next
 		  rightPos = i
 		  
-		  return Mid( source, leftPos, rightPos - leftPos + 1 )
+		  return  source.Middle(leftPos, rightPos - leftPos + 1 )
 		  
 		End Function
 	#tag EndMethod
