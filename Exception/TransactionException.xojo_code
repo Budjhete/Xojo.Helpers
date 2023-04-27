@@ -19,20 +19,12 @@ Inherits BudjheteException
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="Reason"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="Text"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
 			Name="ErrorMessage"
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
-			Type="Text"
-			EditorType=""
+			Type="String"
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Index"

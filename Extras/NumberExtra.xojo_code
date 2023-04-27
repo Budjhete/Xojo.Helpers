@@ -21,7 +21,17 @@ Protected Module NumberExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = API1Only or true
+	#tag Method, Flags = &h0, CompatibilityFlags = API1Only or ( (TargetIOS and (Target64Bit)) )
+		Function ExactMoneyValue(Extends pCurrency as Currency, pUnit as String = "") As String
+		  If pUnit.Length > 1 Then
+		    pUnit = " " + pUnit
+		  End If
+		  
+		  Return Format(pCurrency,"-##0.00#####" + pUnit)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function ExactMoneyValue(Extends pCurrency as Currency, pUnit as String = "") As String
 		  If pUnit.Length > 1 Then
 		    pUnit = " " + pUnit
@@ -60,7 +70,7 @@ Protected Module NumberExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = API2Only and ( (TargetConsole and (Target64Bit)) or  (TargetDesktop and (Target64Bit)) or  (TargetIOS and (Target64Bit)) )
+	#tag Method, Flags = &h0, CompatibilityFlags = API2Only and ( (TargetIOS and (Target64Bit)) )
 		Function MoneyValue(Extends pCurrency as Currency, pFormat as String = "-#0.00", pUnit as String = "") As String
 		  If pUnit.Length > 1 Then
 		    pUnit = " " + pUnit

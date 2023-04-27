@@ -87,7 +87,7 @@ Protected Module TextExtra
 		Function BooleanValue(Extends pString As Text) As Boolean
 		  pString = pString.ReplaceAll(" ", "")
 		  
-		  dim pAuto as Auto = pString
+		  dim pAuto as Variant = pString
 		  
 		  if pAuto.IsNumeric then
 		    return pAuto.BooleanValue
@@ -1000,52 +1000,6 @@ Protected Module TextExtra
 		    End
 		    
 		    format = format.Replace(match.SubExpressionString(0), replace)
-		  next
-		  
-		  return format
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target64Bit)) or  (TargetWeb and (Target64Bit)) or  (TargetDesktop and (Target64Bit))
-		Function Sprintf(format as Text, ParamArray args as Variant) As Text
-		  
-		  dim matches() as RegExMatch = format.SearchAll("%(b|c|d|u|f|o|s|x|X)")
-		  dim match as RegExMatch
-		  
-		  dim replace as Text
-		  dim arg as Auto
-		  
-		  if matches.Ubound <> Ubound(args) then
-		    Raise new InvalidArgumentsException
-		  end
-		  
-		  for i as Integer = 0 to matches.Ubound
-		    replace = ""
-		    match = matches(i)
-		    arg = args(i)
-		    
-		    Select Case match.SubExpressionString(1)
-		    Case "s"
-		      replace = arg.TextValue
-		    Case "d"
-		      replace = arg.IntegerValue.ToText
-		    Case "f"
-		      replace = arg.AutoDoubleValue.ToText
-		    Case "u"
-		      replace = arg.IntegerValue.ToText
-		    Case "c"
-		      replace = Text.FromUnicodeCodepoint(arg.IntegerValue)
-		    Case "b"
-		      ' Integer -> binaire
-		    Case "o"
-		      ' Integer -> octal
-		    Case "x"
-		      ' Integer -> hexadecimal
-		    Case "X"
-		      ' Integer -> hexadecimal
-		    End
-		    
-		    format = format.Replace(match.SubExpressionText(0), replace)
 		  next
 		  
 		  return format

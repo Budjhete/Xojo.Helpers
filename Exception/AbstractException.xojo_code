@@ -338,7 +338,7 @@ Inherits RuntimeException
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
-			Type="Text"
+			Type="String"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -355,14 +355,6 @@ Inherits RuntimeException
 			Group="ID"
 			InitialValue=""
 			Type="String"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="Reason"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="Text"
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -386,8 +378,8 @@ Inherits RuntimeException
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
-			Type="Text"
-			EditorType=""
+			Type="String"
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

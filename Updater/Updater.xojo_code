@@ -338,7 +338,7 @@ Protected Class Updater
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
-			Type="Text"
+			Type="String"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty

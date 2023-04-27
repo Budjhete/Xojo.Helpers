@@ -1,7 +1,7 @@
 #tag FileTypeSet
 	#tag FileType
 		CodeName=Pdf
-		DocIcon=Budjhete.xojo_resources;&h3FE1108
+		DocIcon=Budjhete.xojo_resources;&h28AF3C
 		Extension=.pdf
 		Flags=&h0
 		MacCreator=prvw
@@ -18,7 +18,7 @@
 
 	#tag FileType
 		CodeName=Rtf
-		DocIcon=Budjhete.xojo_resources;&h4A86934
+		DocIcon=Budjhete.xojo_resources;&h315FD7
 		Extension=.rtf
 		Flags=&h0
 		MacCreator=MSWD
@@ -35,7 +35,7 @@
 
 	#tag FileType
 		CodeName=Mp3
-		DocIcon=Budjhete.xojo_resources;&h552C160
+		DocIcon=Budjhete.xojo_resources;&h389C6A
 		Extension=.mp3;.swa
 		Flags=&h0
 		MacCreator=TVOD
@@ -52,7 +52,7 @@
 
 	#tag FileType
 		CodeName=Text
-		DocIcon=Budjhete.xojo_resources;&h5FD198C
+		DocIcon=Budjhete.xojo_resources;&h40C0DF
 		Extension=.asc;.ascii;.bas;.c;.class;.cp;.cpp;.h;.hp;.hpp;.i3;.java;.m2;.m3;.mak;.text;.txt
 		Flags=&h0
 		MacCreator=????
@@ -69,7 +69,7 @@
 
 	#tag FileType
 		CodeName=Mpeg
-		DocIcon=Budjhete.xojo_resources;&h6A771B8
+		DocIcon=Budjhete.xojo_resources;&h47FD72
 		Extension=.mpe;.mpeg;.mpg;.m1s;.m1v;.m1a;.m75;.m15;.mp2;.mpm;.mpv;.mpa
 		Flags=&h0
 		MacCreator=TVOD
@@ -86,7 +86,7 @@
 
 	#tag FileType
 		CodeName=TextHtml
-		DocIcon=Budjhete.xojo_resources;&h751C9E4
+		DocIcon=Budjhete.xojo_resources;&h510124
 		Extension=.htm;.html
 		Flags=&h0
 		MacCreator=????
@@ -103,7 +103,7 @@
 
 	#tag FileType
 		CodeName=ApplicationMsword
-		DocIcon=Budjhete.xojo_resources;&h7FC2210
+		DocIcon=Budjhete.xojo_resources;&h59DC39
 		Extension=.doc;.docx;.odt
 		Flags=&h0
 		MacCreator=MSWD
@@ -120,7 +120,7 @@
 
 	#tag FileType
 		CodeName=ApplicationVndMsExcel
-		DocIcon=Budjhete.xojo_resources;&h8A67A3C
+		DocIcon=Budjhete.xojo_resources;&h64365C
 		Extension=.xl;.xls;.xlsx
 		Flags=&h0
 		MacCreator=XCEL
@@ -137,7 +137,7 @@
 
 	#tag FileType
 		CodeName=Zip
-		DocIcon=Budjhete.xojo_resources;&h950D268
+		DocIcon=Budjhete.xojo_resources;&h6E4348
 		Extension=.zip
 		Flags=&h0
 		MacCreator=????
@@ -154,7 +154,7 @@
 
 	#tag FileType
 		CodeName=Jpeg
-		DocIcon=Budjhete.xojo_resources;&h9FB2A94
+		DocIcon=Budjhete.xojo_resources;&h75F037
 		Extension=.jfif;.jpe;.jpeg;.jpg
 		Flags=&h0
 		MacCreator=prvw
@@ -171,7 +171,7 @@
 
 	#tag FileType
 		CodeName=Png
-		DocIcon=Budjhete.xojo_resources;&hAA582C0
+		DocIcon=Budjhete.xojo_resources;&h7F543F
 		Extension=.png
 		Flags=&h0
 		MacCreator=ogle

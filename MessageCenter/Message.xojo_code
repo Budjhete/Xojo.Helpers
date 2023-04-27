@@ -73,7 +73,7 @@ Inherits Dictionary
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
-		Protected mType As Auto
+		Protected mType As Variant
 	#tag EndProperty
 
 

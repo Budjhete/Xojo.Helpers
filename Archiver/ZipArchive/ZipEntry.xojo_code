@@ -529,7 +529,7 @@ Protected Class ZipEntry
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  dim value as String = LocalName.RTrim("/")
+			  dim value as String = LocalName.TrimRight("/")
 			  dim pos as Integer = value.LastIndexOf("/")
 			  
 			  if pos >= 0 then
@@ -549,7 +549,7 @@ Protected Class ZipEntry
 			  dim pos as Integer = value.LastIndexOf(".")
 			  
 			  if pos >= 0 then
-			    return value.Mid(pos+1)
+			    return value.Middle(pos)
 			  else
 			    return ""
 			  end
@@ -619,11 +619,11 @@ Protected Class ZipEntry
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  dim value as String = LocalName.RTrim("/")
+			  dim value as String = LocalName.TrimRight("/")
 			  dim pos as Integer = value.LastIndexOf("/")
 			  
 			  if pos >= 0 then
-			    return value.Mid(pos+1)
+			    return value.Middle(pos)
 			  else
 			    return value
 			  end

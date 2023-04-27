@@ -751,23 +751,6 @@ Protected Module StringExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function RTrim(Extends source As String, charsToTrim As String) As String
-		  // This is an extended version of RB's RTrim function that lets you specify
-		  // a set of characters to trim.
-		  
-		  Dim srcLen As Integer = source.Length
-		  Dim rightPos, i As Integer
-		  for i = srcLen DownTo 1
-		    if charsToTrim.IndexOf( source.Middle( i, 1) ) = 0 then exit
-		  next
-		  rightPos = i
-		  
-		  return source.Middle( 1, rightPos )
-		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function Search(Extends str as String, pattern as String, params as String = "") As RegExMatch
 		  Dim reg as New RegEx
 		  dim opts as new RegExOptions

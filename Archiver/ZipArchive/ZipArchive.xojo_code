@@ -375,6 +375,8 @@ Protected Class ZipArchive
 		  dim root() as ZipEntry
 		  
 		  for each child as ZipEntry in mEntries
+		    dim nDir as string = child.Directory
+		    dim nNa as string = child.Name
 		    if child.Directory = "" then
 		      root.Append(child)
 		    end

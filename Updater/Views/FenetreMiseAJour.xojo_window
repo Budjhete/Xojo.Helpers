@@ -109,6 +109,7 @@ Begin Window FenetreMiseAJour
       Scope           =   0
       TabIndex        =   2
       TabPanelIndex   =   0
+      TabStop         =   True
       Tooltip         =   ""
       Top             =   49
       Transparent     =   False
@@ -120,6 +121,7 @@ Begin Window FenetreMiseAJour
       Address         =   ""
       BytesAvailable  =   0
       BytesLeftToSend =   0
+      Enabled         =   True
       Handle          =   0
       httpProxyAddress=   ""
       httpProxyPort   =   0

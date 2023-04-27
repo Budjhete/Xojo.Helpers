@@ -43,7 +43,7 @@ Protected Class AppcastItem
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
-			Type="Text"
+			Type="String"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -51,7 +51,7 @@ Protected Class AppcastItem
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
-			Type="Text"
+			Type="String"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -59,7 +59,7 @@ Protected Class AppcastItem
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
-			Type="Text"
+			Type="String"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -91,7 +91,7 @@ Protected Class AppcastItem
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
-			Type="Text"
+			Type="String"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -99,7 +99,7 @@ Protected Class AppcastItem
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
-			Type="Text"
+			Type="String"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -115,7 +115,7 @@ Protected Class AppcastItem
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
-			Type="Text"
+			Type="String"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
@@ -131,7 +131,7 @@ Protected Class AppcastItem
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
-			Type="Text"
+			Type="String"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty

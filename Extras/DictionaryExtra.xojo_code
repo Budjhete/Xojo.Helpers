@@ -197,7 +197,7 @@ Protected Module DictionaryExtra
 		  
 		  For Each pEntry As DictionaryEntry In EagerlyEvaluateIterable(pDictionary)
 		    
-		    Dim pValue As Auto = pEntry.Value
+		    Dim pValue As Variant = pEntry.Value
 		    
 		    
 		    
@@ -212,7 +212,7 @@ Protected Module DictionaryExtra
 		      
 		    case 6
 		      
-		      pDictionary.Value(pEntry.Key)  = pValue.AutoDoubleValue
+		      pDictionary.Value(pEntry.Key)  = pValue.DoubleValue
 		      
 		      
 		    End Select

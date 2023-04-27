@@ -291,6 +291,7 @@ Begin Window FenetreNouvelleVersion
       Top             =   95
       Transparent     =   False
       Underline       =   False
+      URL             =   ""
       Visible         =   True
       Width           =   32
    End

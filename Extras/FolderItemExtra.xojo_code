@@ -41,7 +41,7 @@ Protected Module FolderItemExtra
 		    return ""
 		  end
 		  
-		  return fi.Name.Mid(pos+1)
+		  return fi.Name.Middle(pos-1)
 		End Function
 	#tag EndMethod
 
