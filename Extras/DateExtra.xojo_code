@@ -92,8 +92,8 @@ Protected Module DateExtra
 	#tag Method, Flags = &h0
 		Function FormatPlain(extends d As DateTime) As String
 		  ' 2000-12-31 16h 01m 07s to 20001231160107
-		  return  d.Year.ToText + d.Month.ToText + d.Day.ToText +_
-		  d.Hour.ToText.FillLeft("0", 2) + d.Minute.ToText.FillLeft("0", 2) + d.Second.ToText.FillLeft("0", 2)
+		  return  d.Year.ToString + d.Month.ToString + d.Day.ToString +_
+		  d.Hour.ToString.FillLeft("0", 2) + d.Minute.ToString.FillLeft("0", 2) + d.Second.ToString.FillLeft("0", 2)
 		End Function
 	#tag EndMethod
 
@@ -484,7 +484,7 @@ Protected Module DateExtra
 	#tag EndMethod
 
 
-	#tag Constant, Name = kAnteMeridiem, Type = Text, Dynamic = True, Default = \"AM", Scope = Protected
+	#tag Constant, Name = kAnteMeridiem, Type = String, Dynamic = True, Default = \"AM", Scope = Protected
 		#Tag Instance, Platform = Any, Language = en, Definition  = \"AM"
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"AM"
 	#tag EndConstant
@@ -494,22 +494,22 @@ Protected Module DateExtra
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"Dimanche\x2CLundi\x2CMardi\x2CMercredi\x2CJeudi\x2CVendredi\x2CSamedi"
 	#tag EndConstant
 
-	#tag Constant, Name = kDayOfWeekShort, Type = Text, Dynamic = True, Default = \"Sun\x2CMon\x2CTue\x2CWed\x2CThu\x2CFri\x2CSat", Scope = Protected
+	#tag Constant, Name = kDayOfWeekShort, Type = String, Dynamic = True, Default = \"Sun\x2CMon\x2CTue\x2CWed\x2CThu\x2CFri\x2CSat", Scope = Protected
 		#Tag Instance, Platform = Any, Language = en, Definition  = \"Sun\x2CMon\x2CTue\x2CWed\x2CThu\x2CFri\x2CSat"
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"Dim\x2CLun\x2CMar\x2CMer\x2CJeu\x2CVen\x2CSam"
 	#tag EndConstant
 
-	#tag Constant, Name = kMonths, Type = Text, Dynamic = True, Default = \"January\x2CFebruary\x2CMarch\x2CApril\x2CMay\x2CJune\x2CJuly\x2CAugust\x2CSeptember\x2COctober\x2CNovember\x2CDecember", Scope = Protected
+	#tag Constant, Name = kMonths, Type = String, Dynamic = True, Default = \"January\x2CFebruary\x2CMarch\x2CApril\x2CMay\x2CJune\x2CJuly\x2CAugust\x2CSeptember\x2COctober\x2CNovember\x2CDecember", Scope = Protected
 		#Tag Instance, Platform = Any, Language = en, Definition  = \"January\x2CFebruary\x2CMarch\x2CApril\x2CMay\x2CJune\x2CJuly\x2CAugust\x2CSeptember\x2COctober\x2CNovember\x2CDecember"
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"Janvier\x2CF\xC3\xA9vrier\x2CMars\x2CAvril\x2CMai\x2CJuin\x2CJuillet\x2CAo\xC3\xBBt\x2CSeptembre\x2COctobre\x2CNovembre\x2CD\xC3\xA9cembre"
 	#tag EndConstant
 
-	#tag Constant, Name = kMonthsShort, Type = Text, Dynamic = True, Default = \"Jan\x2CFeb\x2CMar\x2CApr\x2CMay\x2CJun\x2CJul\x2CAug\x2CSep\x2COct\x2CNov\x2CDec", Scope = Protected
+	#tag Constant, Name = kMonthsShort, Type = String, Dynamic = True, Default = \"Jan\x2CFeb\x2CMar\x2CApr\x2CMay\x2CJun\x2CJul\x2CAug\x2CSep\x2COct\x2CNov\x2CDec", Scope = Protected
 		#Tag Instance, Platform = Any, Language = en, Definition  = \"Jan\x2CFeb\x2CMar\x2CApr\x2CMay\x2CJun\x2CJul\x2CAug\x2CSep\x2COct\x2CNov\x2CDec"
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"Jan\x2CF\xC3\xA9v\x2CMar\x2CAvr\x2CMai\x2CJun\x2CJul\x2CAo\xC3\xBB\x2CSep\x2COct\x2CNov\x2CD\xC3\xA9c"
 	#tag EndConstant
 
-	#tag Constant, Name = kPostMeridiem, Type = Text, Dynamic = True, Default = \"PM", Scope = Protected
+	#tag Constant, Name = kPostMeridiem, Type = String, Dynamic = True, Default = \"PM", Scope = Protected
 		#Tag Instance, Platform = Any, Language = en, Definition  = \"PM"
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"PM"
 	#tag EndConstant
@@ -517,17 +517,17 @@ Protected Module DateExtra
 	#tag Constant, Name = kSecondsPerDay, Type = Double, Dynamic = False, Default = \"86400", Scope = Protected
 	#tag EndConstant
 
-	#tag Constant, Name = kToday, Type = Text, Dynamic = True, Default = \"Today", Scope = Protected
+	#tag Constant, Name = kToday, Type = String, Dynamic = True, Default = \"Today", Scope = Protected
 		#Tag Instance, Platform = Any, Language = en, Definition  = \"Today"
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"Aujourd\'hui"
 	#tag EndConstant
 
-	#tag Constant, Name = kTomorrow, Type = Text, Dynamic = True, Default = \"Tomorrow", Scope = Protected
+	#tag Constant, Name = kTomorrow, Type = String, Dynamic = True, Default = \"Tomorrow", Scope = Protected
 		#Tag Instance, Platform = Any, Language = en, Definition  = \"Tomorrow"
 		#Tag Instance, Platform = Any, Language = Default, Definition  = \"Demain"
 	#tag EndConstant
 
-	#tag Constant, Name = kYesterday, Type = Text, Dynamic = True, Default = \"Yesterday", Scope = Protected
+	#tag Constant, Name = kYesterday, Type = String, Dynamic = True, Default = \"Yesterday", Scope = Protected
 		#Tag Instance, Platform = Any, Language = en, Definition  = \"Yesterday"
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"Hier"
 	#tag EndConstant

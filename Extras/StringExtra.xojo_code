@@ -1022,6 +1022,35 @@ Protected Module StringExtra
 	#tag EndNote
 
 
+	#tag Constant, Name = kBaseTable10, Type = String, Dynamic = False, Default = \"0123456789", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = kBaseTable16, Type = String, Dynamic = False, Default = \"0123456789ABCDEF", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = kBaseTable2, Type = String, Dynamic = False, Default = \"01", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = kBaseTable36, Type = String, Dynamic = False, Default = \"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = kBaseTable64, Type = String, Dynamic = False, Default = \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = kBaseTable8, Type = String, Dynamic = False, Default = \"01234567", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = Tabulation, Type = String, Dynamic = False, Default = \"\t", Scope = Public, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+	#tag EndConstant
+
+
+	#tag Enum, Name = PaddingAlignment, Flags = &h0
+		Left
+		  Center
+		Right
+	#tag EndEnum
+
+
 	#tag ViewBehavior
 		#tag ViewProperty
 			Name="Index"

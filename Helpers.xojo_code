@@ -433,8 +433,8 @@ Protected Module Helpers
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function IIF(condition as Boolean, trueValue as ORM, falseValue as ORM) As Auto
+	#tag Method, Flags = &h0
+		Function IIF(condition as Boolean, trueValue as ORM, falseValue as ORM) As ORM
 		  if condition then
 		    return trueValue
 		  else

@@ -157,13 +157,13 @@ Protected Module DictionaryExtra
 		  case 2, 3 // integer
 		    Return pAuto.IntegerValue
 		  case 5 // Double
-		    Return pAuto.DoubleValue.ToText.IntegerValue
+		    Return pAuto.DoubleValue.StringValue.IntegerValue
 		  Case 8 // string 
 		    Return pAuto.IntegerValue
 		  Case 37 // text
-		    Return pAuto.TextValue.IntegerValue
+		    Return pAuto.StringValue.IntegerValue
 		  Case 6 // Currency
-		    Return pAuto.CurrencyValue.ToText.IntegerValue
+		    Return pAuto.CurrencyValue.ToString.IntegerValue
 		    
 		  Case 11 // Boolean
 		    if pAuto.BooleanValue then
