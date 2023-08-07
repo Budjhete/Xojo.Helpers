@@ -814,15 +814,6 @@ Protected Module StringExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Slugalize1(Extends pString as String) As String
-		  Return pString.ReplaceAccents. _
-		  ReplaceAllRegExp("[\W\s]+", " "). _ // replace non-word and space by space
-		  Trim. _ // trim beginning and ending spaces
-		  ReplaceAll(" ", "-")
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function SlugalizeButKeepDots(Extends pString as String) As String
 		  Return pString.ReplaceAccents. _
 		  ReplaceAllRegExp("[^0-9a-zA-Z.-]+", " "). _ // replace non-word and space by space
