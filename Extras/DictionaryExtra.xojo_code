@@ -208,7 +208,7 @@ Protected Module DictionaryExtra
 		      pDictionary.Value(pEntry.Key) = dd.jsoncompatible
 		      
 		    Case 17
-		      pDictionary.Value(pEntry.Key)  = pValue.DateTimeValue .SQLDateTime
+		      pDictionary.Value(pEntry.Key)  = pValue.DateTimeValue.SQLDateTime
 		      
 		    case 6
 		      
