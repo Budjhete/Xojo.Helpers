@@ -469,7 +469,7 @@ End
 		  
 		  dim ext as String = item_.FileURL.Mid(item_.FileURL.LastIndexOf(".")+1)
 		  
-		  temp_ = SpecialFolder.Temporary.Child(TextExtra.RandomText(10) + "-part." + ext)
+		  temp_ = SpecialFolder.Temporary.Child(StringExtra.RandomString(10) + "-part." + ext)
 		  
 		  request.SetRequestHeader("User-Agent", Appcast.FullVersionName)
 		  request.Get(item_.FileURL, temp_.OldFolderItem)
