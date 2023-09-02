@@ -157,7 +157,7 @@ Protected Module DictionaryExtra
 		  case 2, 3 // integer
 		    Return pAuto.IntegerValue
 		  case 5 // Double
-		    Return pAuto.DoubleValue.StringValue.IntegerValue
+		    Return pAuto.DoubleValue.ToString.ToInteger
 		  Case 8 // string 
 		    Return pAuto.IntegerValue
 		  Case 37 // text

@@ -267,9 +267,9 @@ Protected Module GraphicsExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target32Bit or Target64Bit))
-		Function Wrap(Extends g as iOSGraphics, text as Text, width as Integer) As Text()
+		Function Wrap(Extends g as iOSGraphics, pText as Text, width as Integer) As Text()
 		  dim lines() as Text
-		  dim para() as Text = text.Split(EndOfLine_)
+		  dim para() as Text = pText.Split(Text.FromUnicodeCodepoint(10)) // EndOfLine_
 		  
 		  for p as Integer = 0 to para.Ubound
 		    dim ret() as Text = g.WrapLine(para(p), width)
@@ -402,6 +402,7 @@ Protected Module GraphicsExtra
 			Group="ID"
 			InitialValue="-2147483648"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Left"
@@ -409,18 +410,23 @@ Protected Module GraphicsExtra
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Name"
 			Visible=true
 			Group="ID"
+			InitialValue=""
 			Type="String"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Super"
 			Visible=true
 			Group="ID"
+			InitialValue=""
 			Type="String"
+			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Top"
@@ -428,6 +434,7 @@ Protected Module GraphicsExtra
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Module
