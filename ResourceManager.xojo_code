@@ -23,10 +23,10 @@ Protected Class ResourceManager
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Item(path as Text) As Xojo.IO.FolderItem
-		  dim fi as Xojo.IO.FolderItem = GetResourceFolder()
+		Function Item(path as String) As FolderItem
+		  dim fi as FolderItem = GetResourceFolder()
 		  
-		  dim chunks() as Text = path.Split("/")
+		  dim chunks() as String = path.Split("/")
 		  for i as Integer = 0 to UBound(chunks)
 		    if not fi.Exists then
 		      return nil
@@ -40,19 +40,19 @@ Protected Class ResourceManager
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Libraries(name as Text) As Xojo.IO.FolderItem
+		Function Libraries(name as String) As FolderItem
 		  return Item("Libraries/"+name)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function SQL() As Xojo.IO.FolderItem
+		Function SQL() As FolderItem
 		  return Item("Sql")
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function SQL(name as Text) As Xojo.IO.FolderItem
+		Function SQL(name as String) As FolderItem
 		  if name.EndsWith(".sql") then
 		    return Item("Sql/"+name)
 		  else
