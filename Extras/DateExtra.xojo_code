@@ -274,7 +274,7 @@ Protected Module DateExtra
 
 	#tag Method, Flags = &h0
 		Function MonthName(Extends d as DateTime) As String
-		  return kMonths.NthField(",", d.month-1)
+		  return kMonths.NthField(",", d.month)
 		End Function
 	#tag EndMethod
 
