@@ -67,9 +67,25 @@ Protected Class ResourceManager
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function TmpFolder() As FolderItem
+		  if mtmpfolder=nil then
+		    mtmpfolder = new FolderItem
+		    dim name as String = RandomString(10)
+		    SpecialFolder.Temporary.Child(name).CreateAsFolderIfNotExist
+		    mtmpfolder = SpecialFolder.Temporary.Child(name)
+		  end if
+		  return mtmpfolder
+		End Function
+	#tag EndMethod
+
 
 	#tag Property, Flags = &h21
 		Private Shared mInstance As ResourceManager
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		Shared mtmpfolder As FolderItem
 	#tag EndProperty
 
 

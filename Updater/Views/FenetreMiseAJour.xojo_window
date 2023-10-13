@@ -1,5 +1,5 @@
 #tag Window
-Begin Window FenetreMiseAJour
+Begin Window FenetreMiseAJour Attributes ( Deprecated = true ) 
    BackColor       =   &cFFFFFF00
    Backdrop        =   0
    CloseButton     =   False
@@ -121,7 +121,6 @@ Begin Window FenetreMiseAJour
       Address         =   ""
       BytesAvailable  =   0
       BytesLeftToSend =   0
-      Enabled         =   True
       Handle          =   0
       httpProxyAddress=   ""
       httpProxyPort   =   0
@@ -273,46 +272,46 @@ End
 
 	#tag Method, Flags = &h1
 		Protected Sub InstallUpdate()
-		  lExtration.Visible = true
-		  pExtraction.Visible = true
-		  
-		  #if TargetWin32
-		    dim ext as String = item_.FileURL.Mid(item_.FileURL.LastIndexOf(".")+1).Lowercase
-		    
-		    if ext = "exe" then
-		      mEstInstaller = true
-		      UnarchiveFinish()
-		      return
-		    end
-		  #endif
-		  
-		  dest_ = SpecialFolder.Temporary.Child(RandomString(10))
-		  dest_.CreateAsFolder
-		  
-		  #if TargetMacOS
-		    dim extract as new DiskImageUnarchiver(temp_.oldFolderItem, dest_.oldFolderItem)
-		    
-		    AddHandler extract.Finish, AddressOf UnarchiveMacFinish
-		    AddHandler extract.Fail, AddressOf UnarchiveMacFail
-		    
-		    extract.Start
-		    
-		  #elseif TargetWin32
-		    dim extract as new ZipImageUnarchiver(temp_.oldFolderItem, dest_.oldFolderItem)
-		    
-		    AddHandler extract.Finish, AddressOf UnarchiveWinFinish
-		    AddHandler extract.Fail, AddressOf UnarchiveWinFail
-		    
-		    extract.Start
-		    
-		  #else 'TargetLinux
-		    dim extract as new ZipImageUnarchiver(temp_.oldFolderItem, dest_.oldFolderItem)
-		    
-		    AddHandler extract.Finish, AddressOf UnarchiveLinFinish
-		    AddHandler extract.Fail, AddressOf UnarchiveLinFail
-		    
-		    extract.Start
-		  #endif
+		  'lExtration.Visible = true
+		  'pExtraction.Visible = true
+		  '
+		  '#if TargetWin32
+		  'dim ext as String = item_.FileURL.Mid(item_.FileURL.LastIndexOf(".")+1).Lowercase
+		  '
+		  'if ext = "exe" then
+		  'mEstInstaller = true
+		  'UnarchiveFinish()
+		  'return
+		  'end
+		  '#endif
+		  '
+		  'dest_ = SpecialFolder.Temporary.Child(RandomString(10))
+		  'dest_.CreateAsFolder
+		  '
+		  '#if TargetMacOS
+		  'dim extract as new DiskImageUnarchiver(temp_.oldFolderItem, dest_.oldFolderItem)
+		  '
+		  'AddHandler extract.Finish, AddressOf UnarchiveMacFinish
+		  'AddHandler extract.Fail, AddressOf UnarchiveMacFail
+		  '
+		  'extract.Start
+		  '
+		  '#elseif TargetWin32
+		  'dim extract as new ZipImageUnarchiver(temp_.oldFolderItem, dest_.oldFolderItem)
+		  '
+		  'AddHandler extract.Finish, AddressOf UnarchiveWinFinish
+		  'AddHandler extract.Fail, AddressOf UnarchiveWinFail
+		  '
+		  'extract.Start
+		  '
+		  '#else 'TargetLinux
+		  'dim extract as new ZipImageUnarchiver(temp_.oldFolderItem, dest_.oldFolderItem)
+		  '
+		  'AddHandler extract.Finish, AddressOf UnarchiveLinFinish
+		  'AddHandler extract.Fail, AddressOf UnarchiveLinFail
+		  '
+		  'extract.Start
+		  '#endif
 		End Sub
 	#tag EndMethod
 
@@ -340,118 +339,118 @@ End
 
 	#tag Method, Flags = &h1
 		Protected Sub Relancer()
-		  #if TargetWin32
-		    
-		    if mEstInstaller then
-		      temp_.oldFolderItem.Launch()
-		      Quit()
-		      
-		      return
-		    end
-		    
-		  #endif
-		  
-		  
-		  if mArchive = nil then
-		    Raise new RuntimeException()
-		  end
-		  
-		  #if TargetWin32
-		    dim zip as ZipArchive = ZipArchive.Open(mArchive.oldFolderItem, true)
-		    zip.ExtractAll(mArchive.oldFolderItem.Parent)
-		    zip.Close()
-		    
-		    mRelauncher = mArchive.Parent.Child("relaunch.exe")
-		    mArchive.Delete()
-		    
-		    Soft Declare Function ShellExecuteExW Lib "Shell32" ( info as Ptr ) as Boolean
-		    Soft Declare Function ShellExecuteExA Lib "Shell32" ( info as Ptr ) as Boolean
-		    
-		    dim info as new MemoryBlock( 15 * 4 )
-		    dim verb as new MemoryBlock( 32 )
-		    dim file as new MemoryBlock( 260 * 2 )
-		    dim args as new MemoryBlock(512)
-		    
-		    info.Long( 0 ) = info.Size
-		    info.Long( 8 ) = self.Handle
-		    if System.IsFunctionAvailable( "ShellExecuteExW", "Shell32" ) then
-		      verb.WString( 0 ) = "runas"
-		      file.WString( 0 ) = mRelauncher.oldFolderItem.NativePath
-		      args.WString( 0 ) = Str(App.PID) + " """+relaunchItem_.oldFolderItem.ShellPath+""" """ + dest_.oldFolderItem.ShellPath+ """"
-		    else
-		      verb.CString( 0 ) = "runas"
-		      file.CString( 0 ) = mRelauncher.oldFolderItem.NativePath
-		      args.CString( 0 ) = Str(App.PID) + " """+relaunchItem_.oldFolderItem.ShellPath+""" """ + dest_.oldFolderItem.ShellPath+ """"
-		      
-		    end if
-		    info.Ptr( 12 ) = verb
-		    info.Ptr( 16 ) = file
-		    info.Ptr( 20 ) = args
-		    
-		    Const SW_SHOWNORMAL = 1
-		    info.Long( 28 ) = SW_SHOWNORMAL
-		    
-		    dim ret as Boolean
-		    if System.IsFunctionAvailable( "ShellExecuteExW", "Shell32" ) then
-		      ret = ShellExecuteExW( info )
-		    else
-		      ret = ShellExecuteExA( info )
-		    end if
-		    
-		  #elseif TargetMacOS
-		    dim zip as ZipArchive = ZipArchive.Open(mArchive.oldFolderItem, true)
-		    zip.ExtractAll(mArchive.Parent.oldFolderItem, true)
-		    zip.Close()
-		    
-		    mRelauncher = mArchive.Parent.Child("relaunch.app")
-		    mArchive.Delete()
-		    
-		    mRelauncher.RecursivePermissions(&o777)
-		    
-		    mRelauncher.oldFolderItem.Launch(Str(App.PID) + " """+relaunchItem_.oldFolderItem.ShellPath+"""")
-		    
-		  #else 'TargetLinux
-		    dim zip as ZipArchive = ZipArchive.Open(mArchive.oldFolderItem, true)
-		    zip.ExtractAll(mArchive.Parent.oldFolderItem)
-		    zip.Close()
-		    
-		    mRelauncher = mArchive.Parent.Child("relaunch")
-		    mArchive.Delete()
-		    
-		    mRelauncher = mRelauncher.Parent.Child("relaunch")
-		    mRelauncher.RecursivePermissions(&o777)
-		    'MsgBox(mRelauncher.AbsolutePath + " " + Str(App.PID) + " """+relaunchItem_.ShellPath+""" """ + dest_.ShellPath+ """")
-		    
-		    mRelauncher.oldFolderItem.Launch(Str(App.PID) + " """+relaunchItem_.oldFolderItem.ShellPath+""" """ + dest_.oldFolderItem.ShellPath+ """")
-		  #endif
-		  
-		  ForceQuit()
-		  
-		  Exception err
-		    if err isa NilObjectException then
-		      Dim d as New MessageDialog                  //declare the MessageDialog object
-		      Dim b as MessageDialogButton                //for handling the result
-		      d.icon=MessageDialog.GraphicStop         //display warning icon
-		      d.ActionButton.Caption = "Mannuellement"
-		      d.CancelButton.Visible = True              //show the Cancel button
-		      d.CancelButton.Caption = kQuitterMAJ
-		      d.AlternateActionButton.Visible=True        //show the "Don't Save" button
-		      d.AlternateActionButton.Caption="Télécharger en ligne"
-		      d.Message="kLa mise à jour n'a pu être téléchargée, veuillez essayez manuellement."+EndOfLine+"Ou télécharger la dernière version en ligne"
-		      d.Explanation= ""
-		      
-		      b=d.ShowModal                              //display the dialog
-		      Select Case b                              //determine which button was pressed.
-		      Case d.ActionButton
-		        ShowURL(item_.FileURL)
-		        ForceQuit()
-		      Case d.AlternateActionButton
-		        ShowUrl(app.LienTelechargement)
-		        ForceQuit()
-		      Case d.CancelButton
-		        ForceQuit()
-		      End select
-		    end if
+		  '#if TargetWin32
+		  '
+		  'if mEstInstaller then
+		  'temp_.oldFolderItem.Launch()
+		  'Quit()
+		  '
+		  'return
+		  'end
+		  '
+		  '#endif
+		  '
+		  '
+		  'if mArchive = nil then
+		  'Raise new RuntimeException()
+		  'end
+		  '
+		  '#if TargetWin32
+		  'dim zip as ZipArchive = ZipArchive.Open(mArchive.oldFolderItem, true)
+		  'zip.ExtractAll(mArchive.oldFolderItem.Parent)
+		  'zip.Close()
+		  '
+		  'mRelauncher = mArchive.Parent.Child("relaunch.exe")
+		  'mArchive.Delete()
+		  '
+		  'Soft Declare Function ShellExecuteExW Lib "Shell32" ( info as Ptr ) as Boolean
+		  'Soft Declare Function ShellExecuteExA Lib "Shell32" ( info as Ptr ) as Boolean
+		  '
+		  'dim info as new MemoryBlock( 15 * 4 )
+		  'dim verb as new MemoryBlock( 32 )
+		  'dim file as new MemoryBlock( 260 * 2 )
+		  'dim args as new MemoryBlock(512)
+		  '
+		  'info.Long( 0 ) = info.Size
+		  'info.Long( 8 ) = self.Handle
+		  'if System.IsFunctionAvailable( "ShellExecuteExW", "Shell32" ) then
+		  'verb.WString( 0 ) = "runas"
+		  'file.WString( 0 ) = mRelauncher.oldFolderItem.NativePath
+		  'args.WString( 0 ) = Str(App.PID) + " """+relaunchItem_.oldFolderItem.ShellPath+""" """ + dest_.oldFolderItem.ShellPath+ """"
+		  'else
+		  'verb.CString( 0 ) = "runas"
+		  'file.CString( 0 ) = mRelauncher.oldFolderItem.NativePath
+		  'args.CString( 0 ) = Str(App.PID) + " """+relaunchItem_.oldFolderItem.ShellPath+""" """ + dest_.oldFolderItem.ShellPath+ """"
+		  '
+		  'end if
+		  'info.Ptr( 12 ) = verb
+		  'info.Ptr( 16 ) = file
+		  'info.Ptr( 20 ) = args
+		  '
+		  'Const SW_SHOWNORMAL = 1
+		  'info.Long( 28 ) = SW_SHOWNORMAL
+		  '
+		  'dim ret as Boolean
+		  'if System.IsFunctionAvailable( "ShellExecuteExW", "Shell32" ) then
+		  'ret = ShellExecuteExW( info )
+		  'else
+		  'ret = ShellExecuteExA( info )
+		  'end if
+		  '
+		  '#elseif TargetMacOS
+		  'dim zip as ZipArchive = ZipArchive.Open(mArchive.oldFolderItem, true)
+		  'zip.ExtractAll(mArchive.Parent.oldFolderItem, true)
+		  'zip.Close()
+		  '
+		  'mRelauncher = mArchive.Parent.Child("relaunch.app")
+		  'mArchive.Delete()
+		  '
+		  'mRelauncher.RecursivePermissions(&o777)
+		  '
+		  'mRelauncher.oldFolderItem.Launch(Str(App.PID) + " """+relaunchItem_.oldFolderItem.ShellPath+"""")
+		  '
+		  '#else 'TargetLinux
+		  'dim zip as ZipArchive = ZipArchive.Open(mArchive.oldFolderItem, true)
+		  'zip.ExtractAll(mArchive.Parent.oldFolderItem)
+		  'zip.Close()
+		  '
+		  'mRelauncher = mArchive.Parent.Child("relaunch")
+		  'mArchive.Delete()
+		  '
+		  'mRelauncher = mRelauncher.Parent.Child("relaunch")
+		  'mRelauncher.RecursivePermissions(&o777)
+		  ''MsgBox(mRelauncher.AbsolutePath + " " + Str(App.PID) + " """+relaunchItem_.ShellPath+""" """ + dest_.ShellPath+ """")
+		  '
+		  'mRelauncher.oldFolderItem.Launch(Str(App.PID) + " """+relaunchItem_.oldFolderItem.ShellPath+""" """ + dest_.oldFolderItem.ShellPath+ """")
+		  '#endif
+		  '
+		  'ForceQuit()
+		  '
+		  'Exception err
+		  'if err isa NilObjectException then
+		  'Dim d as New MessageDialog                  //declare the MessageDialog object
+		  'Dim b as MessageDialogButton                //for handling the result
+		  'd.icon=MessageDialog.GraphicStop         //display warning icon
+		  'd.ActionButton.Caption = "Mannuellement"
+		  'd.CancelButton.Visible = True              //show the Cancel button
+		  'd.CancelButton.Caption = kQuitterMAJ
+		  'd.AlternateActionButton.Visible=True        //show the "Don't Save" button
+		  'd.AlternateActionButton.Caption="Télécharger en ligne"
+		  'd.Message="kLa mise à jour n'a pu être téléchargée, veuillez essayez manuellement."+EndOfLine+"Ou télécharger la dernière version en ligne"
+		  'd.Explanation= ""
+		  '
+		  'b=d.ShowModal                              //display the dialog
+		  'Select Case b                              //determine which button was pressed.
+		  'Case d.ActionButton
+		  'ShowURL(item_.FileURL)
+		  'ForceQuit()
+		  'Case d.AlternateActionButton
+		  'ShowUrl(app.LienTelechargement)
+		  'ForceQuit()
+		  'Case d.CancelButton
+		  'ForceQuit()
+		  'End select
+		  'end if
 		End Sub
 	#tag EndMethod
 
@@ -497,14 +496,14 @@ End
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
-		Protected Sub UnarchiveLinFail(extract as ZipImageUnarchiver)
-		  MsgBox kErreurDecompressionArchive
-		  UnarchiveFinish(false)
+	#tag Method, Flags = &h1, CompatibilityFlags = false
+		Attributes( Deprecated = True ) Protected Sub UnarchiveLinFail(extract as ZipImageUnarchiver)
+		  'MsgBox kErreurDecompressionArchive
+		  'UnarchiveFinish(false)
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
+	#tag Method, Flags = &h1, CompatibilityFlags = false
 		Protected Sub UnarchiveLinFinish(extract as ZipImageUnarchiver)
 		  PrepareRelauncher()
 		  
@@ -514,14 +513,14 @@ End
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
+	#tag Method, Flags = &h1, CompatibilityFlags = false
 		Protected Sub UnarchiveMacFail(extract as DiskImageUnarchiver)
 		  MsgBox kErreurDecompressionArchive
 		  UnarchiveFinish(false)
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
+	#tag Method, Flags = &h1, CompatibilityFlags = false
 		Protected Sub UnarchiveMacFinish(extract as DiskImageUnarchiver)
 		  PrepareRelauncher()
 		  
@@ -556,14 +555,14 @@ End
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
+	#tag Method, Flags = &h1, CompatibilityFlags = false
 		Protected Sub UnarchiveWinFail(extract as ZipImageUnarchiver)
 		  MsgBox kErreurDecompressionArchive
 		  UnarchiveFinish(false)
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
+	#tag Method, Flags = &h1, CompatibilityFlags = false
 		Protected Sub UnarchiveWinFinish(extract as ZipImageUnarchiver)
 		  PrepareRelauncher()
 		  

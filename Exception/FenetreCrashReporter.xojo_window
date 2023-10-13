@@ -598,9 +598,9 @@ End
 		  
 		  // Version initial du logiciel
 		  
-		  IF version <> "" THEN
-		    post.Value("Initial version") = version
-		  end if
+		  'IF version <> "" THEN
+		  'post.Value("Initial version") = version
+		  'end if
 		  if creationDate <> "" Then
 		    post.Value("Created on") = creationDate
 		  end if
