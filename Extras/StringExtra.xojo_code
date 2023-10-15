@@ -166,7 +166,7 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetWeb and (Target64Bit)) or  (TargetIOS and (Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target64Bit)) or  (TargetAndroid and (Target64Bit))
 		Function CHR(numchar as Integer) As string
 		  Var enc As TextEncoding = Encodings.UTF8 
 		  return enc.Chr(numchar)
