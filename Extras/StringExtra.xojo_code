@@ -87,7 +87,7 @@ Protected Module StringExtra
 
 	#tag Method, Flags = &h0
 		Function Capitalize(extends s as String) As String
-		  dim first as String = s.CharAt(1)
+		  dim first as String = s.CharAt(0)
 		  
 		  if first.Asc < 97 or first.Asc > 122 then
 		    return s
