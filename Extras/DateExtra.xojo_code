@@ -185,7 +185,7 @@ Protected Module DateExtra
 		Function LastQuarterEnd(Extends d As DateTime, firstDay As DateTime = Nil) As DateTime
 		  dim start as DateTime = d.QuarterEnd(firstDay)
 		  dim diff as new DateInterval(0, 3)
-		  start = start-diff
+		  start = start+diff
 		  return start
 		  
 		End Function
@@ -243,17 +243,20 @@ Protected Module DateExtra
 
 	#tag Method, Flags = &h0
 		Function Month(Extends d as DateTime, pMonth as integer) As DateTime
+		  dim mYear as integer = d.Year
 		  if pMonth<1 then
 		    pMonth = 11+pMonth
+		    myear = myear-1
 		  elseif pMonth > 12 then
 		    pMonth = pMonth - 12
+		    mYear = myear +1
 		  end if
 		  dim dd as integer = d.day
 		  if pMonth = 2 and d.day > 28 then
 		    dd = 28
 		  end if
 		  
-		  Return New DateTime(d.Year, pMonth, dd, d.Hour, d.Minute, d.Second, d.Nanosecond, d.TimeZone)
+		  Return New DateTime(mYear, pMonth, dd, d.Hour, d.Minute, d.Second, d.Nanosecond, d.TimeZone)
 		  
 		End Function
 	#tag EndMethod
@@ -273,8 +276,8 @@ Protected Module DateExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function MonthName(Extends d as DateTime) As String
-		  return kMonths.NthField(",", d.month)
+		Function MonthName(Extends d as DateTime, pLang as string = "en") As String
+		  return kMonths(pLang).NthField(",", d.month)
 		End Function
 	#tag EndMethod
 
@@ -365,6 +368,11 @@ Protected Module DateExtra
 		  ThisQuarterEnd = ThisQuarterEnd.Hour(23)
 		  ThisQuarterEnd = ThisQuarterEnd.Minute(59)
 		  ThisQuarterEnd = ThisQuarterEnd.Second(59)
+		  if ThisQuarterEnd.Day = 1 then
+		    dim minus1day as new DateInterval
+		    minus1day.Days = 1
+		    ThisQuarterEnd = ThisQuarterEnd - minus1day
+		  end if
 		  return ThisQuarterEnd
 		  
 		  
