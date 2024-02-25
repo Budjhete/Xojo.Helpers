@@ -446,7 +446,7 @@ End
 		Sub Constructor(error as RuntimeException)
 		  Me.excp = error
 		  
-		  Message = "Une exception de type "+Introspection.GetType(error).Name.totext+" n'a pas été gérée." + EndOfLine
+		  Message = "Une exception de type "+Introspection.GetType(error).Name+" n'a pas été gérée." + EndOfLine
 		  'Message = Message + pMessage + EndOfLine
 		  
 		  if error.Message <> "" then
@@ -466,7 +466,7 @@ End
 		Sub Constructor(error as RuntimeException, pMessage as String)
 		  Me.excp = error
 		  
-		  Message = "Une exception de type "+Introspection.GetType(error).Name.ToText+" n'a pas été gérée." + EndOfLine
+		  Message = "Une exception de type "+Introspection.GetType(error).Name+" n'a pas été gérée." + EndOfLine
 		  Message = Message + pMessage + EndOfLine
 		  
 		  if error.Message <> "" then
