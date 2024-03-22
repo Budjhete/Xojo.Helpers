@@ -60,16 +60,6 @@ Protected Module NumberExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = API2Only and ( (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) )
-		Function MoneyValue(Extends pCurrency as Currency, pFormat as String = "-#0.00", pUnit as String = "") As String
-		  If pUnit.Length > 1 Then
-		    pUnit = " " + pUnit
-		  End If
-		  
-		  Return Format(pCurrency,pFormat + pUnit)
-		End Function
-	#tag EndMethod
-
 	#tag Method, Flags = &h0, CompatibilityFlags = API2Only and ( (TargetIOS and (Target64Bit)) )
 		Function MoneyValue(Extends pCurrency as Currency, pFormat as String = "-#0.00", pUnit as String = "") As String
 		  If pUnit.Length > 1 Then
@@ -79,6 +69,22 @@ Protected Module NumberExtra
 		  dim cc as Double = pCurrency
 		  dim pp as string = pFormat + pUnit
 		  Return cc.ToString(Nil, pp)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = API2Only and ( (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) )
+		Function MoneyValue(Extends pCurrency as Currency, pFormat as String = "-#0.00", pUnit as String = "", pShowZero as Boolean = True) As String
+		  If pUnit.Length > 1 Then
+		    pUnit = " " + pUnit
+		  End If
+		  
+		  if pShowZero then
+		    Return Format(pCurrency,pFormat + pUnit)
+		  elseif NOT pShowZero and pCurrency=0 then
+		    Return ""
+		  else
+		    Return Format(pCurrency,pFormat + pUnit)
+		  end if
 		End Function
 	#tag EndMethod
 
