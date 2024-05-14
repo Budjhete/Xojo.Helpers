@@ -289,6 +289,20 @@ Protected Module ArrayExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function Difference(Extends arr() as String, values() as String) As String()
+		  dim Result() as string
+		  
+		  For Each element As String In values
+		    If Not arr.IndexOf(element)>-1 Then
+		      result.Append(element)
+		    End If
+		  Next
+		  
+		  return Result
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function Max(Extends arr() As Double) As Double
 		  // Return the greatest of the items in the array, or 0 for an empty array.
 		  Dim index, ub As Integer

@@ -610,9 +610,21 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target64Bit)) or  (TargetWeb and (Target64Bit)) or  (TargetDesktop and (Target64Bit)) or  (TargetIOS and (Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target64Bit)) or  (TargetWeb and (Target64Bit)) or  (TargetDesktop and (Target64Bit)) or  (TargetIOS and (Target64Bit)) or  (TargetAndroid and (Target64Bit))
 		Function MoneyValue(Extends pString As String, pUnit As String) As String
 		  Return pString.CurrencyValue.MoneyValue(pUnit)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target64Bit)) or  (TargetWeb and (Target64Bit)) or  (TargetDesktop and (Target64Bit)) or  (TargetIOS and (Target64Bit)) or  (TargetAndroid and (Target64Bit))
+		Function MoneyValue(Extends pString as String, pUnit as String, pDecimal as integer = 2) As String
+		  dim nFormat as string = "-##0.00"
+		  
+		  for i as Integer = 2 to pDecimal
+		    nFormat = nFormat + "#"
+		  next
+		  
+		  Return pString.CurrencyValue.MoneyValue(nFormat, pUnit)
 		End Function
 	#tag EndMethod
 
@@ -825,7 +837,7 @@ Protected Module StringExtra
 		  Return pString.ReplaceAccents. _
 		  ReplaceAllRegExp("[^0-9a-zA-Z.-]+", " "). _ // replace non-word and space by space
 		  Trim. _ // trim beginning and ending spaces
-		  ReplaceAll(" ", "-")
+		  ReplaceAll(" ", "_").ReplaceAll("\", "-")
 		End Function
 	#tag EndMethod
 
