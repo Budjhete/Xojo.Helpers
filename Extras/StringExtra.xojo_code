@@ -180,6 +180,16 @@ Protected Module StringExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function cleanCSV(Extends str as String) As String
+		  str = str.ReplaceAll(Encodings.UTF8.Chr(22), Encodings.UTF8.Chr(22)+Encodings.UTF8.Chr(22)+Encodings.UTF8.Chr(22)) // return carriage
+		  return str
+		  
+		  
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function cleanJSON(Extends str as String) As String
 		  str = str.ReplaceAll(Encodings.UTF8.Chr(13), "\r") // return carriage
 		  str = str.ReplaceAll(Encodings.UTF8.Chr(12), "\f")  // form feed
