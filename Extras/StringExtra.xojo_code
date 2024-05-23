@@ -94,7 +94,7 @@ Protected Module StringExtra
 		  end if
 		  
 		  first = Chr(first.Asc - &h20)
-		  return first + s.Middle(2)
+		  return first + s.Middle(1)
 		End Function
 	#tag EndMethod
 
