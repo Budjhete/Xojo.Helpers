@@ -987,7 +987,7 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetAndroid and (Target64Bit))
 		Function Trim(Extends source As String, charsToTrim As String) As String
 		  // This is an extended version of RB's Trim function that lets you specify
 		  // a set of characters to trim.
