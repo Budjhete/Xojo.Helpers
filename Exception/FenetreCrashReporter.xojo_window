@@ -607,7 +607,7 @@ End
 		  
 		  
 		  if System.NetworkInterfaceCount > 0 then
-		    post.Value("MAC-modified") = StringMD5(System.GetNetworkInterface(0).MACAddress.ToText).Lowercase
+		    post.Value("MAC-modified") = StringMD5(System.GetNetworkInterface(0).MACAddress).Lowercase
 		  end if
 		  
 		  post.Value("NbWindows") = str(WindowCount)
