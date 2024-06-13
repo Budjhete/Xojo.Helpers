@@ -229,9 +229,18 @@ Protected Module DateExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function LongishDate(extends d As DateTime) As String
+		Function LongishDate(extends d as DateTime, pLang as string = "fr") As String
 		  // Return a date in the format: <month name> <day>, <year>
-		  return d.MonthName + " " + d.Day.ToString + ", " + d.Year.ToString
+		  Select Case pLang
+		  Case "en"
+		    Return d.MonthName + " " + d.Day.ToString + ", " + d.Year.ToString
+		  Case "fr"
+		    Return d.Day.ToString + " " + d.MonthName(pLang) + " " + d.Year.ToString
+		    
+		  Else
+		    Return d.MonthName + " " + d.Day.ToString + ", " + d.Year.ToString
+		    
+		  End Select
 		End Function
 	#tag EndMethod
 
