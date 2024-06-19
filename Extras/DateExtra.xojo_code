@@ -233,12 +233,12 @@ Protected Module DateExtra
 		  // Return a date in the format: <month name> <day>, <year>
 		  Select Case pLang
 		  Case "en"
-		    Return d.MonthName + " " + d.Day.ToString + ", " + d.Year.ToString
+		    Return d.MonthName(pLang) + " " + d.Day.ToString + ", " + d.Year.ToString
 		  Case "fr"
 		    Return d.Day.ToString + " " + d.MonthName(pLang) + " " + d.Year.ToString
 		    
 		  Else
-		    Return d.MonthName + " " + d.Day.ToString + ", " + d.Year.ToString
+		    Return d.MonthName(pLang) + " " + d.Day.ToString + ", " + d.Year.ToString
 		    
 		  End Select
 		End Function
