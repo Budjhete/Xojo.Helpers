@@ -53,7 +53,7 @@ Protected Module FolderItemExtra
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function RealType(extends folder as FolderItem) As FileType
-		  if folder.IsFolder then Return nil
+		  If folder.IsFolder Then Return Nil
 		  
 		  If Folder.Name.EndsWith(DocumentsTypes.Pdf.Extensions.Split(";")) Then
 		    Return DocumentsTypes.Pdf
@@ -85,6 +85,10 @@ Protected Module FolderItemExtra
 		  
 		  If Folder.Name.EndsWith(DocumentsTypes.Jpeg.Extensions.Split(";")) Then
 		    Return DocumentsTypes.Jpeg
+		  End If
+		  
+		  If Folder.Name.EndsWith(DocumentsTypes.Mpeg.Extensions.Split(";")) Then
+		    Return DocumentsTypes.Mpeg
 		  End If
 		End Function
 	#tag EndMethod
