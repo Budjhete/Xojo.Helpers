@@ -235,7 +235,7 @@ Protected Module DateExtra
 		  Case "en"
 		    Return d.MonthName(pLang) + " " + d.Day.ToString + ", " + d.Year.ToString
 		  Case "fr"
-		    Return d.Day.ToString + " " + d.MonthName(pLang) + " " + d.Year.ToString
+		    Return d.Day.ToString + " " + d.MonthName(pLang).Lowercase + " " + d.Year.ToString
 		    
 		  Else
 		    Return d.MonthName(pLang) + " " + d.Day.ToString + ", " + d.Year.ToString
