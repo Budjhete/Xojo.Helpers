@@ -397,7 +397,7 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub Tag(Extends popup as PopupMenu, Assigns value as Auto)
+		Sub Tag(Extends popup as PopupMenu, Assigns value as Variant)
 		  for i as Integer = 0 to (popup.ListCount-1)
 		    if popup.List(i) <> "-" and popup.RowTagAt(i) = value then
 		      popup.ListIndex = i
