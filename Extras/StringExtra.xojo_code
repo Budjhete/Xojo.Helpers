@@ -626,7 +626,7 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target64Bit)) or  (TargetWeb and (Target64Bit)) or  (TargetDesktop and (Target64Bit)) or  (TargetIOS and (Target64Bit)) or  (TargetAndroid and (Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = false
 		Function MoneyValue(Extends pString as String, pUnit as String, pDecimal as integer = 2) As String
 		  dim nFormat as string = "-##0.00"
 		  
