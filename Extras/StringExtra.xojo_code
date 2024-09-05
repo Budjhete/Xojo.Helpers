@@ -638,6 +638,17 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target64Bit)) or  (TargetWeb and (Target64Bit)) or  (TargetDesktop and (Target64Bit)) or  (TargetIOS and (Target64Bit)) or  (TargetAndroid and (Target64Bit))
+		Function MoneyValue(Extends pString as String, pUnit as String, pDecimal as integer = 2, pFormat as string = "##0.00;-##0.00;0.00") As String
+		  
+		  for i as Integer = 2 to pDecimal
+		    pFormat = pFormat + "#"
+		  next
+		  
+		  Return pString.CurrencyValue.MoneyValue(pFormat, pUnit)
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0, CompatibilityFlags = false
 		Function Number(Extends str as String, default as String = "") As String
 		  if not str.test("^\d+") then

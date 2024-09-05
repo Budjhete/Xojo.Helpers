@@ -61,7 +61,7 @@ Protected Module NumberExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = API2Only and ( (TargetIOS and (Target64Bit)) )
-		Function MoneyValue(Extends pCurrency as Currency, pFormat as String = "#0.00", pUnit as String = "") As String
+		Function MoneyValue(Extends pCurrency as Currency, pFormat as String = "##0.00;-##0.00;0.00", pUnit as String = "") As String
 		  If pUnit.Length > 1 Then
 		    pUnit = " " + pUnit
 		  End If
