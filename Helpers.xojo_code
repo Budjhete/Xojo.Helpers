@@ -355,7 +355,7 @@ Protected Module Helpers
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function GetResourceFolder() As FolderItem
 		  #if TargetLinux
-		    return new FolderItem(App.ExecutableFile.Parent.Child("Resources").NativePath.ToText)
+		    return new FolderItem(App.ExecutableFile.Parent.Child(App.ExecutableFile.Name + " Resources").NativePath.ToText)
 		  #elseif TargetWin32
 		    return new FolderItem(App.ExecutableFile.Parent.Child(replace(App.ExecutableFile.Name, ".exe", "") + " Resources").NativePath.ToText)
 		  #elseif TargetMacOS
