@@ -863,6 +863,14 @@ Protected Module StringExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function SlugalizeButKeepDotsAndSpace(Extends pString as String) As String
+		  Return pString.ReplaceAccents. _
+		  Trim. _ // trim beginning and ending spaces
+		  ReplaceAll("\", "-").ReplaceAll(":", "-")
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function SplitAndKeep(Extends source as String, delimiter as String = " ") As String()
 		  dim parts() as String
 		  
