@@ -183,9 +183,10 @@ Protected Module DateExtra
 
 	#tag Method, Flags = &h0
 		Function LastQuarterEnd(Extends d As DateTime, firstDay As DateTime = Nil) As DateTime
-		  dim start as DateTime = d.QuarterEnd(firstDay)
+		  dim start as DateTime = firstDay
 		  dim diff as new DateInterval(0, 3)
-		  start = start+diff
+		  dim diffday as new DateInterval(0,0,1)
+		  start = start+diff-diffday
 		  return start
 		  
 		End Function

@@ -352,6 +352,28 @@ Protected Module Helpers
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function FromLabel(extends e as MimeEmailMBS) As string
+		  dim h as MimeHeaderMBS = e.Header
+		  dim f as MimeMailboxListMBS = h.from
+		  
+		  if f <> nil then
+		    dim Mailboxes() as MimeMailboxMBS = f.Mailboxes
+		    
+		    for each m as MimeMailboxMBS in Mailboxes
+		      dim l as string = m.LabelDecoded
+		      if l = "" then
+		        l = m.Email
+		      end if
+		      
+		      return l
+		    next
+		  end if
+		  
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function GetResourceFolder() As FolderItem
 		  #if TargetLinux
@@ -693,6 +715,39 @@ Protected Module Helpers
 		    System.Log(System.LogLevelInformation, "TODO: " + tache)
 		  #endif
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function ToLabel(extends e as MimeEmailMBS) As string
+		  dim h as MimeHeaderMBS = e.Header
+		  dim f as MimeAddressListMBS = h.too
+		  dim parts() as string
+		  
+		  if f <> nil then
+		    dim Addresses() as MimeAddressMBS = f.Addresses
+		    
+		    for each a as MimeAddressMBS in Addresses
+		      dim g as MimeGroupMBS = a.Group
+		      
+		      if g <> nil then
+		        parts.Append g.NameDecoded
+		      else
+		        dim m as MimeMailboxMBS = a.Mailbox
+		        if m <> nil then
+		          dim s as string = m.LabelDecoded
+		          if s = "" then
+		            s = m.Email
+		          end if
+		          
+		          parts.Append s
+		        end if
+		      end if
+		    next
+		  end if
+		  
+		  Return Join(parts, ", ")
+		  
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
