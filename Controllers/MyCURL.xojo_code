@@ -8,6 +8,8 @@ Inherits CURLSMBS
 		  me.YieldTime = true
 		  me.CollectDebugMessages = true
 		  me.CollectOutputData = true
+		  me.OptionSSLVerifyHost = 0
+		  me.OptionSSLVerifyPeer = 0
 		  
 		End Sub
 	#tag EndMethod
@@ -15,6 +17,10 @@ Inherits CURLSMBS
 
 	#tag Property, Flags = &h0
 		EmailID As string
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		Folder As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
