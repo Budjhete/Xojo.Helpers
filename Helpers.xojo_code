@@ -510,6 +510,32 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function InvertImage(source As Picture) As Picture
+		  If source Is Nil Then Return Nil
+		  
+		  if color.IsDarkMode then
+		    
+		    Var newPicture As New Picture(source.Width, source.Height)
+		    Var sourceSurface As RGBSurface = source.RGBSurface
+		    Var destSurface As RGBSurface = newPicture.RGBSurface
+		    
+		    If sourceSurface Is Nil Or destSurface Is Nil Then Return Nil
+		    
+		    For x As Integer = 0 To source.Width - 1
+		      For y As Integer = 0 To source.Height - 1
+		        Var c As Color = sourceSurface.Pixel(x,y)
+		        destSurface.Pixel(x,y) = Color.RGBA(255 - c.Red, 255 - c.Green, 255 - c.Blue, c.Alpha)
+		      Next
+		    Next
+		    
+		    Return newPicture
+		  else
+		    Return source
+		  end if
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function isArray(value As Auto) As Boolean
 		  Using Xojo.Introspection
 		  if value=nil then Return false

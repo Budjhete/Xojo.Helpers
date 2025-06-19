@@ -418,6 +418,12 @@ Protected Module StringExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function FromArray(Extends pStrings() as String, pSeparator as string = ",") As String
+		  Return String.FromArray(pStrings, pSeparator)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function FromBase(Extends str as String, base as Integer) As Integer
 		  dim num as Integer = 0
 		  dim exponent as Integer = 0
