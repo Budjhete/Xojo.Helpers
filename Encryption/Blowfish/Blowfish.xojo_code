@@ -10,7 +10,7 @@ Protected Class Blowfish
 		  
 		  for i = 0 to data.Size - 1
 		    temp = Hex(data.UInt8Value(i))
-		    if len(temp) = 1 then
+		    if temp.Length = 1 then
 		      temp = "0" + temp
 		    end if
 		    returnValue = returnValue + temp
@@ -177,7 +177,7 @@ Protected Class Blowfish
 		  // remove any line breaks
 		  db64 = ReplaceLineEndings( db64, "" )
 		  
-		  if len(db64) mod 4 <> 0 then
+		  if db64.Length mod 4 <> 0 then
 		    err = new RuntimeException
 		    err.Message = "The input should be a multiple of 4 characters! The data has been corrupted!"
 		    raise err
@@ -207,13 +207,13 @@ Protected Class Blowfish
 		  // remove any line breaks
 		  hex = ReplaceLineEndings( hex, "" )
 		  
-		  if len(hex) mod 16 <> 0 then
+		  if hex.Length mod 16 <> 0 then
 		    err = new RuntimeException
 		    err.Message = "The input should be a multiple of 16 characters! The data has been corrupted!"
 		    raise err
 		  end if
 		  
-		  data = NewMemoryBlock(Len(hex) / 2) // 2 hex chars per byte
+		  data = NewMemoryBlock(hex.Length / 2) // 2 hex chars per byte
 		  
 		  //  make sure we got it!
 		  if (data = nil) then
@@ -543,7 +543,7 @@ Protected Class Blowfish
 		  Dim err as RuntimeException
 		  
 		  // make sure the given string has 2 hex values
-		  if len(HexValue) <> 2 then
+		  if HexValue.Length <> 2 then
 		    err = new RuntimeException
 		    err.Message = "Blowfish HexToByte(value) requires the value to be 2 hexadecimal characters."
 		    raise err
@@ -558,7 +558,7 @@ Protected Class Blowfish
 		    else
 		      // error! not a hex digit!
 		      err = new RuntimeException
-		      err.Message = "Blowfish HexToByte(value) received a non-hexadecimal character: " + Left(HexValue, 1)
+		      err.Message = "Blowfish HexToByte(value) received a non-hexadecimal character: " + HexValue.left(1)
 		      raise err
 		    end if
 		  end if
@@ -573,7 +573,7 @@ Protected Class Blowfish
 		    else
 		      // error! not a hex digit!
 		      err = new RuntimeException
-		      err.Message = "Blowfish HexToByte(value) received a non-hexadecimal character: " + Left(HexValue, 1)
+		      err.Message = "Blowfish HexToByte(value) received a non-hexadecimal character: " + HexValue.left(1)
 		      raise err
 		    end if
 		  end if
@@ -707,7 +707,7 @@ Protected Class Blowfish
 		  Dim i as Integer
 		  Dim err as RuntimeException
 		  
-		  if len(IVValue) <> 16 then
+		  if IVValue.Length <> 16 then
 		    err = new RuntimeException
 		    err.Message = "Blowfish SetIV(value) requires the value to be 16 hexadecimal characters."
 		    raise err

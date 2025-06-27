@@ -1,31 +1,31 @@
-#tag Window
-Begin Window FenetreAJour
-   BackColor       =   &cFFFFFF00
+#tag DesktopWindow
+Begin DesktopWindow FenetreAJour
    Backdrop        =   0
-   CloseButton     =   False
+   BackgroundColor =   &cFFFFFF00
    Composite       =   False
-   Frame           =   1
+   DefaultLocation =   3
    FullScreen      =   False
-   FullScreenButton=   False
-   HasBackColor    =   False
+   HasBackgroundColor=   False
+   HasCloseButton  =   False
+   HasFullScreenButton=   False
+   HasMaximizeButton=   False
+   HasMinimizeButton=   False
+   HasTitleBar     =   True
    Height          =   133
    ImplicitInstance=   True
-   LiveResize      =   "False"
    MacProcID       =   0
-   MaxHeight       =   32000
-   MaximizeButton  =   False
-   MaxWidth        =   32000
+   MaximumHeight   =   32000
+   MaximumWidth    =   32000
    MenuBar         =   0
    MenuBarVisible  =   True
-   MinHeight       =   64
-   MinimizeButton  =   False
-   MinWidth        =   64
-   Placement       =   3
+   MinimumHeight   =   64
+   MinimumWidth    =   64
    Resizeable      =   False
    Title           =   "#kMiseAJourDuLogiciel"
+   Type            =   1
    Visible         =   True
    Width           =   366
-   Begin Label Label1
+   Begin DesktopLabel Label1
       AllowAutoDeactivate=   True
       Bold            =   True
       DataField       =   ""
@@ -60,7 +60,7 @@ Begin Window FenetreAJour
       Visible         =   True
       Width           =   202
    End
-   Begin Label lDetail
+   Begin DesktopLabel lDetail
       AllowAutoDeactivate=   True
       Bold            =   False
       DataField       =   ""
@@ -95,7 +95,7 @@ Begin Window FenetreAJour
       Visible         =   True
       Width           =   252
    End
-   Begin PushButton bFermer
+   Begin DesktopButton bFermer
       AllowAutoDeactivate=   True
       Bold            =   False
       Cancel          =   False
@@ -127,7 +127,7 @@ Begin Window FenetreAJour
       Visible         =   True
       Width           =   102
    End
-   Begin Canvas Canvas1
+   Begin DesktopCanvas Canvas1
       AllowAutoDeactivate=   True
       AllowFocus      =   False
       AllowFocusRing  =   True
@@ -156,11 +156,11 @@ Begin Window FenetreAJour
       Width           =   62
    End
 End
-#tag EndWindow
+#tag EndDesktopWindow
 
 #tag WindowCode
 	#tag Event
-		Sub Open()
+		Sub Opening() Handles Opening
 		  lDetail.Text = kSoftwareLastVersion(App.Lang).AssignVars(App.Version)
 		End Sub
 	#tag EndEvent
@@ -170,7 +170,7 @@ End
 
 #tag Events bFermer
 	#tag Event
-		Sub Action()
+		Sub Pressed()
 		  Close()
 		End Sub
 	#tag EndEvent

@@ -1,7 +1,7 @@
 #tag Module
 Protected Module ControlExtra
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub AccessTo(Extends toolbar as Toolbar, ItemName as String, License as String, Permission as String)
+		Sub AccessTo(Extends toolbar as DesktopToolbar, ItemName as String, License as String, Permission as String)
 		  'dim item as ToolItem = toolbar.Find(ItemName)
 		  '
 		  'if item <> nil then
@@ -11,46 +11,46 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub AppendAfter(Extends menu as MenuItem, after as String, from as MenuItem)
+		Sub AppendAfter(Extends menu as DesktopMenuItem, after as String, from as DesktopMenuItem)
 		  dim index as Integer = menu.IndexOf(after)
 		  
 		  if index >= 0 then
 		    For i as Integer = 0 to (from.Count-1)
 		      index = index + 1
-		      menu.Insert(index, from.Item(i))
+		      menu.AddMenuAt(index, from.MenuAt(i))
 		    Next
 		  end
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub AppendBefore(Extends menu as MenuItem, before as String, from as MenuItem)
+		Sub AppendBefore(Extends menu as DesktopMenuItem, before as String, from as DesktopMenuItem)
 		  dim index as Integer = menu.IndexOf(before)
 		  
 		  if index >= 0 then
-		    menu.Insert(index, from)
+		    menu.AddMenuAt(index, from)
 		  end
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub AppendSeparator(Extends menu as MenuItem)
-		  menu.Append(new MenuItem(MenuItem.TextSeparator))
+		Sub AppendSeparator(Extends menu as DesktopMenuItem)
+		  menu.AddMenu(new DesktopMenuItem(MenuItem.TextSeparator))
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function Bottom(Extends ctrl as RectControl) As Integer
+		Function Bottom(Extends ctrl as DesktopUIControl) As Integer
 		  return ctrl.Top + ctrl.Height
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function ColumnLeft(Extends ctrl as ListBox, column as Integer) As Integer
+		Function ColumnLeft(Extends ctrl as DesktopListBox, column as Integer) As Integer
 		  dim left as Integer = ctrl.ScreenX
 		  
 		  for i as Integer = 0 to (column-1)
-		    left = left + ctrl.Column(i).WidthActual
+		    left = left + ctrl.ColumnAttributesAt(i).WidthActual
 		  next
 		  
 		  return left
@@ -58,9 +58,9 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function Contains(Extends menu as MenuItem, item as MenuItem) As Boolean
+		Function Contains(Extends menu as DesktopMenuItem, item as DesktopMenuItem) As Boolean
 		  For i as Integer = 0 to menu.Count-1
-		    if menu.Item(i) = item then
+		    if menu.MenuAt(i) = item then
 		      return true
 		    end
 		  Next
@@ -70,21 +70,21 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub DeleteAllItems(Extends toolbar as Toolbar)
+		Sub DeleteAllItems(Extends toolbar as DesktopToolbar)
 		  For i as Integer = (toolbar.Count-1) downto 0
-		    toolbar.Remove(i)
+		    toolbar.RemoveButtonAt(i)
 		  Next
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub EmptyRow(Extends list as ListBox, row As Integer)
-		  if row >= list.ListCount then
+		Sub EmptyRow(Extends list As DesktopListBox, row As Integer)
+		  if row >= list.RowCount then
 		    return
 		  end
 		  
 		  for column As Integer = 0 To list.ColumnCount
-		    list.Cell(row, column) = ""
+		    list.CellTextAt(row, column) = ""
 		  next
 		End Sub
 	#tag EndMethod
@@ -100,12 +100,12 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h1, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Protected Function EvaluateHeight(control as Label, text as String) As Integer
+		Protected Function EvaluateHeight(control as DesktopLabel, text as String) As Integer
 		  dim g as Graphics = EvaluateGraphics
 		  
-		  g.TextFont = control.TextFont
-		  g.TextSize = control.TextSize
-		  g.TextUnit = control.TextUnit
+		  g.FontName = control.FontName
+		  g.FontSize = control.FontSize
+		  g.FontUnit = control.FontUnit
 		  g.Bold = control.Bold
 		  g.Italic = control.Italic
 		  g.Underline = control.Underline
@@ -115,12 +115,12 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h1, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Protected Function EvaluateWidth(control as Label, text as String) As Integer
+		Protected Function EvaluateWidth(control as DesktopButton, text as String) As Integer
 		  dim g as Graphics = EvaluateGraphics
 		  
-		  g.TextFont = control.TextFont
-		  g.TextSize = control.TextSize
-		  g.TextUnit = control.TextUnit
+		  g.FontName = control.FontName
+		  g.FontSize = control.FontSize
+		  g.FontUnit = control.FontUnit
 		  g.Bold = control.Bold
 		  g.Italic = control.Italic
 		  g.Underline = control.Underline
@@ -130,12 +130,12 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h1, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Protected Function EvaluateWidth(control as PushButton, text as String) As Integer
+		Protected Function EvaluateWidth(control as DesktopLabel, text as String) As Integer
 		  dim g as Graphics = EvaluateGraphics
 		  
-		  g.TextFont = control.TextFont
-		  g.TextSize = control.TextSize
-		  g.TextUnit = control.TextUnit
+		  g.FontName = control.FontName
+		  g.FontSize = control.FontSize
+		  g.FontUnit = control.FontUnit
 		  g.Bold = control.Bold
 		  g.Italic = control.Italic
 		  g.Underline = control.Underline
@@ -145,13 +145,13 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function Find(Extends menu as MenuItem, name as String) As MenuItem
+		Function Find(Extends menu as DesktopMenuItem, name as String) As DesktopMenuItem
 		  For i as Integer = 0 to (menu.Count-1)
-		    if menu.Item(i).Name = name then
-		      return menu.Item(i)
+		    if menu.MenuAt(i).Name = name then
+		      return menu.MenuAt(i)
 		    end
 		    
-		    dim itm as MenuItem = menu.Item(i).Find(name)
+		    dim itm as DesktopMenuItem = menu.MenuAt(i).Find(name)
 		    if itm <> nil then
 		      return itm
 		    end
@@ -161,10 +161,10 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function Find(Extends toolbar as Toolbar, name as String) As ToolItem
+		Function Find(Extends toolbar as DesktopToolbar, name as String) As DesktopToolbarItem
 		  for i as Integer = 0 to toolbar.Count-1
-		    if toolbar.Item(i).Name = name then
-		      return toolbar.Item(i)
+		    if toolbar.ButtonAt(i).Name = name then
+		      return toolbar.ButtonAt(i)
 		    end
 		  next
 		  
@@ -172,16 +172,52 @@ Protected Module ControlExtra
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function FindParentContainer(Extends control as DesktopContainer) As DesktopContainer
+		  Var currentParent As Object = control.Parent
+		  
+		  While currentParent <> Nil
+		    If currentParent IsA DesktopContainer Then
+		      Return DesktopContainer(currentParent)
+		    ElseIf currentParent IsA DesktopUIControl Then
+		      currentParent = DesktopUIControl(currentParent).Parent
+		    Else
+		      Return Nil // Reached a window or other non-container
+		    End If
+		  Wend
+		  
+		  Return Nil // No DesktopContainer found
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function FindParentContainer(Extends control as DesktopUIControl) As DesktopContainer
+		  Var currentParent As Object = control.Parent
+		  
+		  While currentParent <> Nil
+		    If currentParent IsA DesktopContainer Then
+		      Return DesktopContainer(currentParent)
+		    ElseIf currentParent IsA DesktopUIControl Then
+		      currentParent = DesktopUIControl(currentParent).Parent
+		    Else
+		      Return Nil // Reached a window or other non-container
+		    End If
+		  Wend
+		  
+		  Return Nil // No DesktopContainer found
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function HaveFocus(Extends ctrl as Control) As Boolean
+		Function HaveFocus(Extends ctrl as DesktopControl) As Boolean
 		  return (ctrl.Window.Focus = ctrl)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function IndexOf(Extends menu as MenuItem, name as String) As Integer
+		Function IndexOf(Extends menu as DesktopMenuItem, name as String) As Integer
 		  For i as Integer = 0 to (menu.Count-1)
-		    if menu.Item(i).Name = name then
+		    if menu.MenuAt(i).Name = name then
 		      return i
 		    end
 		  Next
@@ -190,9 +226,9 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function IndexOf(Extends tabPanel as TabPanel, name as String) As Integer
+		Function IndexOf(Extends tabPanel as DesktopTabPanel, name as String) As Integer
 		  for i as Integer = 0 to tabPanel.PanelCount-1
-		    if tabPanel.Caption(i) = name then
+		    if tabPanel.CaptionAt(i) = name then
 		      return i
 		    end
 		  next
@@ -202,11 +238,11 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub InsertAfter(Extends menu as MenuItem, after as String, from as MenuItem)
+		Sub InsertAfter(Extends menu as DesktopMenuItem, after as String, from as DesktopMenuItem)
 		  dim index as Integer = menu.IndexOf(after)
 		  
 		  if index >= 0 then
-		    menu.Insert(index+1, from)
+		    menu.AddMenuAt(index+1, from)
 		  end
 		End Sub
 	#tag EndMethod
@@ -219,7 +255,7 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function IsMouseHover(Extends ctrl as RectControl) As Boolean
+		Function IsMouseHover(Extends ctrl as DesktopUIControl) As Boolean
 		  dim X as Integer = ctrl.MouseControlX
 		  dim Y as Integer = ctrl.MouseControlX
 		  
@@ -228,28 +264,7 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function ListCount(Extends button as BevelButton) As Integer
-		  #pragma BreakOnExceptions Off
-		  
-		  dim count as Integer = 0
-		  
-		  try
-		    while true
-		      call button.List(count)
-		      count = count + 1
-		    wend
-		  catch ex as OutOfBoundsException
-		    // do nothing
-		  end
-		  
-		  return count
-		  
-		  #pragma BreakOnExceptions Default
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub LockWidth(Extends ctrl as RectControl, Assigns value as Integer)
+		Sub LockWidth(Extends ctrl as DesktopUIControl, Assigns value as Integer)
 		  if ctrl.LockRight then
 		    dim right as Integer = ctrl.Right
 		    ctrl.Width = value
@@ -261,42 +276,42 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function MouseControlX(Extends pControl as RectControl) As Integer
-		  return (pControl.MouseX - pControl.WindowLeft)
+		Function MouseControlX(Extends pControl as DesktopUIControl) As Integer
+		  return (System.MouseX - pControl.WindowLeft)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function MouseControlY(Extends pControl as RectControl) As Integer
-		  return (pControl.MouseY - pControl.WindowTop)
+		Function MouseControlY(Extends pControl as DesktopUIControl) As Integer
+		  return (System.MouseY - pControl.WindowTop)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub Remove(Extends menu as MenuItem, name as String)
+		Sub Remove(Extends menu as DesktopMenuItem, name as String)
 		  dim index as Integer = menu.IndexOf(name)
 		  if index >= 0 then
-		    menu.Remove(index)
+		    menu.RemoveMenuAt(index)
 		  end
 		  
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub Remove(Extends tabPanel as TabPanel, name as String)
+		Sub Remove(Extends tabPanel as DesktopTabPanel, name as String)
 		  dim index as Integer = tabPanel.IndexOf(name)
 		  
 		  if index >= 0 then
-		    tabPanel.Remove(index)
+		    tabPanel.RemovePanelAt(index)
 		  end
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub Remove(Extends toolbar as Toolbar, name as String)
+		Sub Remove(Extends toolbar as DesktopToolbar, name as String)
 		  For i as Integer = 0 to (toolbar.Count-1)
-		    if toolbar.Item(i).Name = name then
-		      toolbar.Remove(i)
+		    if toolbar.ButtonAt(i).Name = name then
+		      toolbar.RemoveButtonAt(i)
 		      return
 		    end
 		  Next
@@ -304,12 +319,12 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub RemoveByTag(Extends popup as PopupMenu, value as Auto)
-		  dim index as Integer = popup.ListIndex
+		Sub RemoveByTag(Extends popup as DesktopPopupMenu, value as Auto)
+		  dim index as Integer = popup.SelectedRowIndex
 		  
-		  for i as Integer = (popup.ListCount-1) downto 0
+		  for i as Integer = (popup.RowCount-1) downto 0
 		    if popup.RowTagAt(i) = value then
-		      popup.RemoveRow(i)
+		      popup.RemoveRowAt(i)
 		      
 		      if index = i then
 		        index = -1
@@ -319,25 +334,25 @@ Protected Module ControlExtra
 		    end
 		  next
 		  
-		  if popup.ListIndex <> index then
-		    popup.ListIndex = index
+		  if popup.SelectedRowIndex <> index then
+		    popup.SelectedRowIndex = index
 		  end
 		  
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub RemoveByText(Extends listbox as ListBox, text as String, column as Integer = 0)
-		  for row as Integer = listbox.ListCount-1 downto 0
-		    if listbox.Cell(row, column) = text then
-		      listbox.RemoveRow(row)
+		Sub RemoveByText(Extends pListbox as DesktopListBox, text as String, column as Integer = 0)
+		  for row as Integer = pListbox.RowCount-1 downto 0
+		    if pListbox.CellTextAt(row, column) = text then
+		      pListbox.RemoveRowAt(row)
 		    end
 		  next
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub RemoveOnCondition(Extends toolbar as Toolbar, name as String, condition as Boolean)
+		Sub RemoveOnCondition(Extends toolbar as DesktopToolbar, name as String, condition as Boolean)
 		  if condition then
 		    toolbar.Remove(name)
 		  end
@@ -345,73 +360,84 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function Right(Extends ctrl as RectControl) As Integer
+		Function Right(Extends ctrl as DesktopUIControl) As Integer
 		  return ctrl.Window.Width - ctrl.RightPosition
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub Right(Extends ctrl as RectControl, Assigns value as Integer)
+		Sub Right(Extends ctrl as DesktopUIControl, Assigns value as Integer)
 		  ctrl.RightPosition = ctrl.Window.Width - value
+		  
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function RightPosition(Extends ctrl as RectControl) As Integer
+		Function RightPosition(Extends ctrl as DesktopUIControl) As Integer
 		  return ctrl.Left + ctrl.Width
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub RightPosition(Extends ctrl as RectControl, Assigns value as Integer)
+		Sub RightPosition(Extends ctrl as DesktopUIControl, Assigns value as Integer)
 		  ctrl.Left = value - ctrl.Width
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function RowTop(Extends ctrl as ListBox, row as Integer) As Integer
+		Function RowCount(Extends button as DesktopBevelButton) As Integer
+		  if button.Menu<>nil then 
+		    Return button.Menu.LastRowIndex + 1
+		  else
+		    Return 0
+		  end if
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Function RowTop(Extends ctrl as DesktopListBox, row as Integer) As Integer
 		  return  (ctrl.ScreenY + ctrl.HeaderHeight + ctrl.RowHeight * (row - ctrl.ScrollPosition))
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function ScreenX(Extends ctrl as RectControl) As Integer
+		Function ScreenX(Extends ctrl as DesktopUIControl) As Integer
 		  return ctrl.Left + ctrl.Window.Left
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function ScreenY(Extends ctrl as RectControl) As Integer
+		Function ScreenY(Extends ctrl as DesktopUIControl) As Integer
 		  return ctrl.top + ctrl.Window.top
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function Tag(Extends popup as PopupMenu) As Variant
-		  if popup.ListIndex < 0 then
+		Function Tag(Extends popup as DesktopPopupMenu) As Variant
+		  if popup.SelectedRowIndex < 0 then
 		    return nil
 		  end
 		  
-		  return popup.RowTagAt(popup.ListIndex)
+		  return popup.RowTagAt(popup.SelectedRowIndex)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub Tag(Extends popup as PopupMenu, Assigns value as Variant)
-		  for i as Integer = 0 to (popup.ListCount-1)
-		    if popup.List(i) <> "-" and popup.RowTagAt(i) = value then
-		      popup.ListIndex = i
+		Sub Tag(Extends popup as DesktopPopupMenu, Assigns value as Variant)
+		  for i as Integer = 0 to (popup.RowCount-1)
+		    if popup.RowTextAt(i) <> "-" and popup.RowTagAt(i) = value then
+		      popup.SelectedRowIndex = i
 		      return
 		    end
 		  next
 		  
-		  popup.ListIndex = -1
+		  popup.SelectedRowIndex = -1
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function TagExists(Extends popup as PopupMenu, value as Auto) As Boolean
-		  for i as Integer = 0 to (popup.ListCount-1)
+		Function TagExists(Extends popup as DesktopPopupMenu, value as Auto) As Boolean
+		  for i as Integer = 0 to (popup.RowCount-1)
 		    if popup.RowTagAt(i) = value then
 		      return true
 		    end
@@ -422,10 +448,10 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function Toolbar(Extends win as Window) As Toolbar
+		Function Toolbar(Extends win as DesktopWindow) As DesktopToolbar
 		  for i as Integer = 0 to (win.ControlCount-1)
-		    if win.Control(i) IsA Toolbar then
-		      return Toolbar(win.Control(i))
+		    if win.Control(i) IsA DesktopToolbar then
+		      return DesktopToolbar(win.ControlAt(i))
 		    end
 		  next
 		  

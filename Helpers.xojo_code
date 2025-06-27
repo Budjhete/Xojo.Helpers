@@ -1,9 +1,9 @@
 #tag Module
 Protected Module Helpers
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetDesktop and (Target32Bit or Target64Bit))
-		Function ActiveWindow() As Window
-		  if WindowCount > 0 then
-		    return Window(0)
+		Function ActiveWindow() As DesktopWindow
+		  if App.WindowCount > 0 then
+		    return App.WindowAt(0)
 		  end
 		  return nil
 		End Function
@@ -16,11 +16,11 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetDesktop and (Target32Bit or Target64Bit))
-		Function BuildPopupMenu(ParamArray items as String) As MenuItem
-		  Dim m as new MenuItem
+		Function BuildPopupMenu(ParamArray items as String) As DesktopMenuItem
+		  Dim m as new DesktopMenuItem
 		  
 		  for i as Integer = 0 to items.Ubound
-		    m.Append(new MenuItem(items(i), i))
+		    m.AddMenu(new DesktopMenuItem(items(i), i))
 		  next
 		  
 		  return m
@@ -30,7 +30,7 @@ Protected Module Helpers
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub CloseAllWindows()
 		  For i as Integer = WindowCount - 1 DownTo 0
-		    Dim w as Window = Window(i)
+		    Dim w as DesktopWindow = App.WindowAt(i)
 		    If w <> nil then
 		      w.Close()
 		    End if
@@ -55,14 +55,6 @@ Protected Module Helpers
 		  else
 		    Return cc
 		  end if
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetDesktop and (Target32Bit or Target64Bit))
-		Function Confirm(message as String) As Boolean
-		  return (MsgBox(message, 36) = 6)
-		  
-		  
 		End Function
 	#tag EndMethod
 
@@ -550,7 +542,7 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetDesktop and (Target32Bit or Target64Bit))
-		Function IsWindowOnTop(w As Window) As Boolean
+		Function IsWindowOnTop(w As DesktopWindow) As Boolean
 		  return w = Window(0)
 		End Function
 	#tag EndMethod
@@ -558,7 +550,7 @@ Protected Module Helpers
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetDesktop and (Target32Bit or Target64Bit))
 		Function IsWindowOpen(name as String) As boolean
 		  For i as Integer = 0 to WindowCount - 1
-		    Dim w as Window = Window(i)
+		    Dim w as DesktopWindow = App.WindowAt(i)
 		    If w <> nil then
 		      dim ti As Introspection.TypeInfo = Introspection.GetType(w)
 		      if ti.Name = name then
@@ -682,13 +674,13 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetDesktop and (Target32Bit or Target64Bit))
-		Function ScreenPosX(ctrl As RectControl) As Integer
+		Function ScreenPosX(ctrl As DesktopUIControl) As Integer
 		  return ctrl.Left + ctrl.Window.Left
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetDesktop and (Target32Bit or Target64Bit))
-		Function ScreenPosY(ctrl As RectControl) As Integer
+		Function ScreenPosY(ctrl As DesktopUIControl) As Integer
 		  return ctrl.Top + ctrl.Window.Top
 		End Function
 	#tag EndMethod

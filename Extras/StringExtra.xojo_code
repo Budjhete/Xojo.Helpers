@@ -154,15 +154,14 @@ Protected Module StringExtra
 	#tag Method, Flags = &h1
 		Protected Function ChopB(s As String, stringToCut As String) As String
 		  // Chops 'stringToCut' off of s, if stringToCut is found at the end.
-		  // Useful for removing file extensions, trailing punctuation, etc.
+		  // Works at the byte level.
 		  
-		  Dim cutLenB As Integer = stringToCut.LenB
-		  if StrComp( s.RightBytes(cutLenB), stringToCut, 0 ) = 0 then
-		    return s.LeftBytes( s.LenB - cutLenB )
-		  else
-		    return s
-		  end if
-		  
+		  Var cutLenB As Integer = stringToCut.Bytes
+		  If s.RightBytes(cutLenB) = stringToCut Then
+		    Return s.LeftBytes(s.Bytes - cutLenB)
+		  Else
+		    Return s
+		  End If
 		End Function
 	#tag EndMethod
 
@@ -521,7 +520,7 @@ Protected Module StringExtra
 		  // be good enough in most cases anyway.
 		  Dim posB As Integer
 		  for posB = Min( srcLen - subLen + 1, startPosB ) downTo 1
-		    if StrComp( source.MiddleBytes( posB, subLen ), substr, 0 ) = 0 then return posB
+		    if source.MiddleBytes( posB, subLen ).Compare(substr) = 0 then return posB
 		  next posB
 		  
 		  return 0

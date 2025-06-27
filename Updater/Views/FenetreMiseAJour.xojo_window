@@ -1,35 +1,33 @@
-#tag Window
-Begin Window FenetreMiseAJour Attributes ( Deprecated = true ) 
-   BackColor       =   &cFFFFFF00
+#tag DesktopWindow
+Begin DesktopWindow FenetreMiseAJour Attributes ( Deprecated = true ) 
    Backdrop        =   0
-   CloseButton     =   False
+   BackgroundColor =   &cFFFFFF00
    Composite       =   False
-   Frame           =   0
+   DefaultLocation =   3
    FullScreen      =   False
-   FullScreenButton=   False
-   HasBackColor    =   False
+   HasBackgroundColor=   False
+   HasCloseButton  =   False
+   HasFullScreenButton=   False
+   HasMaximizeButton=   False
+   HasMinimizeButton=   False
+   HasTitleBar     =   True
    Height          =   120
    ImplicitInstance=   True
-   LiveResize      =   "False"
    MacProcID       =   0
-   MaxHeight       =   120
-   MaximizeButton  =   False
-   MaxWidth        =   32000
+   MaximumHeight   =   120
+   MaximumWidth    =   32000
    MenuBar         =   0
    MenuBarVisible  =   True
-   MinHeight       =   120
-   MinimizeButton  =   False
-   MinWidth        =   350
-   Placement       =   3
+   MinimumHeight   =   120
+   MinimumWidth    =   350
    Resizeable      =   True
    Title           =   "#kMiseAJourDuLogiciel"
+   Type            =   0
    Visible         =   True
    Width           =   350
-   Begin Label Label1
+   Begin DesktopLabel Label1
       AllowAutoDeactivate=   True
       Bold            =   True
-      DataField       =   ""
-      DataSource      =   ""
       Enabled         =   True
       FontName        =   "System"
       FontSize        =   0.0
@@ -60,7 +58,7 @@ Begin Window FenetreMiseAJour Attributes ( Deprecated = true )
       Visible         =   True
       Width           =   255
    End
-   Begin PushButton bAction
+   Begin DesktopButton bAction
       AllowAutoDeactivate=   True
       Bold            =   False
       Cancel          =   True
@@ -92,8 +90,10 @@ Begin Window FenetreMiseAJour Attributes ( Deprecated = true )
       Visible         =   True
       Width           =   91
    End
-   Begin ProgressBar pProgess
+   Begin DesktopProgressBar pProgess
+      Active          =   False
       AllowAutoDeactivate=   True
+      AllowTabStop    =   True
       Enabled         =   True
       Height          =   20
       Indeterminate   =   False
@@ -106,22 +106,25 @@ Begin Window FenetreMiseAJour Attributes ( Deprecated = true )
       LockRight       =   True
       LockTop         =   True
       MaximumValue    =   100
+      PanelIndex      =   0
       Scope           =   0
       TabIndex        =   2
       TabPanelIndex   =   0
-      TabStop         =   True
       Tooltip         =   ""
       Top             =   49
       Transparent     =   False
       Value           =   0.0
       Visible         =   True
       Width           =   255
+      _mIndex         =   0
+      _mInitialParent =   ""
+      _mName          =   ""
+      _mPanelIndex    =   0
    End
    Begin HTTPSocket request
       Address         =   ""
       BytesAvailable  =   0
       BytesLeftToSend =   0
-      Enabled         =   True
       Handle          =   0
       httpProxyAddress=   ""
       httpProxyPort   =   0
@@ -136,8 +139,10 @@ Begin Window FenetreMiseAJour Attributes ( Deprecated = true )
       TabPanelIndex   =   0
       yield           =   False
    End
-   Begin ProgressWheel pExtraction
+   Begin DesktopProgressWheel pExtraction
+      Active          =   False
       AllowAutoDeactivate=   True
+      AllowTabStop    =   True
       Enabled         =   True
       Height          =   16
       Index           =   -2147483648
@@ -148,21 +153,23 @@ Begin Window FenetreMiseAJour Attributes ( Deprecated = true )
       LockLeft        =   True
       LockRight       =   False
       LockTop         =   True
+      PanelIndex      =   0
       Scope           =   0
       TabIndex        =   5
       TabPanelIndex   =   0
-      TabStop         =   True
       Tooltip         =   ""
       Top             =   81
       Transparent     =   False
       Visible         =   False
       Width           =   16
+      _mIndex         =   0
+      _mInitialParent =   ""
+      _mName          =   ""
+      _mPanelIndex    =   0
    End
-   Begin Label lExtration
+   Begin DesktopLabel lExtration
       AllowAutoDeactivate=   True
       Bold            =   False
-      DataField       =   ""
-      DataSource      =   ""
       Enabled         =   True
       FontName        =   "System"
       FontSize        =   10.0
@@ -193,13 +200,12 @@ Begin Window FenetreMiseAJour Attributes ( Deprecated = true )
       Visible         =   False
       Width           =   179
    End
-   Begin Canvas Canvas1
+   Begin DesktopCanvas Canvas1
       AllowAutoDeactivate=   True
       AllowFocus      =   False
       AllowFocusRing  =   True
       AllowTabs       =   False
       Backdrop        =   1164708047
-      DoubleBuffer    =   False
       Enabled         =   True
       Height          =   55
       Index           =   -2147483648
@@ -231,7 +237,7 @@ Begin Window FenetreMiseAJour Attributes ( Deprecated = true )
       TabPanelIndex   =   0
    End
 End
-#tag EndWindow
+#tag EndDesktopWindow
 
 #tag WindowCode
 	#tag Method, Flags = &h1
@@ -254,13 +260,13 @@ End
 		    newFolder.createAsFolder
 		    
 		    For i=1 to source.count //go through each item
-		      If source.item(i).directory then
+		      If source.ChildAt(i).directory then
 		        //it's a folder
-		        CopyFileOrFolder source.item(i), newFolder
+		        CopyFileOrFolder source.ChildAt(i), newFolder
 		        //recursively call this
 		        //routine passing it the folder
 		      else
-		        source.item(i).CopyFileTo newFolder
+		        source.ChildAt(i).CopyFileTo newFolder
 		        //it's a file so copy it
 		      end if
 		    next
@@ -277,7 +283,7 @@ End
 		  'pExtraction.Visible = true
 		  '
 		  '#if TargetWin32
-		  'dim ext as String = item_.FileURL.Mid(item_.FileURL.LastIndexOf(".")+1).Lowercase
+		  'dim ext as String = item_.FileURL.Mid(item_.FileURL.LastRowIndexOf(".")+1).Lowercase
 		  '
 		  'if ext = "exe" then
 		  'mEstInstaller = true
@@ -321,7 +327,7 @@ End
 		  mArchive = App.Resources.Relauncher()
 		  
 		  if not mArchive.Exists then
-		    MsgBox kLanceurNonDisponible
+		    MessageBox kLanceurNonDisponible
 		    state_ = UpdateState.Fermer
 		    bAction.Caption = kFermerMAJ
 		    return
@@ -420,7 +426,7 @@ End
 		  '
 		  'mRelauncher = mRelauncher.Parent.Child("relaunch")
 		  'mRelauncher.RecursivePermissions(&o777)
-		  ''MsgBox(mRelauncher.AbsolutePath + " " + Str(App.PID) + " """+relaunchItem_.ShellPath+""" """ + dest_.ShellPath+ """")
+		  '' MessageBox(mRelauncher.AbsolutePath + " " + Str(App.PID) + " """+relaunchItem_.ShellPath+""" """ + dest_.ShellPath+ """")
 		  '
 		  'mRelauncher.oldFolderItem.Launch(Str(App.PID) + " """+relaunchItem_.oldFolderItem.ShellPath+""" """ + dest_.oldFolderItem.ShellPath+ """")
 		  '#endif
@@ -467,7 +473,7 @@ End
 		  
 		  Super.Show
 		  
-		  dim ext as String = item_.FileURL.Mid(item_.FileURL.LastIndexOf(".")+1)
+		  dim ext as String = item_.FileURL.LastField(".")
 		  
 		  temp_ = SpecialFolder.Temporary.Child(StringExtra.RandomString(10) + "-part." + ext)
 		  
@@ -499,7 +505,7 @@ End
 
 	#tag Method, Flags = &h1, CompatibilityFlags = false
 		Attributes( Deprecated = True ) Protected Sub UnarchiveLinFail(extract as ZipImageUnarchiver)
-		  'MsgBox kErreurDecompressionArchive
+		  ' MessageBox kErreurDecompressionArchive
 		  'UnarchiveFinish(false)
 		End Sub
 	#tag EndMethod
@@ -516,7 +522,7 @@ End
 
 	#tag Method, Flags = &h1, CompatibilityFlags = false
 		Protected Sub UnarchiveMacFail(extract as DiskImageUnarchiver)
-		  MsgBox kErreurDecompressionArchive
+		  MessageBox kErreurDecompressionArchive
 		  UnarchiveFinish(false)
 		End Sub
 	#tag EndMethod
@@ -558,7 +564,7 @@ End
 
 	#tag Method, Flags = &h1, CompatibilityFlags = false
 		Protected Sub UnarchiveWinFail(extract as ZipImageUnarchiver)
-		  MsgBox kErreurDecompressionArchive
+		  MessageBox kErreurDecompressionArchive
 		  UnarchiveFinish(false)
 		End Sub
 	#tag EndMethod
@@ -619,7 +625,7 @@ End
 
 #tag Events bAction
 	#tag Event
-		Sub Action()
+		Sub Pressed()
 		  if state_ = UpdateState.Annuler then
 		    Cancel()
 		  elseif state_ = UpdateState.Fermer then
@@ -641,7 +647,7 @@ End
 		Sub DownloadComplete(url as string, httpStatus as integer, headers as internetHeaders, file as folderItem)
 		  if DebugBuild then
 		    if temp_.Length <> item_.Length or MD5(temp_).Lowercase <> item_.MD5Signature.Lowercase then
-		      MsgBox("Erreur : Le fichier téléchargé est corrompu. (en test)")
+		      MessageBox("Erreur : Le fichier téléchargé est corrompu. (en test)")
 		      bAction.Caption = "Fermer"
 		      return
 		    end
@@ -659,6 +665,14 @@ End
 	#tag EndEvent
 #tag EndEvents
 #tag ViewBehavior
+	#tag ViewProperty
+		Name="HasTitleBar"
+		Visible=true
+		Group="Frame"
+		InitialValue="True"
+		Type="Boolean"
+		EditorType=""
+	#tag EndViewProperty
 	#tag ViewProperty
 		Name="MinimumWidth"
 		Visible=true
@@ -708,8 +722,7 @@ End
 			"6 - Rounded Window"
 			"7 - Global Floating Window"
 			"8 - Sheet Window"
-			"9 - Metal Window"
-			"11 - Modeless Dialog"
+			"9 - Modeless Dialog"
 		#tag EndEnumValues
 	#tag EndViewProperty
 	#tag ViewProperty
@@ -772,8 +785,8 @@ End
 		Visible=true
 		Group="Background"
 		InitialValue="&hFFFFFF"
-		Type="Color"
-		EditorType="Color"
+		Type="ColorGroup"
+		EditorType="ColorGroup"
 	#tag EndViewProperty
 	#tag ViewProperty
 		Name="Backdrop"
@@ -836,7 +849,7 @@ End
 		Visible=true
 		Group="Appearance"
 		InitialValue=""
-		Type="MenuBar"
+		Type="DesktopMenuBar"
 		EditorType=""
 	#tag EndViewProperty
 	#tag ViewProperty

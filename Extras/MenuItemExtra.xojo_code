@@ -1,18 +1,18 @@
 #tag Module
 Protected Module MenuItemExtra
 	#tag Method, Flags = &h0
-		Sub AppendAll(Extends pMenuItem as MenuItem, pFromMenuItem as MenuItem)
+		Sub AppendAll(Extends pMenuItem as DesktopMenuItem, pFromMenuItem as DesktopMenuItem)
 		  For i As Integer = 0 to pFromMenuItem.Count - 1
-		    pMenuItem.Append(pFromMenuItem.Item(i).Clone)
+		    pMenuItem.AddMenu(pFromMenuItem.MenuAt(i).Clone)
 		  Next
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Item(Extends pMenuItem as MenuItem, name as String) As MenuItem
+		Function MenuAt(Extends pMenuItem as DesktopMenuItem, name as String) As DesktopMenuItem
 		  For i As Integer = 0 to pMenuItem.Count - 1
-		    If pMenuItem.Item(i).Name = name Then
-		      Return pMenuItem.Item(i)
+		    If pMenuItem.MenuAt(i).Name = name Then
+		      Return pMenuItem.MenuAt(i)
 		    End
 		  Next
 		  
@@ -21,11 +21,11 @@ Protected Module MenuItemExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub RemoveAll(Extends menu as MenuItem)
+		Sub RemoveAll(Extends menu as DesktopMenuItem)
 		  while menu.Count > 0
 		    // Fix pour Windows, on dirait qu'il supprime pas les separator...
 		    dim menuCount As Integer = menu.Count
-		    menu.Remove(0)
+		    menu.RemoveMenuAt(0)
 		    if menu.Count >= menuCount then
 		      System.Log(System.LogLevelERROR, "Impossible de supprimer le menu !")
 		      exit
@@ -35,14 +35,14 @@ Protected Module MenuItemExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Replace(Extends pMenuItem As MenuItem, pIndex As Integer, pMenuItemToInsert As MenuItem)
-		  pMenuItem.Insert(pIndex, pMenuItemToInsert)
-		  pMenuItem.Remove(pIndex + 1)
+		Sub Replace(Extends pMenuItem As DesktopMenuItem, pIndex As Integer, pMenuItemToInsert As DesktopMenuItem)
+		  pMenuItem.AddMenuAt(pIndex, pMenuItemToInsert)
+		  pMenuItem.RemoveMenuAt(pIndex + 1)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Replace(Extends pMenuItem As MenuItem, pName As String, pMenuItemToInsert As MenuItem)
+		Sub Replace(Extends pMenuItem As DesktopMenuItem, pName As String, pMenuItemToInsert As DesktopMenuItem)
 		  pMenuItem.Replace(pMenuItem.IndexOf(pName), pMenuItemToInsert)
 		End Sub
 	#tag EndMethod

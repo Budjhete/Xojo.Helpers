@@ -1,35 +1,33 @@
-#tag Window
-Begin Window FenetreNouvelleVersion
-   BackColor       =   &cFFFFFF00
+#tag DesktopWindow
+Begin DesktopWindow FenetreNouvelleVersion
    Backdrop        =   0
-   CloseButton     =   True
+   BackgroundColor =   &cFFFFFF00
    Composite       =   True
-   Frame           =   0
+   DefaultLocation =   3
    FullScreen      =   False
-   FullScreenButton=   False
-   HasBackColor    =   False
+   HasBackgroundColor=   False
+   HasCloseButton  =   True
+   HasFullScreenButton=   False
+   HasMaximizeButton=   False
+   HasMinimizeButton=   True
+   HasTitleBar     =   True
    Height          =   624
    ImplicitInstance=   False
-   LiveResize      =   "True"
    MacProcID       =   0
-   MaxHeight       =   32000
-   MaximizeButton  =   False
-   MaxWidth        =   32000
+   MaximumHeight   =   32000
+   MaximumWidth    =   32000
    MenuBar         =   0
    MenuBarVisible  =   True
-   MinHeight       =   64
-   MinimizeButton  =   True
-   MinWidth        =   64
-   Placement       =   3
+   MinimumHeight   =   64
+   MinimumWidth    =   64
    Resizeable      =   True
    Title           =   "#kMiseAJourDuLogiciel"
+   Type            =   0
    Visible         =   True
    Width           =   886
-   Begin Label Label1
+   Begin DesktopLabel Label1
       AllowAutoDeactivate=   True
       Bold            =   True
-      DataField       =   ""
-      DataSource      =   ""
       Enabled         =   True
       FontName        =   "System"
       FontSize        =   0.0
@@ -60,11 +58,9 @@ Begin Window FenetreNouvelleVersion
       Visible         =   True
       Width           =   765
    End
-   Begin Label lDetail
+   Begin DesktopLabel lDetail
       AllowAutoDeactivate=   True
       Bold            =   False
-      DataField       =   ""
-      DataSource      =   ""
       Enabled         =   True
       FontName        =   "System"
       FontSize        =   0.0
@@ -95,11 +91,9 @@ Begin Window FenetreNouvelleVersion
       Visible         =   True
       Width           =   773
    End
-   Begin Label Label3
+   Begin DesktopLabel Label3
       AllowAutoDeactivate=   True
       Bold            =   True
-      DataField       =   ""
-      DataSource      =   ""
       Enabled         =   True
       FontName        =   "System"
       FontSize        =   10.0
@@ -130,7 +124,7 @@ Begin Window FenetreNouvelleVersion
       Visible         =   True
       Width           =   106
    End
-   Begin PushButton bUpdate
+   Begin DesktopButton bUpdate
       AllowAutoDeactivate=   True
       Bold            =   False
       Cancel          =   False
@@ -162,7 +156,7 @@ Begin Window FenetreNouvelleVersion
       Visible         =   True
       Width           =   117
    End
-   Begin PushButton bLater
+   Begin DesktopButton bLater
       AllowAutoDeactivate=   True
       Bold            =   False
       Cancel          =   True
@@ -194,7 +188,7 @@ Begin Window FenetreNouvelleVersion
       Visible         =   True
       Width           =   179
    End
-   Begin PushButton bSkip
+   Begin DesktopButton bSkip
       AllowAutoDeactivate=   True
       Bold            =   False
       Cancel          =   False
@@ -226,12 +220,10 @@ Begin Window FenetreNouvelleVersion
       Visible         =   True
       Width           =   162
    End
-   Begin CheckBox cAuto
+   Begin DesktopCheckBox cAuto
       AllowAutoDeactivate=   True
       Bold            =   False
       Caption         =   "#kAutomatiquementMettreAJour"
-      DataField       =   ""
-      DataSource      =   ""
       Enabled         =   True
       FontName        =   "System"
       FontSize        =   0.0
@@ -262,8 +254,6 @@ Begin Window FenetreNouvelleVersion
    Begin BHLink LinWithoutGtkLink
       AllowAutoDeactivate=   True
       Bold            =   False
-      DataField       =   ""
-      DataSource      =   ""
       Enabled         =   True
       FontName        =   "System"
       FontSize        =   0.0
@@ -305,15 +295,13 @@ Begin Window FenetreNouvelleVersion
       Scope           =   0
       TabPanelIndex   =   0
    End
-   Begin Canvas Canvas1
+   Begin DesktopCanvas Canvas1
       AllowAutoDeactivate=   True
       AllowFocus      =   False
       AllowFocusRing  =   True
       AllowTabs       =   False
       Backdrop        =   1001725311
-      DoubleBuffer    =   False
       Enabled         =   True
-      EraseBackground =   "True"
       Height          =   68
       Index           =   -2147483648
       InitialParent   =   ""
@@ -333,10 +321,11 @@ Begin Window FenetreNouvelleVersion
       Visible         =   True
       Width           =   61
    End
-   Begin Rectangle Rectangle1
+   Begin DesktopRectangle Rectangle1
       AllowAutoDeactivate=   True
+      BorderColor     =   &c000000
       BorderThickness =   1.0
-      BottomRightColor=   &c00000000
+      CornerSize      =   0.0
       Enabled         =   True
       FillColor       =   &cFFFFFF00
       Height          =   422
@@ -351,15 +340,13 @@ Begin Window FenetreNouvelleVersion
       Scope           =   0
       TabIndex        =   8
       TabPanelIndex   =   0
-      TabStop         =   "True"
       Tooltip         =   ""
       Top             =   118
-      TopLeftColor    =   &c00000000
       Transparent     =   False
       Visible         =   True
       Width           =   846
-      Begin HTMLViewer hNotes
-         AllowAutoDeactivate=   True
+      Begin DesktopHTMLViewer hNotes
+         AutoDeactivate  =   True
          Enabled         =   True
          Height          =   420
          Index           =   -2147483648
@@ -381,7 +368,7 @@ Begin Window FenetreNouvelleVersion
          Width           =   844
       End
    End
-   Begin PushButton bManuel
+   Begin DesktopButton bManuel
       AllowAutoDeactivate=   True
       Bold            =   False
       Cancel          =   False
@@ -414,17 +401,17 @@ Begin Window FenetreNouvelleVersion
       Width           =   170
    End
 End
-#tag EndWindow
+#tag EndDesktopWindow
 
 #tag WindowCode
 	#tag Event
-		Sub Activate()
+		Sub Activated()
 		  mLastActivate = new Date
 		End Sub
 	#tag EndEvent
 
 	#tag Event
-		Sub Open()
+		Sub Opening()
 		  if item_.Version <> nil then
 		    lDetail.Text = lDetail.Text.AssignVars(item_.Version.ToString, App.Version)
 		  else
@@ -491,7 +478,7 @@ End
 		  select case System.EnvironmentVariable("DESKTOP_SESSION")
 		  case "gnome"
 		    shell.Execute("sudo " + exString)
-		    'MsgBox("gksudo " + exString)
+		    ' MessageBox("gksudo " + exString)
 		  case "xfce"
 		    shell.Execute("gksudo " + exString)
 		  case "kde"
@@ -524,7 +511,7 @@ End
 
 #tag Events bUpdate
 	#tag Event
-		Sub Action()
+		Sub Pressed()
 		  if App.EnableAutoUpdates then
 		    Updater.Instance.Update(item_)
 		  else
@@ -541,7 +528,7 @@ End
 #tag EndEvents
 #tag Events bLater
 	#tag Event
-		Sub Action()
+		Sub Pressed()
 		  Updater.Instance.UpdateLater(item_)
 		  Close()
 		End Sub
@@ -549,7 +536,7 @@ End
 #tag EndEvents
 #tag Events bSkip
 	#tag Event
-		Sub Action()
+		Sub Pressed()
 		  Updater.Instance.Skip(item_.Version)
 		  Close()
 		End Sub
@@ -557,7 +544,7 @@ End
 #tag EndEvents
 #tag Events cAuto
 	#tag Event
-		Sub Action()
+		Sub ValueChanged()
 		  Updater.Instance.AutoUpdate = Me.Value
 		End Sub
 	#tag EndEvent
@@ -578,12 +565,20 @@ End
 #tag EndEvents
 #tag Events bManuel
 	#tag Event
-		Sub Action()
+		Sub Pressed()
 		  ShowURL(item_.FileURL)
 		End Sub
 	#tag EndEvent
 #tag EndEvents
 #tag ViewBehavior
+	#tag ViewProperty
+		Name="HasTitleBar"
+		Visible=true
+		Group="Frame"
+		InitialValue="True"
+		Type="Boolean"
+		EditorType=""
+	#tag EndViewProperty
 	#tag ViewProperty
 		Name="MinimumWidth"
 		Visible=true
@@ -633,8 +628,7 @@ End
 			"6 - Rounded Window"
 			"7 - Global Floating Window"
 			"8 - Sheet Window"
-			"9 - Metal Window"
-			"11 - Modeless Dialog"
+			"9 - Modeless Dialog"
 		#tag EndEnumValues
 	#tag EndViewProperty
 	#tag ViewProperty
@@ -697,8 +691,8 @@ End
 		Visible=true
 		Group="Background"
 		InitialValue="&hFFFFFF"
-		Type="Color"
-		EditorType="Color"
+		Type="ColorGroup"
+		EditorType="ColorGroup"
 	#tag EndViewProperty
 	#tag ViewProperty
 		Name="Backdrop"
@@ -761,7 +755,7 @@ End
 		Visible=true
 		Group="Appearance"
 		InitialValue=""
-		Type="MenuBar"
+		Type="DesktopMenuBar"
 		EditorType=""
 	#tag EndViewProperty
 	#tag ViewProperty

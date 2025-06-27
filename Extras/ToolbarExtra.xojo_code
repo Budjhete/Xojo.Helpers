@@ -1,10 +1,10 @@
 #tag Module
 Protected Module ToolbarExtra
 	#tag Method, Flags = &h0
-		Function Item(Extends pToolbar as Toolbar, name as String) As ToolItem
+		Function ButtonAt(Extends pToolbar as DesktopToolbar, name as String) As DesktopToolbarItem
 		  For i As Integer = 0 to pToolbar.Count - 1
-		    If pToolbar.Item(i).Name = name Then
-		      Return pToolbar.Item(i)
+		    If pToolbar.ButtonAt(i).Name = name Then
+		      Return pToolbar.ButtonAt(i)
 		    End
 		  Next
 		  

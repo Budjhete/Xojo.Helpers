@@ -7,8 +7,8 @@ Protected Class Updater
 		  dim item as AppcastItem
 		  dim newer as AppcastItem = nil
 		  
-		  For i as Integer = 0 to cast.Items.Ubound
-		    item = cast.Items(i)
+		  For i as Integer = 0 to cast.items.Ubound
+		    item = cast.items(i)
 		    
 		    if not IsSkipped(item.Version) and _
 		      not IsUpdateLater(item.Version) and _
@@ -21,7 +21,7 @@ Protected Class Updater
 		  mNewer = newer
 		  
 		  'if mNewer <> nil and not Me.windowShow then
-		  'MsgBox "Une nouvelle version est disponible."
+		  ' MessageBox "Une nouvelle version est disponible."
 		  ''Me.windowShow = true
 		  ''dim win as new FenetreNouvelleVersion(mNewer)
 		  ''win.Show()
@@ -201,7 +201,7 @@ Protected Class Updater
 	#tag ComputedProperty, Flags = &h0
 		#tag Getter
 			Get
-			  return Me.UpdateConfig.GetText("Frequency", "Daily")
+			  return Me.UpdateConfig.GetString("Frequency", "Daily")
 			  
 			End Get
 		#tag EndGetter

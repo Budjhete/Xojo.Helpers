@@ -47,25 +47,25 @@ Protected Class Appcast
 		    ' Titre
 		    param = node.Child("title")
 		    if param <> nil then
-		      item.Title = param.FirstChild.Value.ToText
+		      item.Title = param.FirstChild.Value
 		    end
 		    
 		    ' Description
 		    param = node.Child("description")
 		    if param <> nil then
-		      item.Description = param.FirstChild.Value.ToText
+		      item.Description = param.FirstChild.Value
 		    end
 		    
 		    ' Date
 		    param = node.Child("pubDate")
 		    if param <> nil then
-		      item.Date = param.FirstChild.Value.ToText
+		      item.Date = param.FirstChild.Value
 		    end
 		    
 		    ' ReleaseNotesURL
 		    param = node.Child("releaseNotesLink")
 		    if param <> nil then
-		      item.ReleaseNotesURL = param.FirstChild.Value.ToText
+		      item.ReleaseNotesURL = param.FirstChild.Value
 		    end
 		    
 		    ' Enclosure:
@@ -82,7 +82,7 @@ Protected Class Appcast
 		      
 		    next
 		    
-		    Me.Items.Append(item)
+		    Me.items.Append(item)
 		  Next
 		  
 		  RaiseEvent Success()
@@ -169,25 +169,25 @@ Protected Class Appcast
 		    ' Titre
 		    param = node.Child("title")
 		    if param <> nil then
-		      item.Title = param.FirstChild.Value.ToText
+		      item.Title = param.FirstChild.Value
 		    end
 		    
 		    ' Description
 		    param = node.Child("description")
 		    if param <> nil then
-		      item.Description = param.FirstChild.Value.ToText
+		      item.Description = param.FirstChild.Value
 		    end
 		    
 		    ' Date
 		    param = node.Child("pubDate")
 		    if param <> nil then
-		      item.Date = param.FirstChild.Value.ToText
+		      item.Date = param.FirstChild.Value
 		    end
 		    
 		    ' ReleaseNotesURL
 		    param = node.Child("releaseNotesLink")
 		    if param <> nil then
-		      item.ReleaseNotesURL = param.FirstChild.Value.ToText
+		      item.ReleaseNotesURL = param.FirstChild.Value
 		    end
 		    
 		    ' Enclosure:
@@ -195,16 +195,16 @@ Protected Class Appcast
 		      
 		      param = node.Child(j)
 		      if param.Name = "enclosure" and param.GetAttribute("os") = kMonOS then
-		        item.MD5Signature = param.GetAttribute("md5Signature").ToText
-		        item.FileURL = param.GetAttribute("url").ToText
-		        item.MinimumSystemVersion = param.GetAttribute("minimumSystemVersion").ToText
+		        item.MD5Signature = param.GetAttribute("md5Signature")
+		        item.FileURL = param.GetAttribute("url")
+		        item.MinimumSystemVersion = param.GetAttribute("minimumSystemVersion")
 		        item.Length = Val(param.GetAttribute("length"))
 		        item.Version = new Version(param.GetAttribute("version"))
 		      end
 		      
 		    next
 		    
-		    Me.Items.Append(item)
+		    Me.items.Append(item)
 		  Next
 		  
 		End Sub

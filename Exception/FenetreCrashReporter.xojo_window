@@ -1,35 +1,33 @@
-#tag Window
-Begin Window FenetreCrashReporter
-   BackColor       =   &cFFFFFF00
+#tag DesktopWindow
+Begin DesktopWindow FenetreCrashReporter
    Backdrop        =   0
-   CloseButton     =   True
+   BackgroundColor =   &cFFFFFF00
    Composite       =   True
-   Frame           =   0
+   DefaultLocation =   3
    FullScreen      =   False
-   FullScreenButton=   False
-   HasBackColor    =   False
+   HasBackgroundColor=   False
+   HasCloseButton  =   True
+   HasFullScreenButton=   False
+   HasMaximizeButton=   False
+   HasMinimizeButton=   True
+   HasTitleBar     =   True
    Height          =   434
    ImplicitInstance=   True
-   LiveResize      =   "True"
    MacProcID       =   0
-   MaxHeight       =   32000
-   MaximizeButton  =   False
-   MaxWidth        =   32000
+   MaximumHeight   =   32000
+   MaximumWidth    =   32000
    MenuBar         =   0
    MenuBarVisible  =   True
-   MinHeight       =   434
-   MinimizeButton  =   True
-   MinWidth        =   500
-   Placement       =   3
+   MinimumHeight   =   434
+   MinimumWidth    =   500
    Resizeable      =   True
    Title           =   "#kRapporterProbleme"
+   Type            =   0
    Visible         =   True
    Width           =   500
-   Begin Label lRapporter
+   Begin DesktopLabel lRapporter
       AllowAutoDeactivate=   True
       Bold            =   True
-      DataField       =   ""
-      DataSource      =   ""
       Enabled         =   True
       FontName        =   "System"
       FontSize        =   0.0
@@ -60,11 +58,9 @@ Begin Window FenetreCrashReporter
       Visible         =   True
       Width           =   460
    End
-   Begin Label lInfoDetails
+   Begin DesktopLabel lInfoDetails
       AllowAutoDeactivate=   True
       Bold            =   False
-      DataField       =   ""
-      DataSource      =   ""
       Enabled         =   True
       FontName        =   "System"
       FontSize        =   11.0
@@ -95,7 +91,7 @@ Begin Window FenetreCrashReporter
       Visible         =   True
       Width           =   150
    End
-   Begin TextArea tInformations
+   Begin DesktopTextArea tInformations
       AllowAutoDeactivate=   True
       AllowFocusRing  =   False
       AllowSpellChecking=   True
@@ -103,8 +99,6 @@ Begin Window FenetreCrashReporter
       AllowTabs       =   False
       BackgroundColor =   &cFFFFFF00
       Bold            =   False
-      DataField       =   ""
-      DataSource      =   ""
       Enabled         =   True
       FontName        =   "System"
       FontSize        =   0.0
@@ -144,11 +138,9 @@ Begin Window FenetreCrashReporter
       Visible         =   True
       Width           =   460
    End
-   Begin Label lComment
+   Begin DesktopLabel lComment
       AllowAutoDeactivate=   True
       Bold            =   False
-      DataField       =   ""
-      DataSource      =   ""
       Enabled         =   True
       FontName        =   "System"
       FontSize        =   11.0
@@ -188,8 +180,6 @@ Begin Window FenetreCrashReporter
       BackgroundColor =   &cFFFFFF00
       Bold            =   False
       Dash            =   False
-      DataField       =   ""
-      DataSource      =   ""
       Date            =   False
       Decimal         =   False
       Digit           =   False
@@ -243,8 +233,10 @@ Begin Window FenetreCrashReporter
       Width           =   460
       ZipCode         =   False
    End
-   Begin ProgressWheel progress
+   Begin DesktopProgressWheel progress
+      Active          =   False
       AllowAutoDeactivate=   True
+      AllowTabStop    =   True
       Enabled         =   True
       Height          =   16
       Index           =   -2147483648
@@ -255,21 +247,23 @@ Begin Window FenetreCrashReporter
       LockLeft        =   True
       LockRight       =   False
       LockTop         =   False
+      PanelIndex      =   0
       Scope           =   0
       TabIndex        =   9
       TabPanelIndex   =   0
-      TabStop         =   True
       Tooltip         =   ""
       Top             =   394
       Transparent     =   False
       Visible         =   False
       Width           =   16
+      _mIndex         =   0
+      _mInitialParent =   ""
+      _mName          =   ""
+      _mPanelIndex    =   0
    End
-   Begin Label lEmail
+   Begin DesktopLabel lEmail
       AllowAutoDeactivate=   True
       Bold            =   False
-      DataField       =   ""
-      DataSource      =   ""
       Enabled         =   True
       FontName        =   "System"
       FontSize        =   11.0
@@ -309,8 +303,6 @@ Begin Window FenetreCrashReporter
       BackgroundColor =   &cFFFFFF00
       Bold            =   False
       Dash            =   False
-      DataField       =   ""
-      DataSource      =   ""
       Date            =   False
       Decimal         =   False
       Digit           =   False
@@ -364,7 +356,7 @@ Begin Window FenetreCrashReporter
       Width           =   460
       ZipCode         =   False
    End
-   Begin PushButton bEnvoyer
+   Begin DesktopButton bEnvoyer
       AllowAutoDeactivate=   True
       Bold            =   False
       Cancel          =   False
@@ -396,7 +388,7 @@ Begin Window FenetreCrashReporter
       Visible         =   True
       Width           =   80
    End
-   Begin PushButton bFermer
+   Begin DesktopButton bFermer
       AllowAutoDeactivate=   True
       Bold            =   False
       Cancel          =   True
@@ -429,7 +421,7 @@ Begin Window FenetreCrashReporter
       Width           =   80
    End
 End
-#tag EndWindow
+#tag EndDesktopWindow
 
 #tag WindowCode
 	#tag Method, Flags = &h1000
@@ -553,7 +545,7 @@ End
 
 #tag Events tEmail
 	#tag Event
-		Sub Open()
+		Sub Opening()
 		  'if Company <> Nil then
 		  'dim cpny as Company = Company.Current()
 		  'me.Text = cpny.Client().courriel
@@ -570,7 +562,7 @@ End
 #tag EndEvents
 #tag Events bEnvoyer
 	#tag Event
-		Sub Action()
+		Sub Pressed()
 		  Me.Enabled = False
 		  progress.Visible = true
 		  bFermer.Cancel = false
@@ -665,12 +657,20 @@ End
 #tag EndEvents
 #tag Events bFermer
 	#tag Event
-		Sub Action()
+		Sub Pressed()
 		  Quit()
 		End Sub
 	#tag EndEvent
 #tag EndEvents
 #tag ViewBehavior
+	#tag ViewProperty
+		Name="HasTitleBar"
+		Visible=true
+		Group="Frame"
+		InitialValue="True"
+		Type="Boolean"
+		EditorType=""
+	#tag EndViewProperty
 	#tag ViewProperty
 		Name="MinimumWidth"
 		Visible=true
@@ -720,8 +720,7 @@ End
 			"6 - Rounded Window"
 			"7 - Global Floating Window"
 			"8 - Sheet Window"
-			"9 - Metal Window"
-			"11 - Modeless Dialog"
+			"9 - Modeless Dialog"
 		#tag EndEnumValues
 	#tag EndViewProperty
 	#tag ViewProperty
@@ -784,8 +783,8 @@ End
 		Visible=true
 		Group="Background"
 		InitialValue="&hFFFFFF"
-		Type="Color"
-		EditorType="Color"
+		Type="ColorGroup"
+		EditorType="ColorGroup"
 	#tag EndViewProperty
 	#tag ViewProperty
 		Name="Interfaces"
@@ -880,7 +879,7 @@ End
 		Visible=true
 		Group="Menus"
 		InitialValue=""
-		Type="MenuBar"
+		Type="DesktopMenuBar"
 		EditorType=""
 	#tag EndViewProperty
 	#tag ViewProperty

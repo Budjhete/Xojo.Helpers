@@ -118,35 +118,6 @@ Protected Module DictionaryExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function GetText(Extends pDictionary As Dictionary, pKey As String) As Text
-		  #if TargetIOS then
-		    Dim t as Text = pDictionary.Value(pKey)
-		    Return t
-		  #else
-		    Dim s as String = pKey
-		    Dim d as string = pDictionary.Value(s)
-		    Return d.ToText
-		    
-		  #endif
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
-		Function GetText(Extends pDictionary As Dictionary, pKey As String, pDefault As Text) As Text
-		  #if TargetIOS then
-		    Dim t as Text = pDictionary.Lookup(pKey, pDefault)
-		    Return t
-		  #else
-		    Dim p as String = pKey
-		    Dim d as string = pDefault
-		    Dim s as string = pDictionary.Lookup(p, d)
-		    Return s.ToText
-		    
-		  #endif
-		End Function
-	#tag EndMethod
-
 	#tag Method, Flags = &h0
 		Function IntegerValueNilMinusOne(Extends pAuto As Variant) As Integer
 		  if pAuto = nil then

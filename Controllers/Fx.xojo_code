@@ -16,7 +16,7 @@ Protected Class Fx
 		    
 		    Me.Update(pWhere)
 		    
-		    App.SleepCurrentThread(FrameInterval)
+		    Thread.SleepCurrent(FrameInterval)
 		    
 		  WEnd
 		  
