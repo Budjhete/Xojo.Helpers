@@ -133,7 +133,7 @@ Begin DesktopWindow FenetreAJour
       AllowFocusRing  =   True
       AllowTabs       =   False
       Backdrop        =   1001725311
-      DoubleBuffer    =   False
+      DoubleBuffer    =   "False"
       Enabled         =   True
       EraseBackground =   "True"
       Height          =   68
@@ -160,7 +160,7 @@ End
 
 #tag WindowCode
 	#tag Event
-		Sub Opening() Handles Opening
+		Sub Opening()
 		  lDetail.Text = kSoftwareLastVersion(App.Lang).AssignVars(App.Version)
 		End Sub
 	#tag EndEvent
@@ -176,6 +176,14 @@ End
 	#tag EndEvent
 #tag EndEvents
 #tag ViewBehavior
+	#tag ViewProperty
+		Name="HasTitleBar"
+		Visible=true
+		Group="Frame"
+		InitialValue="True"
+		Type="Boolean"
+		EditorType=""
+	#tag EndViewProperty
 	#tag ViewProperty
 		Name="MinimumWidth"
 		Visible=true
@@ -225,8 +233,7 @@ End
 			"6 - Rounded Window"
 			"7 - Global Floating Window"
 			"8 - Sheet Window"
-			"9 - Metal Window"
-			"11 - Modeless Dialog"
+			"9 - Modeless Dialog"
 		#tag EndEnumValues
 	#tag EndViewProperty
 	#tag ViewProperty
@@ -289,8 +296,8 @@ End
 		Visible=true
 		Group="Background"
 		InitialValue="&hFFFFFF"
-		Type="Color"
-		EditorType="Color"
+		Type="ColorGroup"
+		EditorType="ColorGroup"
 	#tag EndViewProperty
 	#tag ViewProperty
 		Name="Backdrop"
@@ -353,7 +360,7 @@ End
 		Visible=true
 		Group="Appearance"
 		InitialValue=""
-		Type="MenuBar"
+		Type="DesktopMenuBar"
 		EditorType=""
 	#tag EndViewProperty
 	#tag ViewProperty
