@@ -246,7 +246,7 @@ Protected Module NumberExtra
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function XSLValue(Extends pDouble As Double) As String
-		  Return Str(pDouble, "-#0.00").ToText
+		  Return Str(pDouble, "-#0.00")
 		End Function
 	#tag EndMethod
 

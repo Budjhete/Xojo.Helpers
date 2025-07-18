@@ -123,7 +123,7 @@ Protected Module DictionaryExtra
 		  if pAuto = nil then
 		    Return -1
 		  end if
-		  dim tt as integer = pAuto.Type
+		  'dim tt as integer = pAuto.Type
 		  Select case pAuto.Type
 		  case 2, 3 // integer
 		    Return pAuto.IntegerValue

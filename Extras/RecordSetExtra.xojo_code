@@ -21,8 +21,8 @@ Protected Module RecordSetExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function TextValue(Extends str as DatabaseField) As Text
-		  Return str.StringValue.DefineEncoding(Encodings.UTF8).ToText
+		Function TextValue(Extends str as DatabaseField) As String
+		  Return str.StringValue.DefineEncoding(Encodings.UTF8)
 		End Function
 	#tag EndMethod
 

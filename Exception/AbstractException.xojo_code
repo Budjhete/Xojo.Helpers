@@ -227,7 +227,7 @@ Inherits RuntimeException
 		      
 		    #endif
 		    if call_stack.Ubound >= 0 then
-		      FullMessage = FullMessage + call_stack(0).ToText
+		      FullMessage = FullMessage + call_stack(0)
 		    else
 		      FullMessage = FullMessage + "unknown-location"
 		    end

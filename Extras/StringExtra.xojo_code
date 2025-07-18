@@ -1004,7 +1004,7 @@ Protected Module StringExtra
 		Function ToText(Extends s() as String) As String()
 		  dim Tss() as String
 		  For each ss as string in s
-		    tss.Append(ss.ToText)
+		    tss.Append(ss)
 		  Next
 		  
 		  return tss

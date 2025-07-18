@@ -130,135 +130,6 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function CurrentOS() As String
-		  dim os as String
-		  
-		  
-		  #if TargetMacOS
-		    os = "Mac OS"
-		    
-		    //be more specific of OS Version
-		    dim sys1, sys2, sys3 as Integer
-		    call System.Gestalt("sys1", sys1)
-		    call System.Gestalt("sys2", sys2)
-		    call System.Gestalt("sys3", sys3)
-		    
-		    select case sys1
-		    case 10
-		      os = "Mac OS X"
-		      select case sys2
-		      case 0
-		        os = "Mac OS X Chetaah"
-		      case 1
-		        os = "Mac OS X Puma"
-		      case 2
-		        os = "Mac OS X Jaguar"
-		      case 3
-		        os = "Mac OS X Panther"
-		      case 4
-		        os = "Mac OS X Tiger"
-		      case 5
-		        os = "Mac OS X Leopard"
-		      case 6
-		        os = "Mac OS X Snow Leopard"
-		      case 7
-		        os = "Mac OS X Lion"
-		      case 8
-		        os = "Mac OS X Mountain Lion"
-		      case 9
-		        os = "Mac OS X Mavericks"
-		      case 10
-		        os = "Mac OS X Yosemite"
-		      case 11
-		        os = "Mac OS X El Capitan"
-		      case 12
-		        os = "Mac OS X Sierra"
-		      case 13
-		        os = "Mac OS X High Sierra"
-		      case 11
-		        os = "Mac OS X Mojave"
-		      end select
-		    end select
-		    
-		    os = os + " "+sys1.ToText+"."+sys2.ToText+"."+sys3.ToText
-		    
-		  #elseif TargetWin32
-		    os = "Windows"
-		    
-		    //try to be more specific of windows version
-		    Soft Declare Sub GetVersionExA lib "Kernel32" ( info as Ptr )
-		    Soft Declare Sub GetVersionExW lib "Kernel32" ( info as Ptr )
-		    
-		    dim info as MemoryBlock
-		    
-		    if System.IsFunctionAvailable( "GetVersionExW", "Kernel32" ) then
-		      info =  new MemoryBlock( 20 + (2 * 128) )
-		      info.Long( 0 ) = info.Size
-		      
-		      GetVersionExW( info )
-		    else
-		      info =  new MemoryBlock( 148 )
-		      info.Long( 0 ) = info.Size
-		      
-		      GetVersionExA( info )
-		    end if
-		    
-		    dim str as String
-		    
-		    if info.Long( 4 ) = 4 then
-		      if info.Long( 8 ) = 0 then
-		        os = "Windows 95/NT 4.0"
-		      elseif info.Long( 8 ) = 10 then
-		        os = "Windows 98"
-		      elseif info.Long( 8 ) = 90 then
-		        os = "Windows Me"
-		      end if
-		    elseif info.Long( 4 ) = 3 then
-		      os = "Windows NT 3.51"
-		    elseif info.Long( 4 ) = 5 then
-		      if info.Long( 8 ) = 0 then
-		        os = "Windows 2000"
-		      elseif info.Long( 8 ) = 1 then
-		        os = "Windows XP"
-		      elseif info.Long( 8 ) = 2 then
-		        os = "Windows Server 2003"
-		      end if
-		    elseif info.long(4) = 6 then
-		      if info.long(8) = 0 then
-		        os = "Windows Vista"
-		      elseif info.long(8) = 1 then
-		        os = "Windows 7"
-		      end if
-		    end if
-		    
-		    str = " Build " + info.Long( 12 ).ToText
-		    
-		    if System.IsFunctionAvailable( "GetVersionExW", "Kernel32" ) then
-		      str = str + " " + Trim( info.WString( 20 ) ).ToText
-		    else
-		      str = str + " " + Trim( info.CString( 20 ) ).ToText
-		    end if
-		    
-		    os = os + str
-		    
-		    
-		  #elseif TargetLinux
-		    Dim shell as new Shell
-		    shell.execute("cat /etc/issue")
-		    
-		    If shell.errorCode = 0 then
-		      return shell.result.ToText
-		    else
-		      return "Linux"
-		    end if
-		    
-		  #endif
-		  
-		  return os
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function DateToUnix(d As DateTime) As Uint64
 		  
 		  Return d.SecondsFrom1970
@@ -369,11 +240,11 @@ Protected Module Helpers
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function GetResourceFolder() As FolderItem
 		  #if TargetLinux
-		    return new FolderItem(App.ExecutableFile.Parent.Child(App.ExecutableFile.Name + " Resources").NativePath.ToText)
+		    return new FolderItem(App.ExecutableFile.Parent.Child(App.ExecutableFile.Name + " Resources").NativePath)
 		  #elseif TargetWin32
-		    return new FolderItem(App.ExecutableFile.Parent.Child(replace(App.ExecutableFile.Name, ".exe", "") + " Resources").NativePath.ToText)
+		    return new FolderItem(App.ExecutableFile.Parent.Child(replace(App.ExecutableFile.Name, ".exe", "") + " Resources").NativePath)
 		  #elseif TargetMacOS
-		    return new FolderItem(App.ExecutableFile.Parent.Parent.Child("Resources").NativePath.ToText)
+		    return new FolderItem(App.ExecutableFile.Parent.Parent.Child("Resources").NativePath)
 		  #Elseif TargetIOS
 		    Return new FolderItem(SpecialFolder.Resource("Resources").NativePath)
 		  #endif
@@ -488,7 +359,7 @@ Protected Module Helpers
 		  For Each query as String In queries
 		    db.ExecuteSQL(query)
 		    If DB.Error Then
-		      System.DebugLog "DB Error: " + db.ErrorCode.StringValue + "  " + db.ErrorMessage.ToText + EndOfLine  + EndOfLine+ "Dans cette requête : " + query
+		      System.DebugLog "DB Error: " + db.ErrorCode.StringValue + "  " + db.ErrorMessage + EndOfLine  + EndOfLine+ "Dans cette requête : " + query
 		    Else
 		      db.Commit()
 		    End If
@@ -710,12 +581,6 @@ Protected Module Helpers
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function SubExpressionString(Extends pExp as RegExMatch, pID as Integer) As String
 		  Return pExp.SubExpressionString(pID)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target64Bit))
-		Function SubExpressionText(Extends pExp as RegExMatch, pID as Integer) As Text
-		  Return pExp.SubExpressionString(pID).ToText
 		End Function
 	#tag EndMethod
 

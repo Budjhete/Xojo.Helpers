@@ -9,7 +9,7 @@ Protected Module ApplicationExtra
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function CommandLine(Extends a as DesktopApplication) As String
-		  return System.CommandLine.Trim.ToText
+		  return System.CommandLine.Trim
 		End Function
 	#tag EndMethod
 

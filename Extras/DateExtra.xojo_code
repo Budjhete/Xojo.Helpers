@@ -1,12 +1,6 @@
 #tag Module
 Protected Module DateExtra
 	#tag Method, Flags = &h0
-		Attributes( Deprecated )  Function AbbreviatedDate(Extends d as DateTime) As String
-		  return d.SQLDate//.left(11)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function BeginOfTheDay(Extends d As DateTime) As DateTime
 		  d = d.Hour(0)
 		  d = d.Minute(0)

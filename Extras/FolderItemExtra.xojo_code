@@ -27,7 +27,6 @@ Protected Module FolderItemExtra
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub CreateAsFolderIfNotExist(Extends fi as FolderItem)
-		  Using Xojo.IO
 		  if fi.Exists then return
 		  fi.CreateAsFolder
 		End Sub
@@ -209,12 +208,6 @@ Protected Module FolderItemExtra
 		    Raise new BHApplicationException(s)
 		    System.DebugLog s
 		  End Try
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function XojoFolderItem(Extends fi as FolderItem) As FolderItem
-		  Return New FolderItem(fi.NativePath.ToText)
 		End Function
 	#tag EndMethod
 
