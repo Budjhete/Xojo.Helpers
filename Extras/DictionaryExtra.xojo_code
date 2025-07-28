@@ -30,6 +30,23 @@ Protected Module DictionaryExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function FindOrFallbackWithFirstEntry(extends dict as Dictionary, keyToFind as string) As Variant
+		  If dict = Nil Or dict.Count = 0 Then Return Nil
+		  
+		  If dict.HasKey(keyToFind) Then
+		    Return dict.Value(keyToFind)
+		  Else
+		    // Return the first value found in the dictionary
+		    For Each entryKey As Variant In dict.Keys
+		      Return dict.Value(entryKey) // Only the first
+		    Next
+		  End If
+		  
+		  Return Nil
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function GetBoolean(Extends pDictionary As Dictionary, pKey As Variant) As Boolean
 		  Dim b as Boolean = pDictionary.Value(pKey)
 		  Return b

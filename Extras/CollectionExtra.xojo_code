@@ -12,8 +12,8 @@ Protected Module CollectionExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function JSONValue(Extends pCollection As Collection) As JSONItem
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+		Attributes( Depricated )  Function JSONValue(Extends pCollection As Collection) As JSONItem
 		  Dim pJSONItem As New JSONItem
 		  
 		  For pIndex As Integer = 1 To pCollection.Count
@@ -26,7 +26,7 @@ Protected Module CollectionExtra
 		      pJSONItem.Value(pIndex) = Collection(pValue).JSONValue
 		      
 		    Case IsA Dictionary
-		      pJSONItem.Value(pIndex) = Dictionary(pValue).JSONValue
+		      pJSONItem.Value(pIndex) = Dictionary(pValue)
 		      
 		    Case IsA Date
 		      pJSONItem.Value(pIndex) = pValue.DateValue.SQLDateTime

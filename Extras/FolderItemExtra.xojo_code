@@ -192,7 +192,9 @@ Protected Module FolderItemExtra
 		      
 		      if fileNumber = 100 then
 		        i = i + 100
-		        Raise new BHApplicationException(kImpossibleDeGenererUnFichierUnique)
+		        #if TargetDesktop then
+		          Raise new BHApplicationException(kImpossibleDeGenererUnFichierUnique)
+		        #endif
 		      end
 		    wend
 		    i = i + 1000
@@ -204,8 +206,9 @@ Protected Module FolderItemExtra
 		    "file : " + f  + EndOfLine + _
 		    "basename : " + basename + EndOfLine + _
 		    "suffix : " + suffixe
-		    
-		    Raise new BHApplicationException(s)
+		    #if TargetDesktop then
+		      Raise new BHApplicationException(s)
+		    #endif
 		    System.DebugLog s
 		  End Try
 		End Function

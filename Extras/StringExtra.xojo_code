@@ -64,7 +64,9 @@ Protected Module StringExtra
 		    return kBaseTable64
 		  end
 		  
-		  Raise new InvalidArgumentsException
+		  #if TargetDesktop then
+		    Raise new InvalidArgumentsException
+		  #endif
 		End Function
 	#tag EndMethod
 
@@ -434,7 +436,9 @@ Protected Module StringExtra
 		    dim char as String = str.CharAt(i)
 		    facteur = (table.IndexOf(char) - 1)
 		    if facteur < 0 then
-		      Raise new InvalidArgumentsException
+		      #if TargetDesktop then
+		        Raise new InvalidArgumentsException
+		      #endif
 		    end
 		    
 		    num = num + facteur * pow(base, exponent)
@@ -670,7 +674,9 @@ Protected Module StringExtra
 	#tag Method, Flags = &h0
 		Function Padding(Extends str as String, width as Integer, character as String = " ", alignment as PaddingAlignment = PaddingAlignment.Right) As String
 		  if character.Length <> 1 then
-		    Raise new InvalidArgumentsException()
+		    #if TargetDesktop then
+		      Raise new InvalidArgumentsException()
+		    #endif
 		  end
 		  
 		  dim diff as Integer = (width - str.Length)
@@ -940,7 +946,9 @@ Protected Module StringExtra
 		  dim arg as Variant
 		  
 		  if matches.Ubound <> Ubound(args) then
-		    Raise new InvalidArgumentsException
+		    #if TargetDesktop then
+		      Raise new InvalidArgumentsException
+		    #endif
 		  end
 		  
 		  for i as Integer = 0 to matches.Ubound
