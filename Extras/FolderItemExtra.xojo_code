@@ -215,7 +215,7 @@ Protected Module FolderItemExtra
 	#tag EndMethod
 
 
-	#tag Constant, Name = kImpossibleDeGenererUnFichierUnique, Type = Text, Dynamic = True, Default = \"Impossible de g\xC3\xA9n\xC3\xA9rer un fichier unique.", Scope = Public
+	#tag Constant, Name = kImpossibleDeGenererUnFichierUnique, Type = String, Dynamic = True, Default = \"Impossible de g\xC3\xA9n\xC3\xA9rer un fichier unique.", Scope = Public
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"Impossible de g\xC3\xA9n\xC3\xA9rer un fichier unique."
 		#Tag Instance, Platform = Any, Language = en, Definition  = \"Cannot create a unique file."
 	#tag EndConstant
