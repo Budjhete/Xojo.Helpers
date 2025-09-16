@@ -602,21 +602,21 @@ End
 		    post.Value("MAC-modified") = StringMD5(System.GetNetworkInterface(0).MACAddress).Lowercase
 		  end if
 		  
-		  post.Value("NbWindows") = str(WindowCount)
-		  for i as Integer = 0 to WindowCount - 1
+		  post.Value("NbWindows") = App.WindowCount.ToString
+		  for i as Integer = 0 to App.WindowCount - 1
 		    
-		    if Window(i) isA FenetreCrashReporter then
+		    if App.WindowAt(i) isA FenetreCrashReporter then
 		      continue
 		    end if
 		    
-		    post.Value("Window" +str(i)) = Introspection.GetType(Window(i)).Name
+		    post.Value("Window" +str(i)) = Introspection.GetType(App.WindowAt(i)).Name
 		    
 		    
 		  next
 		  
 		  dim strStack() as String = excp.Stack
-		  post.Value("NbStack") = str(strStack.Ubound + 1)
-		  for i as Integer = 0 to strStack.Ubound
+		  post.Value("NbStack") = str(strStack.LastIndex + 1)
+		  for i as Integer = 0 to strStack.LastIndex
 		    post.Value("Stack" + str(i)) = strStack(i)
 		  next
 		  

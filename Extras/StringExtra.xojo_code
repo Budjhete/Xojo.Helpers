@@ -148,7 +148,7 @@ Protected Module StringExtra
 		  
 		  Dim bytesLeft As Integer = s.Bytes - bytesToCut
 		  if bytesLeft <= 0 then return ""
-		  return s.LeftBytes( s.LenB - bytesToCut )
+		  return s.LeftBytes( s.Bytes - bytesToCut )
 		  
 		End Function
 	#tag EndMethod
@@ -206,7 +206,7 @@ Protected Module StringExtra
 
 	#tag Method, Flags = &h0
 		Function Contains(Extends str as String, search() as String) As Boolean
-		  for i as Integer = 0 to search.Ubound
+		  for i as Integer = 0 to search.LastIndex
 		    if str.Contains(search(i)) then
 		      Return true
 		    end if // you need StringExtra.Contains
@@ -217,7 +217,7 @@ Protected Module StringExtra
 
 	#tag Method, Flags = &h0, CompatibilityFlags = API1Only or true
 		Function Contains(Extends str as String, search as String) As Boolean
-		  return str.InStr(search) > 0
+		  return str.String.IndexOf(search) > 0
 		End Function
 	#tag EndMethod
 
@@ -233,7 +233,7 @@ Protected Module StringExtra
 		  dim position as Integer = 1
 		  
 		  while position > 0
-		    position = str.InStr(position, find)
+		    position = str.IndexOf(position, find)
 		    
 		    if position > 0 then
 		      total = total + 1
@@ -250,7 +250,7 @@ Protected Module StringExtra
 		  dim parts() as String = str.Split(separator)
 		  
 		  if enclose <> "" then
-		    for i as Integer = 0 to parts.Ubound
+		    for i as Integer = 0 to parts.LastIndex
 		      dim ret as RegExMatch = parts(i).Search("^\s*"+enclose+"(.*)"+enclose+"\s*$")
 		      if ret <> nil then
 		        parts(i) = ret.SubExpressionString(1)
@@ -306,8 +306,8 @@ Protected Module StringExtra
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function EndsWith(Extends str as String, search() as String) As Boolean
-		  for i as Integer = 0 to search.Ubound
-		    if str.Right(search(i).Len) = search(i) then
+		  for i as Integer = 0 to search.LastIndex
+		    if str.Right(search(i).Length) = search(i) then
 		      Return true
 		    end if // you need StringExtra.Contains
 		  next
@@ -400,7 +400,7 @@ Protected Module StringExtra
 
 	#tag Method, Flags = &h0
 		Function Format(Extends pString As String, pReplacements() As String) As String
-		  For pIndex As Integer = 0 To pReplacements.Ubound
+		  For pIndex As Integer = 0 To pReplacements.LastIndex
 		    pString = pString.ReplaceAll("{" + Str(pIndex) + "}", pReplacements(pIndex))
 		  Next
 		  
@@ -514,8 +514,8 @@ Protected Module StringExtra
 		  // (or if startPosB = -1, then from the end of the string).
 		  // If substr can't be found, returns 0.
 		  
-		  Dim srcLen As Integer = source.LenB
-		  Dim subLen As Integer = substr.LenB
+		  Dim srcLen As Integer = source.Bytes
+		  Dim subLen As Integer = substr.Bytes
 		  if startPosB = -1 then startPosB = srcLen
 		  
 		  // We'll do a simple sequential search.  A Boyer-Moore algorithm
@@ -544,9 +544,9 @@ Protected Module StringExtra
 		  
 		  Dim pValues() As String
 		  
-		  For pIndex As Integer = 0 To pStrings.Ubound
+		  For pIndex As Integer = 0 To pStrings.LastIndex
 		    // Quote quote and quote that
-		    pValues.Append(Chr(34) + pStrings(pIndex).Replace(Chr(34), Chr(34) + Chr(34)) + Chr(34))
+		    pValues.Add(Chr(34) + pStrings(pIndex).Replace(Chr(34), Chr(34) + Chr(34)) + Chr(34))
 		  Next
 		  
 		  Return String.FromArray(pValues, ",")
@@ -556,12 +556,12 @@ Protected Module StringExtra
 	#tag Method, Flags = &h0
 		Function LastIndexOf(Extends str as String, find as String) As Integer
 		  dim chunks() as String = str.Split(find)
-		  if chunks.Ubound = 0 then
+		  if chunks.LastIndex = 0 then
 		    return -1
 		  end
 		  
-		  dim pos as Integer = chunks.Ubound * find.Length
-		  for i as Integer = 0 to (chunks.Ubound-1)
+		  dim pos as Integer = chunks.LastIndex * find.Length
+		  for i as Integer = 0 to (chunks.LastIndex-1)
 		    pos = pos + chunks(i).Length
 		  next
 		  
@@ -577,12 +577,12 @@ Protected Module StringExtra
 		  Dim srcLen As Integer = source.Len
 		  Dim leftPos, i As Integer
 		  for i = 1 to srcLen
-		    if InStr( charsToTrim, Mid(source, i, 1) ) = 0 then exit
+		    if String.IndexOf( charsToTrim, source.Middle(i-1, 1) ) = 0 then exit
 		  next
 		  leftPos = i
 		  if leftPos > srcLen then return ""
 		  
-		  return Mid( source, leftPos )
+		  return source.Middle(leftPos)
 		  
 		End Function
 	#tag EndMethod
@@ -836,7 +836,7 @@ Protected Module StringExtra
 		  
 		  match = reg.Search(str)
 		  if match <> nil then
-		    matches.Append(match)
+		    matches.Add(match)
 		    doLoop = true
 		  end
 		  
@@ -844,7 +844,7 @@ Protected Module StringExtra
 		    match = reg.Search()
 		    
 		    if match <> nil then
-		      matches.Append(match)
+		      matches.Add(match)
 		    else
 		      doLoop = false
 		    end
@@ -887,7 +887,7 @@ Protected Module StringExtra
 		  
 		  parts = source.Split(delimiter)
 		  
-		  for i as Integer = (parts.Ubound-1) DownTo 0
+		  for i as Integer = (parts.LastIndex-1) DownTo 0
 		    parts.Insert(i+1, delimiter)
 		  next
 		  
@@ -911,7 +911,7 @@ Protected Module StringExtra
 		  dim delimiter as String = delimiters.Pop()
 		  
 		  parts = source.Split(delimiter)
-		  if delimiters.Ubound < 0 then
+		  if delimiters.LastIndex < 0 then
 		    return parts
 		  end
 		  
@@ -945,13 +945,13 @@ Protected Module StringExtra
 		  dim replace as String
 		  dim arg as Variant
 		  
-		  if matches.Ubound <> Ubound(args) then
+		  if matches.LastIndex <> args.LastIndex then
 		    #if TargetDesktop then
 		      Raise new InvalidArgumentsException
 		    #endif
 		  end
 		  
-		  for i as Integer = 0 to matches.Ubound
+		  for i as Integer = 0 to matches.LastIndex
 		    replace = ""
 		    match = matches(i)
 		    arg = args(i)
@@ -1012,7 +1012,7 @@ Protected Module StringExtra
 		Function ToText(Extends s() as String) As String()
 		  dim Tss() as String
 		  For each ss as string in s
-		    tss.Append(ss)
+		    tss.Add(ss)
 		  Next
 		  
 		  return tss
@@ -1060,7 +1060,7 @@ Protected Module StringExtra
 		  Dim pVariants() As Variant
 		  
 		  For Each pString As String In pStrings
-		    pVariants.Append(pString)
+		    pVariants.Add(pString)
 		  Next
 		  
 		  Return pVariants

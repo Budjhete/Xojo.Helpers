@@ -4,10 +4,10 @@ Protected Module ArrayExtra
 		Sub Append(Extends arr() As Double, arr2() As Double)
 		  // Concatenate arr2 to arr.
 		  
-		  Dim ub2 As Integer = UBound( arr2 )
+		  Dim ub2 As Integer = arr2.LastIndex
 		  if ub2 < 0 then return
 		  
-		  Dim base As Integer = UBound( arr ) + 1
+		  Dim base As Integer = arr.LastIndex + 1
 		  Redim arr( base + ub2 )
 		  
 		  Dim index As Integer
@@ -23,10 +23,10 @@ Protected Module ArrayExtra
 		Sub Append(Extends arr() As Integer, arr2() As Integer)
 		  // Concatenate arr2 to arr.
 		  
-		  Dim ub2 As Integer = UBound( arr2 )
+		  Dim ub2 As Integer = arr2.LastIndex
 		  if ub2 < 0 then return
 		  
-		  Dim base As Integer = UBound( arr ) + 1
+		  Dim base As Integer = arr.LastIndex + 1
 		  Redim arr( base + ub2 )
 		  
 		  Dim index As Integer
@@ -42,10 +42,10 @@ Protected Module ArrayExtra
 		Sub Append(Extends arr() as String, arr2() as String)
 		  // Concatenate arr2 to arr.
 		  
-		  Dim ub2 As Integer = UBound( arr2 )
+		  Dim ub2 As Integer = arr2.LastIndex
 		  if ub2 < 0 then return
 		  
-		  Dim base As Integer = UBound( arr ) + 1
+		  Dim base As Integer = arr.LastIndex + 1
 		  Redim arr( base + ub2 )
 		  
 		  Dim index As Integer
@@ -59,16 +59,16 @@ Protected Module ArrayExtra
 
 	#tag Method, Flags = &h0
 		Sub AppendAll(Extends  ByRef arr() as String, source() as String)
-		  for i as Integer = 0 to source.Ubound
-		    arr.Append(source(i))
+		  for i as Integer = 0 to source.LastIndex
+		    arr.Add(source(i))
 		  Next
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		Sub AppendAll(Extends  ByRef arr() as Text, source() as Text)
-		  for i as Integer = 0 to source.Ubound
-		    arr.Append(source(i))
+		  for i as Integer = 0 to source.LastIndex
+		    arr.Add(source(i))
 		  Next
 		End Sub
 	#tag EndMethod
@@ -86,7 +86,7 @@ Protected Module ArrayExtra
 		  for each item in arr
 		    sum = sum + item
 		  next
-		  return sum / (UBound(arr) + 1)
+		  return sum / (arr.LastIndex + 1)
 		  
 		End Function
 	#tag EndMethod
@@ -98,7 +98,7 @@ Protected Module ArrayExtra
 		  for each item in arr
 		    sum = sum + item
 		  next
-		  return sum / (UBound(arr) + 1)
+		  return sum / (arr.LastIndex + 1)
 		  
 		End Function
 	#tag EndMethod
@@ -108,7 +108,7 @@ Protected Module ArrayExtra
 		  // Return an independent copy of this array.
 		  
 		  Dim out() As Auto
-		  Dim ub As Integer = UBound( arr )
+		  Dim ub As Integer = arr.LastIndex
 		  if ub >= 0 then
 		    Redim out( ub )
 		    Dim index As Integer
@@ -126,7 +126,7 @@ Protected Module ArrayExtra
 		  // Return an independent copy of this array.
 		  
 		  Dim out() As Double
-		  Dim ub As Integer = UBound( arr )
+		  Dim ub As Integer = arr.LastIndex
 		  if ub >= 0 then
 		    Redim out( ub )
 		    Dim index As Integer
@@ -144,7 +144,7 @@ Protected Module ArrayExtra
 		  // Return an independent copy of this array.
 		  
 		  Dim out() As Integer
-		  Dim ub As Integer = UBound( arr )
+		  Dim ub As Integer = arr.LastIndex
 		  if ub >= 0 then
 		    Redim out( ub )
 		    Dim index As Integer
@@ -162,7 +162,7 @@ Protected Module ArrayExtra
 		  // Return an independent copy of this array.
 		  
 		  Dim out() as String
-		  Dim ub As Integer = UBound( arr )
+		  Dim ub As Integer = arr.LastIndex
 		  if ub >= 0 then
 		    Redim out( ub )
 		    Dim index As Integer
@@ -180,7 +180,7 @@ Protected Module ArrayExtra
 		  // Return an independent copy of this array.
 		  
 		  Dim out() as Text
-		  Dim ub As Integer = UBound( arr )
+		  Dim ub As Integer = arr.LastIndex
 		  if ub >= 0 then
 		    Redim out( ub )
 		    Dim index As Integer
@@ -197,8 +197,8 @@ Protected Module ArrayExtra
 		Function Concat(Extends arr1() As Double, arr2() As Double) As Double()
 		  // Concatenate arr2 to arr1 and return the result as a new array.
 		  Dim out() As Double
-		  Dim ub1 As Integer = UBound( arr1 )
-		  Dim ub2 As Integer = UBound( arr2 )
+		  Dim ub1 As Integer = arr1.LastIndex
+		  Dim ub2 As Integer = arr2.LastIndex
 		  Redim out( ub1 + ub2 + 1 )
 		  Dim index, base As Integer
 		  for index = 0 to ub1
@@ -217,8 +217,8 @@ Protected Module ArrayExtra
 		Function Concat(Extends arr1() As Integer, arr2() As Integer) As Integer()
 		  // Concatenate arr2 to arr1 and return the result as a new array.
 		  Dim out() As Integer
-		  Dim ub1 As Integer = UBound( arr1 )
-		  Dim ub2 As Integer = UBound( arr2 )
+		  Dim ub1 As Integer = arr1.LastIndex
+		  Dim ub2 As Integer = arr2.LastIndex
 		  Redim out( ub1 + ub2 + 1 )
 		  Dim index, base As Integer
 		  for index = 0 to ub1
@@ -237,8 +237,8 @@ Protected Module ArrayExtra
 		Function Concat(Extends arr1() as String, arr2() as String) As String()
 		  // Concatenate arr2 to arr1 and return the result as a new array.
 		  Dim out() as String
-		  Dim ub1 As Integer = UBound( arr1 )
-		  Dim ub2 As Integer = UBound( arr2 )
+		  Dim ub1 As Integer = arr1.LastIndex
+		  Dim ub2 As Integer = arr2.LastIndex
 		  Redim out( ub1 + ub2 + 1 )
 		  Dim index, base As Integer
 		  for index = 0 to ub1
@@ -255,7 +255,7 @@ Protected Module ArrayExtra
 
 	#tag Method, Flags = &h0
 		Function Contains(Extends  ByRef arr() as Auto, search as Auto) As Boolean
-		  for i as Integer = 0 to arr.Ubound
+		  for i as Integer = 0 to arr.LastIndex
 		    if arr(i) = search then
 		      return true
 		    end
@@ -266,7 +266,7 @@ Protected Module ArrayExtra
 
 	#tag Method, Flags = &h0
 		Function Contains(Extends arr() as Integer, value as Integer) As Boolean
-		  for i as Integer = 0 to arr.Ubound
+		  for i as Integer = 0 to arr.LastIndex
 		    if arr(i) = value then
 		      Return true
 		    end if
@@ -278,7 +278,7 @@ Protected Module ArrayExtra
 
 	#tag Method, Flags = &h0
 		Function Contains(Extends arr() as String, value as String) As Boolean
-		  for i as Integer = 0 to arr.Ubound
+		  for i as Integer = 0 to arr.LastIndex
 		    if arr(i).Contains(value) then
 		      return true
 		    end  // you need TextExtra.Contains
@@ -294,7 +294,7 @@ Protected Module ArrayExtra
 		  
 		  For Each element As String In values
 		    If Not arr.IndexOf(element)>-1 Then
-		      result.Append(element)
+		      result.Add(element)
 		    End If
 		  Next
 		  
@@ -303,11 +303,17 @@ Protected Module ArrayExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function Join(Extends arr() as String, pSeparator as String) As String
+		  Return arr.FromArray(pSeparator)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function Max(Extends arr() As Double) As Double
 		  // Return the greatest of the items in the array, or 0 for an empty array.
 		  Dim index, ub As Integer
 		  Dim out As Double
-		  ub = UBound(arr)
+		  ub = arr.LastIndex
 		  if ub >= 0 then
 		    out = arr(0)
 		    for index = 1 to ub
@@ -324,7 +330,7 @@ Protected Module ArrayExtra
 		  // Return the greatest of the items in the array, or 0 for an empty array.
 		  Dim index, ub As Integer
 		  Dim out As Integer
-		  ub = UBound(arr)
+		  ub = arr.LastIndex
 		  if ub >= 0 then
 		    out = arr(0)
 		    for index = 1 to ub
@@ -341,7 +347,7 @@ Protected Module ArrayExtra
 		  // Return the least of the items in the array, or 0 for an empty array.
 		  Dim index, ub As Integer
 		  Dim out As Double
-		  ub = UBound(arr)
+		  ub = arr.LastIndex
 		  if ub >= 0 then
 		    out = arr(0)
 		    for index = 1 to ub
@@ -358,7 +364,7 @@ Protected Module ArrayExtra
 		  // Return the least of the items in the array, or 0 for an empty array.
 		  Dim index, ub As Integer
 		  Dim out As Integer
-		  ub = UBound(arr)
+		  ub = arr.LastIndex
 		  if ub >= 0 then
 		    out = arr(0)
 		    for index = 1 to ub
@@ -372,9 +378,9 @@ Protected Module ArrayExtra
 
 	#tag Method, Flags = &h0
 		Sub RemoveByValue(Extends arr() As Double, value as Double)
-		  for i as Integer = arr.Ubound DownTo 0
+		  for i as Integer = arr.LastIndex DownTo 0
 		    if arr(i) = value then
-		      arr.Remove(i)
+		      arr.RemoveAt(i)
 		    end
 		  next
 		End Sub
@@ -382,9 +388,9 @@ Protected Module ArrayExtra
 
 	#tag Method, Flags = &h0
 		Sub RemoveByValue(Extends arr() As Integer, value as Integer)
-		  for i as Integer = arr.Ubound DownTo 0
+		  for i as Integer = arr.LastIndex DownTo 0
 		    if arr(i) = value then
-		      arr.Remove(i)
+		      arr.RemoveAt(i)
 		    end
 		  next
 		End Sub
@@ -392,9 +398,9 @@ Protected Module ArrayExtra
 
 	#tag Method, Flags = &h0
 		Sub RemoveByValue(Extends arr() as String, value as String)
-		  for i as Integer = arr.Ubound DownTo 0
+		  for i as Integer = arr.LastIndex DownTo 0
 		    if arr(i) = value then
-		      arr.Remove(i)
+		      arr.RemoveAt(i)
 		    end
 		  next
 		End Sub
@@ -405,7 +411,7 @@ Protected Module ArrayExtra
 		  // Deletes a portion of the array.
 		  // See "Slice Indexing" note.
 		  
-		  Dim ub As Integer = UBound( arr )
+		  Dim ub As Integer = arr.LastIndex
 		  if fromIndex < 0 then fromIndex = ub + 1 + fromIndex
 		  if toIndex <= 0 then toIndex = ub + 1 + toIndex
 		  
@@ -419,7 +425,7 @@ Protected Module ArrayExtra
 		  
 		  // another easy case: deleting just one element (equivalent to Arary.Remove)
 		  if fromIndex = toIndex - 1 then
-		    arr.Remove fromIndex
+		    arr.RemoveAt fromIndex
 		    return
 		  end if
 		  
@@ -441,7 +447,7 @@ Protected Module ArrayExtra
 		  // Deletes a portion of the array.
 		  // See "Slice Indexing" note.
 		  
-		  Dim ub As Integer = UBound( arr )
+		  Dim ub As Integer = arr.LastIndex
 		  if fromIndex < 0 then fromIndex = ub + 1 + fromIndex
 		  if toIndex <= 0 then toIndex = ub + 1 + toIndex
 		  
@@ -455,7 +461,7 @@ Protected Module ArrayExtra
 		  
 		  // another easy case: deleting just one element (equivalent to Array.Remove)
 		  if fromIndex = toIndex - 1 then
-		    arr.Remove fromIndex
+		    arr.RemoveAt(fromIndex)
 		    return
 		  end if
 		  
@@ -477,7 +483,7 @@ Protected Module ArrayExtra
 		  // Deletes a portion of the array.
 		  // See "Slice Indexing" note.
 		  
-		  Dim ub As Integer = UBound( arr )
+		  Dim ub As Integer = arr.LastIndex
 		  if fromIndex < 0 then fromIndex = ub + 1 + fromIndex
 		  if toIndex <= 0 then toIndex = ub + 1 + toIndex
 		  
@@ -491,7 +497,7 @@ Protected Module ArrayExtra
 		  
 		  // another easy case: deleting just one element (equivalent to Arary.Remove)
 		  if fromIndex = toIndex - 1 then
-		    arr.Remove fromIndex
+		    arr.RemoveAt(fromIndex)
 		    return
 		  end if
 		  
@@ -513,7 +519,7 @@ Protected Module ArrayExtra
 		  // Reverse the order of the elements in the array, in place.
 		  
 		  Dim low, high, midpoint As Integer
-		  high = UBound( arr )
+		  high = arr.LastIndex
 		  if high < 1 then return
 		  
 		  midpoint = (high + 1) \ 2
@@ -532,7 +538,7 @@ Protected Module ArrayExtra
 		  // Reverse the order of the elements in the array, in place.
 		  
 		  Dim low, high, midpoint As Integer
-		  high = UBound( arr )
+		  high = arr.LastIndex
 		  if high < 1 then return
 		  
 		  midpoint = (high + 1) \ 2
@@ -551,7 +557,7 @@ Protected Module ArrayExtra
 		  // Reverse the order of the elements in the array, in place.
 		  
 		  Dim low, high, midpoint As Integer
-		  high = UBound( arr )
+		  high = arr.LastIndex
 		  if high < 1 then return
 		  
 		  midpoint = (high + 1) \ 2
@@ -573,7 +579,7 @@ Protected Module ArrayExtra
 		  // Note that if fromIndex and toIndex span the entire array, then
 		  // this function is equivalent to Clone.
 		  
-		  Dim ub As Integer = UBound( arr )
+		  Dim ub As Integer = arr.LastIndex
 		  if fromIndex < 0 then fromIndex = ub + 1 + fromIndex
 		  if toIndex <= 0 then toIndex = ub + 1 + toIndex
 		  Dim out() As Double
@@ -596,7 +602,7 @@ Protected Module ArrayExtra
 		  // Note that if fromIndex and toIndex span the entire array, then
 		  // this function is equivalent to Clone.
 		  
-		  Dim ub As Integer = UBound( arr )
+		  Dim ub As Integer = arr.LastIndex
 		  if fromIndex < 0 then fromIndex = ub + 1 + fromIndex
 		  if toIndex <= 0 then toIndex = ub + 1 + toIndex
 		  Dim out() As Integer
@@ -619,7 +625,7 @@ Protected Module ArrayExtra
 		  // Note that if fromIndex and toIndex span the entire array, then
 		  // this function is equivalent to Clone.
 		  
-		  Dim ub As Integer = UBound( arr )
+		  Dim ub As Integer = arr.LastIndex
 		  if fromIndex < 0 then fromIndex = ub + 1 + fromIndex
 		  if toIndex <= 0 then toIndex = ub + 1 + toIndex
 		  Dim out() as String
@@ -642,11 +648,11 @@ Protected Module ArrayExtra
 		  // with the Slice method).  The data to insert comes from arrayToInsert, and is
 		  // specified in the same way -- by default, this is the entire source array.
 		  
-		  Dim ub As Integer = UBound( arr )
+		  Dim ub As Integer = arr.LastIndex
 		  if fromIndex < 0 then fromIndex = ub + 1 + fromIndex
 		  if toIndex <= 0 then toIndex = ub + 1 + toIndex
 		  
-		  Dim srcub As Integer = UBound( arrayToInsert )
+		  Dim srcub As Integer = arrayToInsert.LastIndex
 		  if srcFrom < 0 then srcFrom = srcub + 1 + srcFrom
 		  if srcTo <= 0 then srcTo = srcub + 1 + srcTo
 		  
@@ -669,7 +675,7 @@ Protected Module ArrayExtra
 		    if destPos < toIndex then
 		      arr(destPos) = arrayToInsert( srcPos )
 		    else
-		      arr.Insert destPos, arrayToInsert( srcPos )
+		      arr.AddAt(destPos, arrayToInsert( srcPos ))
 		    end if
 		    destPos = destPos + 1
 		  next
@@ -684,11 +690,11 @@ Protected Module ArrayExtra
 		  // with the Slice method).  The data to insert comes from arrayToInsert, and is
 		  // specified in the same way -- by default, this is the entire source array.
 		  
-		  Dim ub As Integer = UBound( arr )
+		  Dim ub As Integer = arr.LastIndex
 		  if fromIndex < 0 then fromIndex = ub + 1 + fromIndex
 		  if toIndex <= 0 then toIndex = ub + 1 + toIndex
 		  
-		  Dim srcub As Integer = UBound( arrayToInsert )
+		  Dim srcub As Integer = arrayToInsert.LastIndex
 		  if srcFrom < 0 then srcFrom = srcub + 1 + srcFrom
 		  if srcTo <= 0 then srcTo = srcub + 1 + srcTo
 		  
@@ -711,7 +717,7 @@ Protected Module ArrayExtra
 		    if destPos < toIndex then
 		      arr(destPos) = arrayToInsert( srcPos )
 		    else
-		      arr.Insert destPos, arrayToInsert( srcPos )
+		      arr.AddAt(destPos, arrayToInsert( srcPos ))
 		    end if
 		    destPos = destPos + 1
 		  next
@@ -726,11 +732,11 @@ Protected Module ArrayExtra
 		  // with the Slice method).  The data to insert comes from arrayToInsert, and is
 		  // specified in the same way -- by default, this is the entire source array.
 		  
-		  Dim ub As Integer = UBound( arr )
+		  Dim ub As Integer = arr.LastIndex
 		  if fromIndex < 0 then fromIndex = ub + 1 + fromIndex
 		  if toIndex <= 0 then toIndex = ub + 1 + toIndex
 		  
-		  Dim srcub As Integer = UBound( arrayToInsert )
+		  Dim srcub As Integer = arrayToInsert.LastIndex
 		  if srcFrom < 0 then srcFrom = srcub + 1 + srcFrom
 		  if srcTo <= 0 then srcTo = srcub + 1 + srcTo
 		  
@@ -753,7 +759,7 @@ Protected Module ArrayExtra
 		    if destPos < toIndex then
 		      arr(destPos) = arrayToInsert( srcPos )
 		    else
-		      arr.Insert destPos, arrayToInsert( srcPos )
+		      arr.AddAt(destPos, arrayToInsert( srcPos ))
 		    end if
 		    destPos = destPos + 1
 		  next

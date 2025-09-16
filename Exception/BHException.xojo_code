@@ -3,8 +3,8 @@ Protected Class BHException
 Inherits RuntimeException
 	#tag Method, Flags = &h0
 		Function Classname() As String
-		  // Return the name of the class of the current exception
-		  return Xojo.Introspection.GetType(Me).Fullname
+		  Return Introspection.GetType(Me).FullName
+		  
 		End Function
 	#tag EndMethod
 
@@ -146,7 +146,7 @@ Inherits RuntimeException
 		  //
 		  // @param ex: The exception to handle
 		  // @param title: Message box title
-		  ErrorBox(title,ex.toText())
+		  ErrorBox(title,ex.ToText())
 		End Sub
 	#tag EndMethod
 
@@ -212,7 +212,7 @@ Inherits RuntimeException
 		  dim FullMessage as String = Classname
 		  
 		  if ErrorNumber <> 0 then
-		    FullMessage = FullMessage + " [" + ErrorNumber.ToText + "]"
+		    FullMessage = FullMessage + " [" + ErrorNumber.ToString + "]"
 		  end
 		  
 		  FullMessage = FullMessage + ": " + ErrorMessage

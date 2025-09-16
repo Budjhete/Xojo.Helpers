@@ -35,7 +35,7 @@ Protected Module ControlExtra
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub AppendSeparator(Extends menu as DesktopMenuItem)
-		  menu.AddMenu(new DesktopMenuItem(MenuItem.TextSeparator))
+		  menu.AddMenu(new DesktopMenuItem(DesktopMenuItem.TextSeparator))
 		End Sub
 	#tag EndMethod
 
@@ -100,7 +100,7 @@ Protected Module ControlExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h1, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Protected Function EvaluateHeight(control as DesktopLabel, text as String) As Integer
+		Protected Function EvaluateHeight(control as DesktopLabel, pText as String) As Integer
 		  dim g as Graphics = EvaluateGraphics
 		  
 		  g.FontName = control.FontName
@@ -110,7 +110,7 @@ Protected Module ControlExtra
 		  g.Italic = control.Italic
 		  g.Underline = control.Underline
 		  
-		  return g.StringHeight(text, control.Width)
+		  return g.StringHeight(pText, control.Width)
 		End Function
 	#tag EndMethod
 
@@ -125,7 +125,7 @@ Protected Module ControlExtra
 		  g.Italic = control.Italic
 		  g.Underline = control.Underline
 		  
-		  return g.StringWidth(text)
+		  return g.TextWidth(text)
 		End Function
 	#tag EndMethod
 
@@ -140,7 +140,7 @@ Protected Module ControlExtra
 		  g.Italic = control.Italic
 		  g.Underline = control.Underline
 		  
-		  return g.StringWidth(text)
+		  return g.TextWidth(text)
 		End Function
 	#tag EndMethod
 
@@ -450,7 +450,7 @@ Protected Module ControlExtra
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function Toolbar(Extends win as DesktopWindow) As DesktopToolbar
 		  for i as Integer = 0 to (win.ControlCount-1)
-		    if win.Control(i) IsA DesktopToolbar then
+		    if win.ControlAt(i) IsA DesktopToolbar then
 		      return DesktopToolbar(win.ControlAt(i))
 		    end
 		  next

@@ -40,8 +40,8 @@ Protected Class Blowfish
 		  Dim err as RuntimeException
 		  
 		  BlowfishHelper.InitializeIfNeeded
-		  IV = NewMemoryBlock(8)
-		  RndIV = NewMemoryBlock(8)
+		  IV = New MemoryBlock(8)
+		  RndIV = New MemoryBlock(8)
 		  
 		  if (IV = nil) or (RndIV = nil) then
 		    err = new RuntimeException
@@ -183,7 +183,7 @@ Protected Class Blowfish
 		    raise err
 		  end if
 		  
-		  data = NewMemoryBlock(0)
+		  data = New MemoryBlock(0)
 		  data = DecodeBase64( db64)
 		  
 		  Decrypt(data)
@@ -213,7 +213,7 @@ Protected Class Blowfish
 		    raise err
 		  end if
 		  
-		  data = NewMemoryBlock(hex.Length / 2) // 2 hex chars per byte
+		  data = New MemoryBlock(hex.Length / 2) // 2 hex chars per byte
 		  
 		  //  make sure we got it!
 		  if (data = nil) then
@@ -590,7 +590,7 @@ Protected Class Blowfish
 		  // initialize the random IV
 		  Dim err as RuntimeException
 		  Dim t as MemoryBlock
-		  t = NewMemoryBlock(8)
+		  t = New MemoryBlock(8)
 		  Dim tmp as String
 		  Dim i As  Integer
 		  
@@ -606,8 +606,8 @@ Protected Class Blowfish
 		  #endif
 		  
 		  // import the current microsecond timer
-		  t.UInt64Value(0) = Microseconds
-		  tmp = MD5(str(Microseconds))
+		  t.UInt64Value(0) = System.Microseconds
+		  tmp = MD5(str(System.Microseconds))
 		  
 		  // Initialize the Random IV with a random double value
 		  RndIV.DoubleValue(0) = Randomizer.Number()
@@ -713,7 +713,7 @@ Protected Class Blowfish
 		    raise err
 		  end if
 		  
-		  IVValue = Uppercase(IVValue)
+		  IVValue = IVValue.Uppercase
 		  
 		  // load the 8 bytes of the IV with the input values
 		  for i = 0 to 7

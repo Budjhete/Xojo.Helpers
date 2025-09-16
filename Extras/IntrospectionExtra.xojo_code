@@ -5,7 +5,7 @@ Protected Module IntrospectionExtra
 		Function GetMethod(Extends type as Introspection.TypeInfo, name as String) As Introspection.MethodInfo
 		  Dim methods() As Introspection.MethodInfo = type.GetMethods()
 		  
-		  for i as Integer = 0 to methods.Ubound
+		  for i as Integer = 0 to methods.LastIndex
 		    if methods(i).Name = name then
 		      return methods(i)
 		    end

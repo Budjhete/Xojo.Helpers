@@ -19,7 +19,7 @@ Protected Module Helpers
 		Function BuildPopupMenu(ParamArray items as String) As DesktopMenuItem
 		  Dim m as new DesktopMenuItem
 		  
-		  for i as Integer = 0 to items.Ubound
+		  for i as Integer = 0 to items.LastIndex
 		    m.AddMenu(new DesktopMenuItem(items(i), i))
 		  next
 		  
@@ -29,7 +29,7 @@ Protected Module Helpers
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub CloseAllWindows()
-		  For i as Integer = WindowCount - 1 DownTo 0
+		  For i as Integer = App.WindowCount - 1 DownTo 0
 		    Dim w as DesktopWindow = App.WindowAt(i)
 		    If w <> nil then
 		      w.Close()
@@ -59,17 +59,12 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ConvertToHex(Source as String) As String
-		  Dim SrcMB As MemoryBlock
-		  SrcMB = Source
-		  
-		  
-		  
+		Function ConvertToHex(Source As MemoryBlock) As String
 		  Dim ReturnValue as String
 		  Dim OneBitHex as String
-		  For i As Integer=0 To SrcMB.Size-1
+		  For i As Integer=0 To Source.Size-1
 		    
-		    Dim b As UInt8 = SrcMB.UInt8Value(i)
+		    Dim b As UInt8 = Source.UInt8Value(i)
 		    OneBitHex=b.ToHex(2)
 		    
 		    If i<>0 Then
@@ -84,14 +79,17 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function ConvertToHex(Source As Xojo.Core.MemoryBlock) As String
-		  Xojo.Core
+		Function ConvertToHex(Source as String) As String
+		  Dim SrcMB As MemoryBlock
+		  SrcMB = Source
+		  
+		  
 		  
 		  Dim ReturnValue as String
 		  Dim OneBitHex as String
-		  For i As Integer=0 To Source.Size-1
+		  For i As Integer=0 To SrcMB.Size-1
 		    
-		    Dim b As UInt8 = Source.UInt8Value(i)
+		    Dim b As UInt8 = SrcMB.UInt8Value(i)
 		    OneBitHex=b.ToHex(2)
 		    
 		    If i<>0 Then
@@ -357,13 +355,15 @@ Protected Module Helpers
 		  
 		  Dim queries() as String = sql.Split(";")
 		  For Each query as String In queries
-		    db.ExecuteSQL(query)
-		    If DB.Error Then
-		      System.DebugLog "DB Error: " + db.ErrorCode.StringValue + "  " + db.ErrorMessage + EndOfLine  + EndOfLine+ "Dans cette requête : " + query
-		    Else
-		      db.Commit()
-		    End If
-		    
+		    Try
+		      db.ExecuteSQL(query)
+		      db.CommitTransaction
+		      
+		    Catch error As DatabaseException
+		      
+		      System.DebugLog "DB Error: " + error.ErrorNumber.StringValue + "  " + error.Message + EndOfLine  + EndOfLine+ "Dans cette requête : " + query
+		      
+		    End Try
 		  Next
 		  
 		  System.DebugLog "DEBUG : Tables created as sqlite"
@@ -387,7 +387,7 @@ Protected Module Helpers
 		    For x As Integer = 0 To source.Width - 1
 		      For y As Integer = 0 To source.Height - 1
 		        Var c As Color = sourceSurface.Pixel(x,y)
-		        destSurface.Pixel(x,y) = Color.RGBA(255 - c.Red, 255 - c.Green, 255 - c.Blue, c.Alpha)
+		        destSurface.Pixel(x,y) = Color.RGB(255 - c.Red, 255 - c.Green, 255 - c.Blue, c.Alpha)
 		      Next
 		    Next
 		    
@@ -414,13 +414,13 @@ Protected Module Helpers
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetDesktop and (Target32Bit or Target64Bit))
 		Function IsWindowOnTop(w As DesktopWindow) As Boolean
-		  return w = Window(0)
+		  return w = App.WindowAt(0)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetDesktop and (Target32Bit or Target64Bit))
 		Function IsWindowOpen(name as String) As boolean
-		  For i as Integer = 0 to WindowCount - 1
+		  For i as Integer = 0 to App.WindowCount - 1
 		    Dim w as DesktopWindow = App.WindowAt(i)
 		    If w <> nil then
 		      dim ti As Introspection.TypeInfo = Introspection.GetType(w)
@@ -440,7 +440,7 @@ Protected Module Helpers
 		    dim fp as TextOutputStream
 		    
 		    if fp = nil then
-		      dim today as new Date
+		      dim today as DateTime
 		      fp = TextOutputStream.Append(SpecialFolder.Desktop.Child("budjhete-" + today.SQLDate+ ".txt"))
 		    end
 		    
@@ -613,7 +613,7 @@ Protected Module Helpers
 		      dim g as MimeGroupMBS = a.Group
 		      
 		      if g <> nil then
-		        parts.Append g.NameDecoded
+		        parts.Add g.NameDecoded
 		      else
 		        dim m as MimeMailboxMBS = a.Mailbox
 		        if m <> nil then
@@ -622,13 +622,13 @@ Protected Module Helpers
 		            s = m.Email
 		          end if
 		          
-		          parts.Append s
+		          parts.Add s
 		        end if
 		      end if
 		    next
 		  end if
 		  
-		  Return Join(parts, ", ")
+		  Return parts.Join(", ")
 		  
 		End Function
 	#tag EndMethod
@@ -651,13 +651,10 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function UnixToDate(i As Int64) As Date
-		  Dim cd As New Date
-		  
+		Function UnixToDate(i as Double) As DateTime
 		  i = i + 2082844800
-		  cd.TotalSeconds = i
+		  return new datetime(i)
 		  
-		  Return cd
 		End Function
 	#tag EndMethod
 
@@ -665,8 +662,8 @@ Protected Module Helpers
 		Function VisibleWindowCount() As Integer
 		  dim count As Integer
 		  
-		  for i As Integer = 0 to (WindowCount - 1)
-		    if Window(i).Visible then
+		  for i As Integer = 0 to (App.WindowCount - 1)
+		    if App.WindowAt(i).Visible then
 		      count = count  + 1
 		    end
 		  next

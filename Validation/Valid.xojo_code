@@ -30,14 +30,14 @@ Protected Module Valid
 		  dim decimals_mask, digits_mask as String
 		  
 		  if decimals > 0 then
-		    decimals_mask = "{"+decimals.ToText+"}"
+		    decimals_mask = "{"+decimals.ToString+"}"
 		  else
 		    decimals_mask = "+"
 		  end
 		  
 		  
 		  if digits > 0 then
-		    digits_mask = "{"+digits.ToText+"}"
+		    digits_mask = "{"+digits.ToString+"}"
 		  else
 		    digits_mask = "+"
 		  end
@@ -79,13 +79,13 @@ Protected Module Valid
 
 	#tag Method, Flags = &h0
 		Function MaxLength(value as String, max_length as Integer) As Boolean
-		  Return (value.Len <= max_length)
+		  Return (value.Length <= max_length)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		Function MinLength(value as String, min_length as Integer) As Boolean
-		  Return (value.Len >= min_length)
+		  Return (value.Length >= min_length)
 		End Function
 	#tag EndMethod
 

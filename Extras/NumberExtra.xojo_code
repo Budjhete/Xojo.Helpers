@@ -141,7 +141,7 @@ Protected Module NumberExtra
 		Function POSvalue(Extends pCurrency as Currency, pLenth as Integer, pFormat as string = "-#0.00") As String
 		  Dim t as string = Str(pCurrency, pFormat)
 		  
-		  dim L as integer = t.Len
+		  dim L as integer = t.Length
 		  Dim LL as integer
 		  
 		  if L < pLenth AND L < 10 then LL = pLenth - L
@@ -213,28 +213,6 @@ Protected Module NumberExtra
 		    formatstring = formatstring + "0"
 		  next
 		  Return pInteger.ToString(Locale.Raw, formatstring) //formatstring
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function TextValue(Extends pDouble As Double) As Text
-		  Return pDouble.ToText()
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function TextValue(Extends pInteger As Integer) As Text
-		  Return pInteger.ToText()
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = false
-		Attributes( Deprecated )  Function TextValue(Extends pInteger as Integer, pLength as Integer) As Text
-		  dim formatstring as String
-		  for i as Integer = 1 to pLength
-		    formatstring = formatstring + "0"
-		  next
-		  Return pInteger.ToText(Locale.Raw, formatstring) //formatstring
 		End Function
 	#tag EndMethod
 

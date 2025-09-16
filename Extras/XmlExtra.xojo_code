@@ -35,13 +35,13 @@ Protected Module XmlExtra
 		    dim child as XmlNode = node.Child(i)
 		    
 		    if node.Child(i) IsA XmlTextNode then
-		      texts.Append(child.Value)
+		      texts.Add(child.Value)
 		    else
-		      texts.Append(child.Text)
+		      texts.Add(child.Text)
 		    end
 		  next
 		  
-		  return Join(texts, " ")
+		  return texts.FromArray(" ")
 		End Function
 	#tag EndMethod
 

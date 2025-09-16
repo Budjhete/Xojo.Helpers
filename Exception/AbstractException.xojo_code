@@ -123,7 +123,7 @@ Inherits RuntimeException
 		  end
 		  
 		  if e.Code > 0 then
-		    FullMessage = FullMessage + " ["+e.Code.ToText+"]"
+		    FullMessage = FullMessage + " ["+e.Code.ToString+"]"
 		  end
 		  
 		  ErrorBox FullMessage
@@ -139,7 +139,7 @@ Inherits RuntimeException
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Shared Sub HandleDetailed(e as AbstractException)
-		  ErrorBox(e.toText)
+		  ErrorBox(e.ToText)
 		End Sub
 	#tag EndMethod
 
@@ -199,9 +199,9 @@ Inherits RuntimeException
 		  dim FullMessage as String = Type()
 		  
 		  if Code > 0 and LevelCode <> 0 then
-		    FullMessage = FullMessage + " [" + Level + " " + Code.ToText+"]"
+		    FullMessage = FullMessage + " [" + Level + " " + Code.ToString+"]"
 		  elseif Code > 0 then
-		    FullMessage = FullMessage + " [" + Code.ToText + "]"
+		    FullMessage = FullMessage + " [" + Code.ToString + "]"
 		  elseif LevelCode > 0 then
 		    FullMessage = FullMessage + " [" + Level + "]"
 		  end
@@ -226,7 +226,7 @@ Inherits RuntimeException
 		      call_stack() = Me.Stack()
 		      
 		    #endif
-		    if call_stack.Ubound >= 0 then
+		    if call_stack.LastIndex >= 0 then
 		      FullMessage = FullMessage + call_stack(0)
 		    else
 		      FullMessage = FullMessage + "unknown-location"
@@ -234,7 +234,7 @@ Inherits RuntimeException
 		  end
 		  
 		  if Line >= 0 then
-		    FullMessage = FullMessage + "," + Line.ToText
+		    FullMessage = FullMessage + "," + Line.ToString
 		  end
 		  
 		  return FullMessage
@@ -243,8 +243,8 @@ Inherits RuntimeException
 
 	#tag Method, Flags = &h0
 		Function Type() As String
-		  // Retourne le type de la classe principale (son nom) de l'exception
-		  return Xojo.Introspection.GetType(Me).Name
+		  Return Introspection.GetType(Me).Name
+		  
 		End Function
 	#tag EndMethod
 

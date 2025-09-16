@@ -26,9 +26,9 @@ Protected Module FolderItemExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub CreateAsFolderIfNotExist(Extends fi as FolderItem)
+		Sub CreateFolderIfNotExist(Extends fi as FolderItem)
 		  if fi.Exists then return
-		  fi.CreateAsFolder
+		  fi.CreateFolder
 		End Sub
 	#tag EndMethod
 
@@ -46,7 +46,7 @@ Protected Module FolderItemExtra
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function OldFolderItem(Extends fi as FolderItem) As FolderItem
-		  Return New FolderItem(fi.NativePath, FolderItem.PathTypeNative)
+		  Return New FolderItem(fi.NativePath, FolderItem.PathModes.Native)
 		End Function
 	#tag EndMethod
 
@@ -103,18 +103,18 @@ Protected Module FolderItemExtra
 		      fi.RecursiveDelete()
 		    Else
 		      #If TargetLinux
-		        fi.Delete
+		        fi.Remove
 		      #Else
-		        fi.MoveTo(New FolderItem(SpecialFolder.Trash.NativePath))
+		        fi.MoveTo(New FolderItem(SpecialFolder.Trash.NativePath, FolderItem.PathModes.Native))
 		      #Endif
 		      
 		      
 		    End If
 		  Next
 		  #If TargetLinux
-		    folder.Delete
+		    folder.Remove
 		  #Else
-		    folder.MoveTo(New FolderItem(SpecialFolder.Trash.NativePath))
+		    folder.MoveTo(New FolderItem(SpecialFolder.Trash.NativePath, FolderItem.PathModes.Native))
 		  #Endif
 		End Sub
 	#tag EndMethod
@@ -133,7 +133,7 @@ Protected Module FolderItemExtra
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function RelativeTo(Extends fi as FolderItem, path as String) As FolderItem
 		  dim chunks() as String = path.Split("/")
-		  for i as Integer = 0 to UBound(chunks)
+		  for i as Integer = 0 to chunks.LastIndex
 		    if not fi.Exists then
 		      return nil
 		    end
@@ -187,7 +187,7 @@ Protected Module FolderItemExtra
 		    ' On crée un fichier unique
 		    while file.Exists()
 		      i = i+1
-		      file = parent.Child(basename + "-"+fileNumber.ToText+suffixe)
+		      file = parent.Child(basename + "-"+fileNumber.ToString+suffixe)
 		      fileNumber = fileNumber + 1
 		      
 		      if fileNumber = 100 then
@@ -201,7 +201,7 @@ Protected Module FolderItemExtra
 		    return file.Name
 		    
 		  Catch err as NilObjectException
-		    dim s as String = "Crash à unique folder à l'étape : " + i.ToText + EndOfLine + _
+		    dim s as String = "Crash à unique folder à l'étape : " + i.ToString + EndOfLine + _
 		    "dossier : " + parent.NativePath  + EndOfLine + _
 		    "file : " + f  + EndOfLine + _
 		    "basename : " + basename + EndOfLine + _

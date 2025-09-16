@@ -1,12 +1,6 @@
 #tag Module
 Protected Module DictionaryExtra
 	#tag Method, Flags = &h0
-		Sub Clear(Extends pDictionary as Dictionary)
-		  pDictionary.RemoveAll
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function Clone(Extends pDictionary as Dictionary) As Dictionary
 		  
 		  Dim pNewDictionary As New Dictionary
@@ -31,7 +25,7 @@ Protected Module DictionaryExtra
 
 	#tag Method, Flags = &h0
 		Function FindOrFallbackWithFirstEntry(extends dict as Dictionary, keyToFind as string) As Variant
-		  If dict = Nil Or dict.Count = 0 Then Return Nil
+		  If dict = Nil Or dict.KeyCount = 0 Then Return Nil
 		  
 		  If dict.HasKey(keyToFind) Then
 		    Return dict.Value(keyToFind)
@@ -263,7 +257,7 @@ Protected Module DictionaryExtra
 		Function Keys(Extends pDictionary as Dictionary) As Variant()
 		  dim keys() as Variant
 		  For each ent as DictionaryEntry in pDictionary
-		    keys.Append(ent.Key)
+		    keys.Add(ent.Key)
 		  Next
 		  
 		  Return keys
@@ -305,7 +299,7 @@ Protected Module DictionaryExtra
 		Function Values(Extends pDictionary as Dictionary) As Auto()
 		  dim values() as Auto
 		  For each ent as DictionaryEntry in pDictionary
-		    values.Append(ent.Value)
+		    values.Add(ent.Value)
 		  Next
 		  
 		  Return values

@@ -5,7 +5,7 @@ Protected Class MessageCenter
 		  mReceivers = new Dictionary
 		  
 		  mTimer = new Timer
-		  mTimer.Mode = Timer.ModeOff
+		  mTimer.RunMode = Timer.RunModes.Off
 		  mTimer.Period = 50
 		  
 		  AddHandler mTimer.Action, AddressOf TimerAction
@@ -20,7 +20,7 @@ Protected Class MessageCenter
 		  
 		  dim receivers() as Object = mReceivers.Value(msgType)
 		  
-		  for i as Integer = 0 to receivers.Ubound
+		  for i as Integer = 0 to receivers.LastIndex
 		    if receivers(i) = receiver then
 		      return true
 		    end
@@ -52,11 +52,11 @@ Protected Class MessageCenter
 	#tag Method, Flags = &h0
 		Sub SendMessage(msg as Message)
 		  System.Log(System.LogLevelInformation, msg.ToString)
-		  mQueue.Append(msg)
+		  mQueue.Add(msg)
 		  
 		  //start timer if stopped.
-		  if mTimer.Mode = Timer.ModeOff then
-		    mTimer.Mode = Timer.ModeMultiple
+		  if mTimer.RunMode = Timer.RunModes.Off then
+		    mTimer.RunMode = Timer.RunModes.Multiple
 		  end
 		  
 		End Sub
@@ -69,26 +69,26 @@ Protected Class MessageCenter
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Sub TimerAction(timer as Timer)
+		Private Sub TimerAction(pTimer as Timer)
 		  //timer tick... send the next queued msg
-		  if mQueue.Ubound < 0 then
+		  if mQueue.LastIndex < 0 then
 		    return
 		  end
 		  
 		  dim msg as Message = mQueue(0)
-		  mQueue.Remove(0)
+		  mQueue.RemoveAt(0)
 		  
 		  if mReceivers.HasKey(msg.Type) then
 		    dim receivers() as Object = mReceivers.Value(msg.Type)
 		    
-		    for i as Integer = 0 to receivers.Ubound
+		    for i as Integer = 0 to receivers.LastIndex
 		      MessageReceiver(receivers(i)).ReceiveMessage(msg)
 		    next
 		  end
 		  
 		  //if queue empty, stop timer
-		  if mQueue.Ubound < 0 then
-		    mTimer.Mode = Timer.ModeOff
+		  if mQueue.LastIndex < 0 then
+		    mTimer.RunMode = Timer.RunModes.Off
 		  end
 		  
 		End Sub
@@ -110,11 +110,11 @@ Protected Class MessageCenter
 		  
 		  dim receivers() as Object = mReceivers.Value(msgType)
 		  
-		  for i as Integer = 0 to receivers.Ubound
+		  for i as Integer = 0 to receivers.LastIndex
 		    if receivers(i) = receiver then
-		      receivers.Remove(i)
+		      receivers.RemoveAt(i)
 		      
-		      if receivers.Ubound >= 0 then
+		      if receivers.LastIndex >= 0 then
 		        mReceivers.Value(msgType) = receivers
 		      else
 		        mReceivers.Remove(msgType)

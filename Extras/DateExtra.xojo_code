@@ -118,6 +118,14 @@ Protected Module DateExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function ISO8601(extends d As DateTime) As String
+		  ' 2000-12-31 16h 01m 07s to 20001231T160107Z
+		  return  d.Year.ToString + d.Month.ToString.FillLeft("0", 2) + d.Day.ToString.FillLeft("0", 2) +"T"+_
+		  d.Hour.ToString.FillLeft("0", 2) + d.Minute.ToString.FillLeft("0", 2) + d.Second.ToString.FillLeft("0", 2)   //d.Timezone.Abbreviation. (start with ;TZID=America/Montreal:)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function IsPast(Extends d as DateTime) As Boolean
 		  return (d < DateTime.Now)
 		End Function

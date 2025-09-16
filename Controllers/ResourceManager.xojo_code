@@ -72,7 +72,7 @@ Protected Class ResourceManager
 		  if mtmpfolder=nil then
 		    mtmpfolder = new FolderItem
 		    dim name as String = RandomString(10)
-		    SpecialFolder.Temporary.Child(name).CreateAsFolderIfNotExist
+		    SpecialFolder.Temporary.Child(name).CreateFolderIfNotExist
 		    mtmpfolder = SpecialFolder.Temporary.Child(name)
 		  end if
 		  return mtmpfolder
