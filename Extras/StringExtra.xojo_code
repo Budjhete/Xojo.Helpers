@@ -696,6 +696,20 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target64Bit)) or  (TargetWeb and (Target64Bit)) or  (TargetDesktop and (Target64Bit)) or  (TargetIOS and (Target64Bit)) or  (TargetAndroid and (Target64Bit))
+		Function PhoneNumber(Extends str as String, pFormat as String = "###\-###\-####") As String
+		  var digits As String
+		  For i As Integer = 0 To str.Length - 1
+		    Var ch As String = str.Middle(i, 1)
+		    If ch >= "0" And ch <= "9" Then
+		      digits = digits + ch
+		    End If
+		  Next
+		  if digits.toInt=0 then Return ""
+		  return Format(Digits.toInt, pFormat)
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Function RandomString(len As Integer, source as String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890") As String
 		  Dim str, num As String

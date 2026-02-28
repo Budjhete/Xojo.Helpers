@@ -179,9 +179,11 @@ Begin DesktopWindow FenetreCrashReporter
       Alpha           =   False
       BackgroundColor =   &cFFFFFF00
       Bold            =   False
+      ConvertPhoneToNumber=   False
       Dash            =   False
       Date            =   False
       Decimal         =   False
+      DefaultCountryCode=   1
       Digit           =   False
       Email           =   False
       Enabled         =   True
@@ -211,6 +213,7 @@ Begin DesktopWindow FenetreCrashReporter
       Numeric         =   False
       Password        =   False
       Phone           =   False
+      PhoneDisplayMode=   0
       Range           =   False
       RangeMax        =   0
       RangeMin        =   0
@@ -302,9 +305,11 @@ Begin DesktopWindow FenetreCrashReporter
       Alpha           =   False
       BackgroundColor =   &cFFFFFF00
       Bold            =   False
+      ConvertPhoneToNumber=   False
       Dash            =   False
       Date            =   False
       Decimal         =   False
+      DefaultCountryCode=   1
       Digit           =   False
       Email           =   True
       Enabled         =   True
@@ -334,6 +339,7 @@ Begin DesktopWindow FenetreCrashReporter
       Numeric         =   False
       Password        =   False
       Phone           =   False
+      PhoneDisplayMode=   0
       Range           =   False
       RangeMax        =   0
       RangeMin        =   0
@@ -544,14 +550,6 @@ End
 #tag EndWindowCode
 
 #tag Events tEmail
-	#tag Event
-		Sub Opening()
-		  'if Company <> Nil then
-		  'dim cpny as Company = Company.Current()
-		  'me.Text = cpny.Client().courriel
-		  'end if
-		End Sub
-	#tag EndEvent
 	#tag Event
 		Sub TextChange()
 		  if me.Check then
