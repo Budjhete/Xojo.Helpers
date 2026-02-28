@@ -14,18 +14,6 @@ Protected Module NextCloudModule
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function URLEncode(Extends s As String) As String
-		  // Encodes a string for use in a query component (dir=...)
-		  // Keep it simple and reliable.
-		  Try
-		    Return EncodeURLComponent(s)
-		  Catch
-		    Return s
-		  End Try
-		End Function
-	#tag EndMethod
-
 
 	#tag Structure, Name = NcFolderEntry, Flags = &h0
 		Name as String * 120
