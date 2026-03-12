@@ -8,8 +8,7 @@ Protected Class NextCloudClass
 		  Var rp As String = NormalizeRemotePath(remotePath)
 		  If rp.EndsWith("/") And rp.Length > 1 Then rp = rp.Left(rp.Length - 1)
 		  
-		  Var base As String = BaseWeb.Trim
-		  If base.EndsWith("/") Then base = base.Left(base.Length - 1)
+		  Var base As String = NormalizeBaseWeb(BaseWeb)
 		  
 		  Return base + "/apps/files/?dir=" + rp.URLEncode
 		End Function
@@ -17,20 +16,135 @@ Protected Class NextCloudClass
 
 	#tag Method, Flags = &h0
 		Sub Delete()
-		    // Optional: implement later (WebDAV DELETE)
+		  // Optional: implement later (WebDAV DELETE)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		Sub Download()
-		    // Optional: implement later (WebDAV GET)
+		  // Optional: implement later (WebDAV GET)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function EncodeRemotePathForDav(path As String) As String
+		  // Encodes each path segment but keeps "/" separators intact.
+		  
+		  Var p As String = path.Trim
+		  If p = "" Then Return ""
+		  
+		  Var hasLeading As Boolean = p.BeginsWith("/")
+		  Var hasTrailing As Boolean = (p.EndsWith("/") And p.Length > 1)
+		  
+		  If hasLeading Then p = p.Middle(1)
+		  If hasTrailing Then p = p.Left(p.Length - 1)
+		  
+		  Var parts() As String = p.Split("/")
+		  Var encodedParts() As String
+		  For Each part As String In parts
+		    If part = "" Then Continue
+		    encodedParts.Add(EncodeURLComponent(part))
+		  Next
+		  
+		  Var encoded As String = String.FromArray(encodedParts, "/")
+		  If hasLeading Then encoded = "/" + encoded
+		  If hasTrailing Then encoded = encoded + "/"
+		  
+		  If encoded = "" And hasLeading Then encoded = "/"
+		  Return encoded
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub Exists()
-		    // Optional: implement later (WebDAV PROPFIND Depth:0 or HEAD)
+		  // Optional: implement later (WebDAV PROPFIND Depth:0 or HEAD)
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function FetchFileId(remotePath As String) As String
+		  // Returns oc:fileid for a file path via WebDAV PROPFIND Depth:0
+		  
+		  Var rp As String = remotePath.Trim
+		  If rp = "" Then Return ""
+		  
+		  If Not rp.BeginsWith("/") Then rp = "/" + rp
+		  While rp.IndexOf("//") >= 0
+		    rp = rp.ReplaceAll("//", "/")
+		  Wend
+		  
+		  If Username.Trim = "" Or AppPassword.Trim = "" Then Return ""
+		  If BaseDav.Trim = "" Then Return ""
+		  
+		  Var base As String = BaseDav.Trim
+		  If Not base.EndsWith("/") Then base = base + "/"
+		  
+		  Var rpEncoded As String = EncodeRemotePathForDav(rp)
+		  Var url As String = base + rpEncoded.Middle(1)
+		  
+		  Var body As String = _
+		  "<?xml version=""1.0"" encoding=""utf-8""?>" + EndOfLine + _
+		  "<d:propfind xmlns:d=""DAV:"" xmlns:oc=""http://owncloud.org/ns"">" + EndOfLine + _
+		  "  <d:prop>" + EndOfLine + _
+		  "    <oc:fileid/>" + EndOfLine + _
+		  "  </d:prop>" + EndOfLine + _
+		  "</d:propfind>"
+		  
+		  Var u As New URLConnection
+		  u.RequestHeader("Depth") = "0"
+		  u.RequestHeader("Content-Type") = "application/xml; charset=utf-8"
+		  u.RequestHeader("User-Agent") = "KanjoDesktop/1.0"
+		  
+		  Var auth As String = EncodeBase64(Username + ":" + AppPassword, 0)
+		  u.RequestHeader("Authorization") = "Basic " + auth
+		  u.SetRequestContent(body, "application/xml; charset=utf-8")
+		  
+		  Var response As String
+		  Try
+		    response = u.SendSync("PROPFIND", url, 30)
+		  Catch e As RuntimeException
+		    Return ""
+		  End Try
+		  
+		  If response.Trim = "" Then Return ""
+		  If Not response.Trim.BeginsWith("<") Then Return ""
+		  
+		  Var x As New XmlDocument
+		  Try
+		    x.LoadXml(response)
+		  Catch
+		    Return ""
+		  End Try
+		  
+		  Var root As XmlNode = x.DocumentElement
+		  If root Is Nil Then Return ""
+		  
+		  For i As Integer = 0 To root.ChildCount - 1
+		    Var resp As XmlNode = root.Child(i)
+		    If resp Is Nil Or resp.LocalName <> "response" Then Continue
+		    
+		    For j As Integer = 0 To resp.ChildCount - 1
+		      Var n As XmlNode = resp.Child(j)
+		      If n Is Nil Or n.LocalName <> "propstat" Then Continue
+		      
+		      For k As Integer = 0 To n.ChildCount - 1
+		        Var ps As XmlNode = n.Child(k)
+		        If ps Is Nil Or ps.LocalName <> "prop" Then Continue
+		        
+		        For m As Integer = 0 To ps.ChildCount - 1
+		          Var p As XmlNode = ps.Child(m)
+		          If p Is Nil Then Continue
+		          
+		          If p.LocalName = "fileid" And p.FirstChild <> Nil Then
+		            Return p.FirstChild.Value
+		          End If
+		        Next
+		      Next
+		    Next
+		  Next
+		  
+		  Return ""
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -50,7 +164,8 @@ Protected Class NextCloudClass
 		  If Not base.EndsWith("/") Then base = base + "/"
 		  
 		  // Build full URL: base + rp without leading "/"
-		  Var url As String = base + rp.Middle(1)
+		  Var rpEncoded As String = EncodeRemotePathForDav(rp)
+		  Var url As String = base + rpEncoded.Middle(1)
 		  
 		  Var body As String = _
 		  "<?xml version=""1.0"" encoding=""utf-8""?>" + EndOfLine + _
@@ -164,14 +279,47 @@ Protected Class NextCloudClass
 
 	#tag Method, Flags = &h0
 		Sub MkCol()
-		    // Optional: implement later (WebDAV MKCOL)
+		  // Optional: implement later (WebDAV MKCOL)
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		Sub Move()
-		    // Optional: implement later (WebDAV MOVE)
+		  // Optional: implement later (WebDAV MOVE)
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function NormalizeBaseWeb(base As String) As String
+		  // Ensures:
+		  // - trims trailing "/"
+		  // - removes any trailing "/apps/files" (including duplicates)
+		  
+		  Var b As String = base.Trim
+		  If b = "" Then Return ""
+		  
+		  Var changed As Boolean
+		  Do
+		    changed = False
+		    
+		    If b.EndsWith("/") Then
+		      b = b.Left(b.Length - 1)
+		      changed = True
+		    End If
+		    
+		    If b.EndsWith("/apps/files/files") Then
+		      dim appsfiles as string = "/apps/files/files"
+		      b = b.Left(b.Length - appsfiles.Length)
+		      changed = True
+		    ElseIf b.EndsWith("/apps/files") Then
+		      dim appsfiles as string = "/apps/files"
+		      b = b.Left(b.Length - appsfiles.Length)
+		      changed = True
+		    End If
+		  Loop Until Not changed
+		  
+		  Return b
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -198,7 +346,7 @@ Protected Class NextCloudClass
 
 	#tag Method, Flags = &h0
 		Sub Upload()
-		    // Optional: implement later (WebDAV PUT)
+		  // Optional: implement later (WebDAV PUT)
 		End Sub
 	#tag EndMethod
 
@@ -275,7 +423,7 @@ Protected Class NextCloudClass
 			Group="Behavior"
 			InitialValue=""
 			Type="String"
-			EditorType=""
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Username"
@@ -283,7 +431,7 @@ Protected Class NextCloudClass
 			Group="Behavior"
 			InitialValue=""
 			Type="String"
-			EditorType=""
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="AppPassword"
@@ -291,7 +439,7 @@ Protected Class NextCloudClass
 			Group="Behavior"
 			InitialValue=""
 			Type="String"
-			EditorType=""
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

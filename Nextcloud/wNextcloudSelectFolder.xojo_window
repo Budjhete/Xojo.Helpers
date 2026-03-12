@@ -140,7 +140,7 @@ End
 #tag WindowCode
 	#tag Event
 		Sub Opening()
-		  updateList
+		  LoadRoot
 		End Sub
 	#tag EndEvent
 
@@ -155,11 +155,37 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub updateList(pPath as String = "/")
+		Sub LoadRoot()
 		  lbFolders.RemoveAllRows
-		  Var folders() As NextCloudModule.NcFolderEntry = ncClass.ListFolders(pPath)
+		  
+		  Var root As String = "/"
+		  If ncClass <> Nil Then
+		    root = ncClass.NormalizeRemotePath(root)
+		  End If
+		  
+		  lbFolders.AddExpandableRow("/")
+		  lbFolders.RowTagAt(lbFolders.LastAddedRowIndex) = root
+		  lbFolders.RowExpandedAt(lbFolders.LastAddedRowIndex) = True
+		  
+		  If lbFolders.RowCount > 0 Then
+		    lbFolders.SelectedRowIndex = 0
+		  End If
+		  
+		  bSelect.Enabled = (lbFolders.SelectedRowIndex <> -1)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub LoadChildren(pRow As Integer)
+		  If ncClass Is Nil Then Return
+		  If pRow < 0 Or pRow >= lbFolders.RowCount Then Return
+		  
+		  Var path As String = lbFolders.RowTagAt(pRow)
+		  If path.Trim = "" Then Return
+		  
+		  Var folders() As NextCloudModule.NcFolderEntry = ncClass.ListFolders(path)
 		  For Each f As NextCloudModule.NcFolderEntry In folders
-		    lbFolders.AddRow(f.Name)
+		    lbFolders.AddExpandableRow(f.Name)
 		    lbFolders.RowTagAt(lbFolders.LastAddedRowIndex) = f.RemotePath
 		  Next
 		End Sub
@@ -170,17 +196,54 @@ End
 		ncClass As NextCloudModule.NextCloudClass
 	#tag EndProperty
 
+	#tag Property, Flags = &h0
+		SelectedPath As String
+	#tag EndProperty
+
+
+	#tag Hook, Flags = &h0
+		Event FolderSelected(remotePath As String)
+	#tag EndHook
+
 
 #tag EndWindowCode
 
 #tag Events lbFolders
 	#tag Event
 		Sub SelectionChanged()
-		  if me.SelectedRowIndex<>-1 then
-		    updateList(me.RowTagAt(me.SelectedRowIndex))
-		  else
-		    
-		  end if
+		  If me.SelectedRowIndex <> -1 Then
+		    SelectedPath = me.RowTagAt(me.SelectedRowIndex)
+		    bSelect.Enabled = True
+		  Else
+		    SelectedPath = ""
+		    bSelect.Enabled = False
+		  End If
+		End Sub
+	#tag EndEvent
+	#tag Event
+		Sub RowExpanded(row As Integer)
+		  LoadChildren(row)
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+
+#tag Events bSelect
+	#tag Event
+		Sub Pressed()
+		  If lbFolders.SelectedRowIndex = -1 Then Return
+		  
+		  SelectedPath = lbFolders.RowTagAt(lbFolders.SelectedRowIndex)
+		  RaiseEvent FolderSelected(SelectedPath)
+		  Self.Close
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+
+#tag Events bCancel
+	#tag Event
+		Sub Pressed()
+		  SelectedPath = ""
+		  Self.Close
 		End Sub
 	#tag EndEvent
 #tag EndEvents
