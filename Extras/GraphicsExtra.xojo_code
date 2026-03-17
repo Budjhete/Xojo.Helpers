@@ -93,7 +93,7 @@ Protected Module GraphicsExtra
 		  pX = 0
 		  pY = 0
 		  for i as Integer = 0 to (list.ColumnCount-1)
-		    size = list.Column(i).WidthActual * width / list.Width
+		    size = list.ColumnAttributesAt(i).WidthActual * width / list.Width
 		    cWidths.Append(size)
 		    pX = pX + size
 		  next
@@ -124,7 +124,7 @@ Protected Module GraphicsExtra
 		  g.ForeColor = &c000000
 		  
 		  pY = y+35
-		  for row as Integer = 0 to list.LastIndex
+		  for row as Integer = 0 to list.LastRowIndex
 		    if height <> 0 and (pY - y) > height then
 		      continue
 		    end
@@ -133,12 +133,12 @@ Protected Module GraphicsExtra
 		    
 		    for column as Integer = 0 to cWidths.Ubound
 		      if cWidths(column) > 0 then
-		        if list.ColumnAlignment(column) = 3 then
-		          g.DrawString(list.Cell(row, column), pX+cWidths(column)-3, pY, TextAlign.Right)
-		        elseif list.ColumnAlignment(column) = 2 then
-		          g.DrawString(list.Cell(row, column), pX+cWidths(column)/2, pY, TextAlign.Center)
+		        if list.ColumnAlignmentAt(column) = DesktopListBox.Alignments.Right then
+		          g.DrawString(list.CellTextAt(row, column), pX+cWidths(column)-3, pY, TextAlign.Right)
+		        elseif list.ColumnAlignmentAt(column) = DesktopListBox.Alignments.Center then
+		          g.DrawString(list.CellTextAt(row, column), pX+cWidths(column)/2, pY, TextAlign.Center)
 		        else
-		          g.DrawString(list.Cell(row, column), pX+3, pY)
+		          g.DrawString(list.CellTextAt(row, column), pX+3, pY)
 		        end
 		      end
 		      
