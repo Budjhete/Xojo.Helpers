@@ -114,7 +114,7 @@ Protected Module GraphicsExtra
 		  for column as Integer = 0 to cWidths.Ubound
 		    if cWidths(column) > 0 then
 		      g.ForeColor = &c000000
-		      g.DrawString(cNames(column), pX+cWidths(column)/2, y + 15, TextAlign.Center)
+		      g.DrawString(cNames(column), pX+cWidths(column)/2, y + 15, TextAlignments.Center)
 		    end
 		    
 		    pX = pX + cWidths(column)
@@ -134,9 +134,9 @@ Protected Module GraphicsExtra
 		    for column as Integer = 0 to cWidths.Ubound
 		      if cWidths(column) > 0 then
 		        if list.ColumnAlignmentAt(column) = DesktopListBox.Alignments.Right then
-		          g.DrawString(list.CellTextAt(row, column), pX+cWidths(column)-3, pY, TextAlign.Right)
+		          g.DrawString(list.CellTextAt(row, column), pX+cWidths(column)-3, pY, TextAlignments.Right)
 		        elseif list.ColumnAlignmentAt(column) = DesktopListBox.Alignments.Center then
-		          g.DrawString(list.CellTextAt(row, column), pX+cWidths(column)/2, pY, TextAlign.Center)
+		          g.DrawString(list.CellTextAt(row, column), pX+cWidths(column)/2, pY, TextAlignments.Center)
 		        else
 		          g.DrawString(list.CellTextAt(row, column), pX+3, pY)
 		        end
@@ -192,20 +192,20 @@ Protected Module GraphicsExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub DrawString(Extends g as Graphics, pText as String, x as Integer, y as Integer, width as Integer, align as TextAlign, alignOnPivot as Boolean = true)
-		  if align = TextAlign.Left then
-		    g.DrawString(pText, x, y, width)
+	#tag Method, Flags = &h0
+		Sub DrawString(Extends g as Graphics, text as String, x as Integer, y as Integer, width as Integer, align as TextAlignments, alignOnPivot as Boolean = true)
+		  if align = TextAlignments.Left then
+		    g.DrawText(text, x, y, width)
 		  else
-		    dim lines() as String = g.Wrap(pText, width)
+		    dim lines() as String = g.Wrap(text, width)
 		    
-		    for i as Integer = 0 to lines.Ubound
-		      dim lineWidth as Integer = g.StringWidth(lines(i))
+		    for i as Integer = 0 to lines.LastIndex
+		      dim lineWidth as Integer = g.TextWidth(lines(i))
 		      
-		      if align = TextAlign.Center then
-		        g.DrawString(lines(i), (x + (width - lineWidth)/2), y)
+		      if align = TextAlignments.Center then
+		        g.DrawText(lines(i), (x + (width - lineWidth)/2), y)
 		      else
-		        g.DrawString(lines(i), (x + width - lineWidth), y)
+		        g.DrawText(lines(i), (x + width - lineWidth), y)
 		      end
 		      
 		      y = y + g.TextHeight
@@ -215,37 +215,23 @@ Protected Module GraphicsExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Sub DrawString(Extends g as Graphics, text as String, x as Integer, y as Integer, align as TextAlign)
+	#tag Method, Flags = &h0
+		Sub DrawString(Extends g as Graphics, text as String, x as Integer, y as Integer, align as TextAlignments)
 		  dim lines() as String = text.Split(EndOfLine)
 		  
-		  for i as Integer = 0 to lines.Ubound
-		    if align = TextAlign.Left then
-		      g.DrawString(lines(i), x, y)
-		    elseif align = TextAlign.Center then
-		      dim width as Double = g.StringWidth(lines(i))
-		      g.DrawString(lines(i), (x - width/2), y)
+		  for i as Integer = 0 to lines.LastIndex
+		    if align = TextAlignments.Left then
+		      g.DrawText(lines(i), x, y)
+		    elseif align = TextAlignments.Center then
+		      dim width as Double = g.TextWidth(lines(i))
+		      g.DrawText(lines(i), (x - width/2), y)
 		    else
-		      dim width as Double = g.StringWidth(lines(i))
-		      g.DrawString(lines(i), (x-width), y)
+		      dim width as Double = g.TextWidth(lines(i))
+		      g.DrawText(lines(i), (x-width), y)
 		    end
 		    
 		    y = y + g.TextHeight
 		  next
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target32Bit or Target64Bit))
-		Sub DrawString(Extends g as iOSGraphics, pText as Text, x as Integer, y as Integer, MaxWidth as Integer, align as iOSTextAlignment = iOSTextAlignment.Left, alignOnPivot as Boolean = true)
-		  g.DrawTextLine(pText, x, y, MaxWidth, align, alignOnPivot)
-		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target32Bit or Target64Bit))
-		Sub DrawString(Extends g as iOSGraphics, pText as Text, x as Integer, y as Integer, align as iOSTextAlignment = iOSTextAlignment.Left)
-		  g.DrawTextBlock(pText, x, y, -1, -1, align)
-		  
 		End Sub
 	#tag EndMethod
 
