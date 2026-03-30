@@ -245,9 +245,93 @@ End
 		Protected Sub Cancel()
 		  request.Disconnect
 		  request.Close
-		  temp_.Delete
+		  if temp_ <> nil and temp_.Exists then
+		    temp_.Delete
+		  end if
 		  
 		  Close()
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Function DownloadExtension() As String
+		  dim cleanedURL as String = item_.FileURL
+		  dim queryPos as Integer = cleanedURL.InStr("?")
+		  if queryPos > 0 then
+		    cleanedURL = cleanedURL.Left(queryPos-1)
+		  end if
+		  
+		  return cleanedURL.LastField(".").Lowercase
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Sub FailInstallAndFallback()
+		  state_ = UpdateState.Fermer
+		  bAction.Caption = kFermerMAJ
+		  pExtraction.Active = false
+		  pExtraction.Visible = false
+		  lExtration.Visible = false
+		  
+		  MessageBox(kVerifiezLesDroitsWEtRelancezLeProgramme)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Sub FinalizeMacInstall()
+		  try
+		    PrepareRelauncher()
+		    if state_ = UpdateState.Fermer then
+		      return
+		    end if
+		    
+		    for each child as FolderItem in dest_.Children
+		      
+		      if child.IsFolder and child.Name.EndsWith(".app") then
+		        dim currentApp as FolderItem = App.ExecutableFile.XojoFolderItem.Parent(".app")
+		        if currentApp = nil then
+		          Raise new RuntimeException()
+		        end
+		        
+		        dim destFolder as FolderItem = currentApp.Parent()
+		        dim finalName as String = currentApp.Name
+		        dim stagedName as String = destFolder.UniqueFolderItemName(currentApp.BaseName + "-update", "."+currentApp.Extension)
+		        
+		        child.Name = stagedName
+		        child.CopyTo(destFolder)
+		        
+		        dim stagedApp as FolderItem = destFolder.Child(stagedName)
+		        if stagedApp = nil or not stagedApp.Exists then
+		          Raise new RuntimeException()
+		        end if
+		        
+		        currentApp.Name = SpecialFolder.Trash.XojoFolderItem.UniqueFolderItemName(currentApp.BaseName, "."+currentApp.Extension)
+		        
+		        currentApp.MoveTo(SpecialFolder.Trash.XojoFolderItem)
+		        
+		        stagedApp.Name = finalName
+		        
+		        relaunchItem_ = destFolder.Child(finalName)
+		        exit
+		      end
+		    next
+		    
+		    if relaunchItem_ = nil then
+		      Raise new RuntimeException()
+		    end if
+		    
+		    if temp_ <> nil and temp_.Exists then
+		      temp_.Delete()
+		    end if
+		    if dest_ <> nil and dest_.Exists then
+		      dest_.RecursiveDelete()
+		    end if
+		    
+		    Timer1.Mode = 1
+		    
+		  catch err as RuntimeException
+		    FailInstallAndFallback()
+		  end try
 		End Sub
 	#tag EndMethod
 
@@ -280,46 +364,56 @@ End
 
 	#tag Method, Flags = &h1
 		Protected Sub InstallUpdate()
-		  'lExtration.Visible = true
-		  'pExtraction.Visible = true
-		  '
-		  '#if TargetWin32
-		  'dim ext as String = item_.FileURL.Mid(item_.FileURL.LastRowIndexOf(".")+1).Lowercase
-		  '
-		  'if ext = "exe" then
-		  'mEstInstaller = true
-		  'UnarchiveFinish()
-		  'return
-		  'end
-		  '#endif
-		  '
-		  'dest_ = SpecialFolder.Temporary.Child(RandomString(10))
-		  'dest_.CreateAsFolder
-		  '
-		  '#if TargetMacOS
-		  'dim extract as new DiskImageUnarchiver(temp_.oldFolderItem, dest_.oldFolderItem)
-		  '
-		  'AddHandler extract.Finish, AddressOf UnarchiveMacFinish
-		  'AddHandler extract.Fail, AddressOf UnarchiveMacFail
-		  '
-		  'extract.Start
-		  '
-		  '#elseif TargetWin32
-		  'dim extract as new ZipImageUnarchiver(temp_.oldFolderItem, dest_.oldFolderItem)
-		  '
-		  'AddHandler extract.Finish, AddressOf UnarchiveWinFinish
-		  'AddHandler extract.Fail, AddressOf UnarchiveWinFail
-		  '
-		  'extract.Start
-		  '
-		  '#else 'TargetLinux
-		  'dim extract as new ZipImageUnarchiver(temp_.oldFolderItem, dest_.oldFolderItem)
-		  '
-		  'AddHandler extract.Finish, AddressOf UnarchiveLinFinish
-		  'AddHandler extract.Fail, AddressOf UnarchiveLinFail
-		  '
-		  'extract.Start
-		  '#endif
+		  lExtration.Visible = true
+		  pExtraction.Visible = true
+		  pExtraction.Active = true
+		  
+		  dim ext as String = DownloadExtension()
+		  
+		  #if TargetWin32
+		    if ext = "exe" then
+		      mEstInstaller = true
+		      UnarchiveFinish()
+		      return
+		    end if
+		  #endif
+		  
+		  dest_ = SpecialFolder.Temporary.Child(RandomString(10))
+		  dest_.CreateFolderIfNotExist
+		  
+		  #if TargetMacOS
+		    if ext = "dmg" then
+		      dim extract as new DiskImageUnarchiver(temp_.oldFolderItem, dest_.oldFolderItem)
+		      
+		      AddHandler extract.Finish, AddressOf UnarchiveMacFinish
+		      AddHandler extract.Fail, AddressOf UnarchiveMacFail
+		      
+		      extract.Start
+		    else
+		      dim extract as new ZipImageUnarchiver(temp_.oldFolderItem, dest_.oldFolderItem)
+		      
+		      AddHandler extract.Finish, AddressOf UnarchiveMacZipFinish
+		      AddHandler extract.Fail, AddressOf UnarchiveMacZipFail
+		      
+		      extract.Start
+		    end if
+		    
+		  #elseif TargetWin32
+		    dim extract as new ZipImageUnarchiver(temp_.oldFolderItem, dest_.oldFolderItem)
+		    
+		    AddHandler extract.Finish, AddressOf UnarchiveWinFinish
+		    AddHandler extract.Fail, AddressOf UnarchiveWinFail
+		    
+		    extract.Start
+		    
+		  #else 'TargetLinux
+		    dim extract as new ZipImageUnarchiver(temp_.oldFolderItem, dest_.oldFolderItem)
+		    
+		    AddHandler extract.Finish, AddressOf UnarchiveLinFinish
+		    AddHandler extract.Fail, AddressOf UnarchiveLinFail
+		    
+		    extract.Start
+		  #endif
 		End Sub
 	#tag EndMethod
 
@@ -337,7 +431,11 @@ End
 		  ' On s'assure qu'il n'y a pas déjà de relauncher dans le dossier temporaire
 		  dim oldLauncher as FolderItem = SpecialFolder.Temporary.Child(mArchive.Name)
 		  if oldLauncher.Exists then
-		    oldLauncher.RecursiveDelete()
+		    if oldLauncher.IsFolder then
+		      oldLauncher.RecursiveDelete()
+		    else
+		      oldLauncher.Remove
+		    end if
 		  end if
 		  
 		  mArchive.CopyTo(SpecialFolder.Temporary)
@@ -347,118 +445,61 @@ End
 
 	#tag Method, Flags = &h1
 		Protected Sub Relancer()
-		  '#if TargetWin32
-		  '
-		  'if mEstInstaller then
-		  'temp_.oldFolderItem.Launch()
-		  'Quit()
-		  '
-		  'return
-		  'end
-		  '
-		  '#endif
-		  '
-		  '
-		  'if mArchive = nil then
-		  'Raise new RuntimeException()
-		  'end
-		  '
-		  '#if TargetWin32
-		  'dim zip as ZipArchive = ZipArchive.Open(mArchive.oldFolderItem, true)
-		  'zip.ExtractAll(mArchive.oldFolderItem.Parent)
-		  'zip.Close()
-		  '
-		  'mRelauncher = mArchive.Parent.Child("relaunch.exe")
-		  'mArchive.Delete()
-		  '
-		  'Soft Declare Function ShellExecuteExW Lib "Shell32" ( info as Ptr ) as Boolean
-		  'Soft Declare Function ShellExecuteExA Lib "Shell32" ( info as Ptr ) as Boolean
-		  '
-		  'dim info as new MemoryBlock( 15 * 4 )
-		  'dim verb as new MemoryBlock( 32 )
-		  'dim file as new MemoryBlock( 260 * 2 )
-		  'dim args as new MemoryBlock(512)
-		  '
-		  'info.Long( 0 ) = info.Size
-		  'info.Long( 8 ) = self.Handle
-		  'if System.IsFunctionAvailable( "ShellExecuteExW", "Shell32" ) then
-		  'verb.WString( 0 ) = "runas"
-		  'file.WString( 0 ) = mRelauncher.oldFolderItem.NativePath
-		  'args.WString( 0 ) = Str(App.PID) + " """+relaunchItem_.oldFolderItem.ShellPath+""" """ + dest_.oldFolderItem.ShellPath+ """"
-		  'else
-		  'verb.CString( 0 ) = "runas"
-		  'file.CString( 0 ) = mRelauncher.oldFolderItem.NativePath
-		  'args.CString( 0 ) = Str(App.PID) + " """+relaunchItem_.oldFolderItem.ShellPath+""" """ + dest_.oldFolderItem.ShellPath+ """"
-		  '
-		  'end if
-		  'info.Ptr( 12 ) = verb
-		  'info.Ptr( 16 ) = file
-		  'info.Ptr( 20 ) = args
-		  '
-		  'Const SW_SHOWNORMAL = 1
-		  'info.Long( 28 ) = SW_SHOWNORMAL
-		  '
-		  'dim ret as Boolean
-		  'if System.IsFunctionAvailable( "ShellExecuteExW", "Shell32" ) then
-		  'ret = ShellExecuteExW( info )
-		  'else
-		  'ret = ShellExecuteExA( info )
-		  'end if
-		  '
-		  '#elseif TargetMacOS
-		  'dim zip as ZipArchive = ZipArchive.Open(mArchive.oldFolderItem, true)
-		  'zip.ExtractAll(mArchive.Parent.oldFolderItem, true)
-		  'zip.Close()
-		  '
-		  'mRelauncher = mArchive.Parent.Child("relaunch.app")
-		  'mArchive.Delete()
-		  '
-		  'mRelauncher.RecursivePermissions(&o777)
-		  '
-		  'mRelauncher.oldFolderItem.Launch(Str(App.PID) + " """+relaunchItem_.oldFolderItem.ShellPath+"""")
-		  '
-		  '#else 'TargetLinux
-		  'dim zip as ZipArchive = ZipArchive.Open(mArchive.oldFolderItem, true)
-		  'zip.ExtractAll(mArchive.Parent.oldFolderItem)
-		  'zip.Close()
-		  '
-		  'mRelauncher = mArchive.Parent.Child("relaunch")
-		  'mArchive.Delete()
-		  '
-		  'mRelauncher = mRelauncher.Parent.Child("relaunch")
-		  'mRelauncher.RecursivePermissions(&o777)
-		  '' MessageBox(mRelauncher.AbsolutePath + " " + Str(App.PID) + " """+relaunchItem_.ShellPath+""" """ + dest_.ShellPath+ """")
-		  '
-		  'mRelauncher.oldFolderItem.Launch(Str(App.PID) + " """+relaunchItem_.oldFolderItem.ShellPath+""" """ + dest_.oldFolderItem.ShellPath+ """")
-		  '#endif
-		  '
-		  'ForceQuit()
-		  '
-		  'Exception err
-		  'if err isa NilObjectException then
-		  'Dim d as New MessageDialog                  //declare the MessageDialog object
-		  'Dim b as MessageDialogButton                //for handling the result
-		  'd.icon=MessageDialog.GraphicStop         //display warning icon
-		  'd.ActionButton.Caption = "Mannuellement"
-		  'd.CancelButton.Visible = True              //show the Cancel button
-		  'd.CancelButton.Caption = kQuitterMAJ
-		  'd.AlternateActionButton.Visible=True        //show the "Don't Save" button
-		  'd.AlternateActionButton.Caption="Télécharger en ligne"
-		  'd.Message="kLa mise à jour n'a pu être téléchargée, veuillez essayez manuellement."+EndOfLine+"Ou télécharger la dernière version en ligne"
-		  'd.Explanation= ""
-		  '
-		  'b=d.ShowModal                              //display the dialog
-		  'Select Case b                              //determine which button was pressed.
-		  'Case d.ActionButton
-		  'ShowURL(item_.FileURL)
-		  'ForceQuit()
-		  'Case d.AlternateActionButton
-		  'ShowUrl(app.LienTelechargement)
-		  'ForceQuit()
-		  'Case d.CancelButton
-		  'ForceQuit()
-		  'End select
-		  'end if
+		  try
+		    #if TargetWin32
+		      if mEstInstaller then
+		        temp_.oldFolderItem.Launch()
+		        ForceQuit()
+		        return
+		      end if
+		    #endif
+		    
+		    if mArchive = nil then
+		      Raise new RuntimeException()
+		    end if
+		    
+		    #if TargetWin32
+		      
+		      dim zip as ZipArchive = ZipArchive.Open(mArchive.oldFolderItem, true)
+		      zip.ExtractAll(mArchive.oldFolderItem.Parent)
+		      zip.Close()
+		      
+		      mRelauncher = mArchive.Parent.Child("relaunch.exe")
+		      mArchive.Delete()
+		      
+		      Soft Declare Function ShellExecuteW Lib "Shell32" ( hwnd as Integer, lpOperation as WString, lpFile as WString, lpParameters as WString, lpDirectory as WString, nShowCmd as Integer ) as Integer
+		      
+		      Const SW_SHOWNORMAL = 1
+		      dim args as String = Str(App.PID) + " """+relaunchItem_.oldFolderItem.ShellPath+""" """ + dest_.oldFolderItem.ShellPath+ """"
+		      dim ret as Integer = ShellExecuteW(Self.Handle, "runas", mRelauncher.oldFolderItem.NativePath, args, mRelauncher.Parent.NativePath, SW_SHOWNORMAL)
+		      
+		      if ret <= 32 then
+		        mRelauncher.oldFolderItem.Launch(args)
+		      end if
+		      
+		    #elseif TargetMacOS
+		      dim zip as ZipArchive = ZipArchive.Open(mArchive.oldFolderItem, true)
+		      zip.ExtractAll(mArchive.Parent.oldFolderItem, true)
+		      zip.Close()
+		      
+		      mRelauncher = mArchive.Parent.Child("relaunch.app")
+		      mArchive.Delete()
+		      
+		      mRelauncher.RecursivePermissions(&o777)
+		      mRelauncher.oldFolderItem.Launch(Str(App.PID) + " """+relaunchItem_.oldFolderItem.ShellPath+"""")
+		      
+		    #else 'TargetLinux
+		      ShowURL(item_.FileURL)
+		      Close()
+		      return
+		    #endif
+		    
+		    ForceQuit()
+		    
+		  catch err as RuntimeException
+		    ShowURL(item_.FileURL)
+		    ForceQuit()
+		  end try
 		End Sub
 	#tag EndMethod
 
@@ -471,10 +512,24 @@ End
 	#tag Method, Flags = &h0
 		Sub Show(item as AppcastItem)
 		  item_ = item
+		  state_ = UpdateState.Annuler
+		  mEstInstaller = false
+		  dest_ = nil
+		  mArchive = nil
+		  mRelauncher = nil
+		  relaunchItem_ = nil
+		  bAction.Caption = kCancel
+		  bAction.Default = false
+		  bAction.Width = 91
+		  bAction.Left = 239
+		  pProgess.Value = 0
+		  pExtraction.Visible = false
+		  pExtraction.Active = false
+		  lExtration.Visible = false
 		  
 		  Super.Show
 		  
-		  dim ext as String = item_.FileURL.LastField(".")
+		  dim ext as String = DownloadExtension()
 		  
 		  temp_ = SpecialFolder.Temporary.Child(StringExtra.RandomString(10) + "-part." + ext)
 		  
@@ -487,6 +542,7 @@ End
 		Protected Sub UnarchiveFinish(success as Boolean = true)
 		  lExtration.Visible = false
 		  pExtraction.Visible = false
+		  pExtraction.Active = false
 		  
 		  if success  then
 		    dim diff as Integer = (150 - bAction.Width)
@@ -506,8 +562,8 @@ End
 
 	#tag Method, Flags = &h1, CompatibilityFlags = false
 		Attributes( Deprecated = True ) Protected Sub UnarchiveLinFail(extract as ZipImageUnarchiver)
-		  ' MessageBox kErreurDecompressionArchive
-		  'UnarchiveFinish(false)
+		  MessageBox kErreurDecompressionArchive
+		  UnarchiveFinish(false)
 		End Sub
 	#tag EndMethod
 
@@ -529,37 +585,21 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h1, CompatibilityFlags = false
+		Protected Sub UnarchiveMacZipFail(extract as ZipImageUnarchiver)
+		  MessageBox kErreurDecompressionArchive
+		  UnarchiveFinish(false)
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1, CompatibilityFlags = false
 		Protected Sub UnarchiveMacFinish(extract as DiskImageUnarchiver)
-		  PrepareRelauncher()
-		  
-		  for each child as FolderItem in dest_.Children
-		    
-		    if child.IsFolder and child.Name.EndsWith(".app") then
-		      dim currentApp as FolderItem = App.ExecutableFile.XojoFolderItem.Parent(".app")
-		      if currentApp = nil then
-		        Raise new RuntimeException()
-		      end
-		      
-		      dim destFolder as FolderItem = currentApp.Parent()
-		      
-		      #if not DebugBuild
-		        child.Name = currentApp.Name
-		      #endif
-		      
-		      currentApp.Name = SpecialFolder.Trash.XojoFolderItem.UniqueFolderItemName(currentApp.BaseName, "."+currentApp.Extension)
-		      
-		      currentApp.MoveTo(SpecialFolder.Trash.XojoFolderItem)
-		      
-		      child.CopyTo(destFolder)
-		      
-		      relaunchItem_ = destFolder.Child(child.Name)
-		    end
-		  next
-		  
-		  temp_.Delete()
-		  dest_.RecursiveDelete()
-		  
-		  Timer1.Mode = 1
+		  FinalizeMacInstall()
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1, CompatibilityFlags = false
+		Protected Sub UnarchiveMacZipFinish(extract as ZipImageUnarchiver)
+		  FinalizeMacInstall()
 		End Sub
 	#tag EndMethod
 
@@ -573,6 +613,9 @@ End
 	#tag Method, Flags = &h1, CompatibilityFlags = false
 		Protected Sub UnarchiveWinFinish(extract as ZipImageUnarchiver)
 		  PrepareRelauncher()
+		  if state_ = UpdateState.Fermer then
+		    return
+		  end if
 		  
 		  'relaunchItem_ = SpecialFolder.Applications.Child("Budjhete").Child("Budjhete.exe")
 		  relaunchItem_ = App.ExecutableFile.XojoFolderItem
@@ -640,16 +683,35 @@ End
 #tag Events request
 	#tag Event
 		Sub ReceiveProgress(bytesReceived as integer, totalBytes as integer, newData as string)
-		  pProgess.Value = (bytesReceived/totalBytes)*100
-		  lExtration.Text = str(bytesReceived/1024) + "/" + str(totalBytes/1024) + " Kb"
+		  if totalBytes > 0 then
+		    pProgess.Value = (bytesReceived/totalBytes)*100
+		    lExtration.Text = str(bytesReceived/1024) + "/" + str(totalBytes/1024) + " Kb"
+		  else
+		    pProgess.Value = 0
+		    lExtration.Text = str(bytesReceived/1024) + " Kb"
+		  end if
 		End Sub
 	#tag EndEvent
 	#tag Event
 		Sub DownloadComplete(url as string, httpStatus as integer, headers as internetHeaders, file as folderItem)
-		  if DebugBuild then
-		    if temp_.Length <> item_.Length or MD5(temp_).Lowercase <> item_.MD5Signature.Lowercase then
+		  dim hasExpectedLength as Boolean = item_.Length > 0
+		  dim hasExpectedSignature as Boolean = item_.MD5Signature <> ""
+		  
+		  if hasExpectedLength or hasExpectedSignature then
+		    dim invalidDownload as Boolean
+		    
+		    if hasExpectedLength and temp_.Length <> item_.Length then
+		      invalidDownload = true
+		    end if
+		    
+		    if hasExpectedSignature and MD5(temp_).Lowercase <> item_.MD5Signature.Lowercase then
+		      invalidDownload = true
+		    end if
+		    
+		    if invalidDownload then
 		      MessageBox("Erreur : Le fichier téléchargé est corrompu. (en test)")
 		      bAction.Caption = "Fermer"
+		      state_ = UpdateState.Fermer
 		      return
 		    end
 		  end if
