@@ -182,7 +182,7 @@ Protected Module StringExtra
 
 	#tag Method, Flags = &h0
 		Function cleanCSV(Extends str as String) As String
-		  str = str.ReplaceAll(Encodings.UTF8.Chr(22), Encodings.UTF8.Chr(22)+Encodings.UTF8.Chr(22)+Encodings.UTF8.Chr(22)) // return carriage
+		  str = str.ReplaceAll(Encodings.UTF8.Chr(34), Encodings.UTF8.Chr(34)+Encodings.UTF8.Chr(34)) // double quote escaping for CSV
 		  return str
 		  
 		  
