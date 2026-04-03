@@ -192,7 +192,7 @@ Protected Module GraphicsExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub DrawString(Extends g as Graphics, text as String, x as Integer, y as Integer, width as Integer, align as TextAlignments, alignOnPivot as Boolean = true)
 		  if align = TextAlignments.Left then
 		    g.DrawText(text, x, y, width)
@@ -215,7 +215,7 @@ Protected Module GraphicsExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub DrawString(Extends g as Graphics, text as String, x as Integer, y as Integer, align as TextAlignments)
 		  dim lines() as String = text.Split(EndOfLine)
 		  

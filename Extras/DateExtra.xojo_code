@@ -219,6 +219,23 @@ Protected Module DateExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function AbbreviatedDate(Extends d As DateTime) As String
+		  Var month As String = d.Month.ToString
+		  Var day As String = d.Day.ToString
+		  
+		  If d.Month < 10 Then
+		    month = "0" + month
+		  End If
+		  
+		  If d.Day < 10 Then
+		    day = "0" + day
+		  End If
+		  
+		  Return d.Year.ToString + "-" + month + "-" + day
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function LastYearStart(Extends d As DateTime, firstDay As DateTime = nil) As DateTime
 		  dim aDate as DateTime = d.YearStart(firstDay)
 		  aDate = aDate.Year(aDate.Year - 1)
@@ -287,7 +304,7 @@ Protected Module DateExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target64Bit)) or  (TargetAndroid and (Target64Bit))
 		Function MonthName(Extends d as DateTime, pLang as string = "en") As String
 		  return kMonths(pLang).NthField(",", d.Month)
 		End Function
