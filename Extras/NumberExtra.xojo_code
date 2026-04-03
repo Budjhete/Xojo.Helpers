@@ -172,7 +172,7 @@ Protected Module NumberExtra
 		Function Round(Extends pCurrency As Currency, pPrecision As Integer) As Double
 		  dim pExponent as Double = (10 ^ pPrecision)
 		  
-		  Return Round(pCurrency * pExponent) / pExponent
+		  Return RoundHalfAwayFromZero(pCurrency * pExponent) / pExponent
 		End Function
 	#tag EndMethod
 
@@ -180,7 +180,19 @@ Protected Module NumberExtra
 		Function Round(Extends pDouble As Double, pPrecision As Integer) As Double
 		  dim pExponent as Double = (10 ^ pPrecision)
 		  
-		  Return Round(pDouble * pExponent) / pExponent
+		  Return RoundHalfAwayFromZero(pDouble * pExponent) / pExponent
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Function RoundHalfAwayFromZero(pValue As Double) As Double
+		  Const kFloatingPointEpsilon As Double = 0.0000000001
+		  
+		  If pValue >= 0 Then
+		    Return Floor(pValue + 0.5 + kFloatingPointEpsilon)
+		  End If
+		  
+		  Return -Floor(Abs(pValue) + 0.5 + kFloatingPointEpsilon)
 		End Function
 	#tag EndMethod
 
