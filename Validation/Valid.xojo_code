@@ -54,7 +54,7 @@ Protected Module Valid
 
 	#tag Method, Flags = &h0
 		Function Email(value as String) As Boolean
-		  Return ValidRegex(value, "^[0-9A-Za-z._%+-]+@[0-9A-Za-z.-]+\.[A-Za-z]{2,6}$")
+		  Return ValidRegex(value, "^[0-9A-Za-z._%+-]+@[0-9A-Za-z.-]+\.[A-Za-z]{2,12}$")
 		  
 		End Function
 	#tag EndMethod

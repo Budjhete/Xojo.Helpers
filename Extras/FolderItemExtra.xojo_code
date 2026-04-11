@@ -44,12 +44,6 @@ Protected Module FolderItemExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
-		Function OldFolderItem(Extends fi as FolderItem) As FolderItem
-		  Return New FolderItem(fi.NativePath, FolderItem.PathModes.Native)
-		End Function
-	#tag EndMethod
-
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function RealType(extends folder as FolderItem) As FileType
 		  If folder.IsFolder Then Return Nil
@@ -121,8 +115,7 @@ Protected Module FolderItemExtra
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Sub RecursivePermissions(extends folder as FolderItem, permissions as Integer)
-		  Dim d as FolderItem = folder.oldFolderItem
-		  d.Permissions = permissions
+		  folder.Permissions = permissions
 		  
 		  for each Item as FolderItem in folder.Children
 		    Item.RecursivePermissions(permissions)
