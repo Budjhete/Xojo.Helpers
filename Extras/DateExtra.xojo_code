@@ -1,6 +1,23 @@
 #tag Module
 Protected Module DateExtra
 	#tag Method, Flags = &h0
+		Function AbbreviatedDate(Extends d As DateTime) As String
+		  Var month As String = d.Month.ToString
+		  Var day As String = d.Day.ToString
+		  
+		  If d.Month < 10 Then
+		    month = "0" + month
+		  End If
+		  
+		  If d.Day < 10 Then
+		    day = "0" + day
+		  End If
+		  
+		  Return d.Year.ToString + "-" + month + "-" + day
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function BeginOfTheDay(Extends d As DateTime) As DateTime
 		  d = d.Hour(0)
 		  d = d.Minute(0)
@@ -215,23 +232,6 @@ Protected Module DateExtra
 		  aDate = aDate.Second(59)
 		  
 		  return aDate
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function AbbreviatedDate(Extends d As DateTime) As String
-		  Var month As String = d.Month.ToString
-		  Var day As String = d.Day.ToString
-		  
-		  If d.Month < 10 Then
-		    month = "0" + month
-		  End If
-		  
-		  If d.Day < 10 Then
-		    day = "0" + day
-		  End If
-		  
-		  Return d.Year.ToString + "-" + month + "-" + day
 		End Function
 	#tag EndMethod
 
