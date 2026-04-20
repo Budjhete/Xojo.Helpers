@@ -11,7 +11,17 @@ Protected Module BooleanExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function TextValue(Extends pBoolean As Boolean) As Text
+		Function OuiNonValue(Extends pBoolean As Boolean) As String
+		  If pBoolean Then
+		    Return kOui(app.lang)
+		  Else
+		    Return kNon(app.lang)
+		  End If
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function TextValue(Extends pBoolean As Boolean) As String
 		  If pBoolean Then
 		    Return "True"
 		  Else
