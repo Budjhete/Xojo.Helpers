@@ -205,6 +205,18 @@ Protected Module StringExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function HtmlEscape(Extends str As String) As String
+		  Dim safe As String = str
+		  safe = safe.ReplaceAll("&", "&amp;")
+		  safe = safe.ReplaceAll("<", "&lt;")
+		  safe = safe.ReplaceAll(">", "&gt;")
+		  safe = safe.ReplaceAll("""", "&quot;")
+		  safe = safe.ReplaceAll("'", "&apos;")
+		  Return safe
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function Contains(Extends str as String, search() as String) As Boolean
 		  for i as Integer = 0 to search.LastIndex
 		    if str.Contains(search(i)) then
