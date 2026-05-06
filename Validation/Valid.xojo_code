@@ -136,7 +136,8 @@ Protected Module Valid
 
 	#tag Method, Flags = &h0
 		Function URL(value as String) As Boolean
-		  Return ValidRegex(value, "^([a-zA-Z]+://)?([a-zA-Z0-9]+\.)+[a-zA-Z]+(:[0-9]+)?/?.*$")
+		  //Return ValidRegex(value, "^([a-zA-Z]+://)?([a-zA-Z0-9]+\.)+[a-zA-Z]+(:[0-9]+)?/?.*$")
+		  Return ValidRegex(value, "^(https?://)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(/.*)?$")
 		  
 		  // Regex de Kohana, un peu trop intense pour nos besoins : http://kohanaframework.org/3.2/guide/api/Valid#url
 		  // Return Regex(value, "^[-a-z0-9+.]++://(?:[-a-z0-9$_.+!*\'(),;?&=%]++(?::[-a-z0-9$_.+!*\'(),;?&=%]++)?@)?(?:\d{1,3}+(?:\.\d{1,3}+){3}+|((?!-)[-a-z0-9]{1,63}+(?<!-)(?:\.(?!-)[-a-z0-9]{1,63}+(?<!-)){0,126}+))(?::\d{1,5}+)?(?:/.*)?$", "iDx")
