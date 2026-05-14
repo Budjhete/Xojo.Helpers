@@ -724,18 +724,20 @@ Protected Module StringExtra
 
 	#tag Method, Flags = &h0
 		Function RandomString(len As Integer, source as String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890") As String
-		  Dim str, num As String
-		  Dim nbChars, start, i As Integer
-		  nbChars = source.Length( )
+		  If len <= 0 Then Return ""
+		  source = source.Trim
+		  If source = "" Then Return ""
 		  
-		  for i = 1 To len
-		    Dim r as New Random
-		    start = r.InRange(1, nbChars)
-		    num = source.Middle( start, 1 )
-		    str = str + num
+		  Dim result As String
+		  Dim nbChars As Integer = source.Length
+		  Dim raw As MemoryBlock = App.GenerateSecureRandomBytes(len)
+		  
+		  For i As Integer = 0 To len - 1
+		    Dim index As Integer = raw.UInt8Value(i) Mod nbChars
+		    result = result + source.Middle(index, 1)
 		  Next
 		  
-		  return str
+		  Return result
 		End Function
 	#tag EndMethod
 
