@@ -1,6 +1,107 @@
 #tag Class
 Protected Class NextCloudClass
 	#tag Method, Flags = &h0
+		Function ArchiveLocalItemOnServer(localItem As FolderItem, localBase As FolderItem, ByRef pResult As Dictionary, activeRootName As String = "Fichiers", archiveRootName As String = "Archives") As Boolean
+		  Return MoveLocalItemOnServer(localItem, localBase, activeRootName, archiveRootName, pResult, "archive")
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function ArchiveRelativePathOnServer(relativePath As String, ByRef pResult As Dictionary, activeRootName As String = "Fichiers", archiveRootName As String = "Archives") As Boolean
+		  Return MoveRelativePathOnServer(relativePath, activeRootName, archiveRootName, pResult, "archive")
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function BuildAuthorizationHeaderValue() As String
+		  If Username.Trim = "" Or AppPassword.Trim = "" Then Return ""
+		  Return "Basic " + EncodeBase64(Username + ":" + AppPassword, 0)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function BuildDavUrl(remotePath As String) As String
+		  Var base As String = BaseDav.Trim
+		  If base = "" Then
+		    Var baseRoot As String = BuildBaseRoot()
+		    If baseRoot.Trim <> "" And Username.Trim <> "" Then
+		      base = baseRoot + "/remote.php/dav/files/" + Username + "/"
+		    End If
+		  End If
+		  
+		  If base.Trim = "" Then Return ""
+		  If Not base.EndsWith("/") Then base = base + "/"
+		  
+		  Var rp As String = remotePath.Trim
+		  If rp = "" Then Return ""
+		  If Not rp.BeginsWith("/") Then rp = "/" + rp
+		  While rp.IndexOf("//") >= 0
+		    rp = rp.ReplaceAll("//", "/")
+		  Wend
+		  
+		  Var encoded As String = EncodeRemotePathForDav(rp)
+		  If encoded.BeginsWith("/") Then encoded = encoded.Middle(1)
+		  
+		  Return base + encoded
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function BuildRelativePathFromLocal(localItem As FolderItem, localBase As FolderItem) As String
+		  If localItem = Nil Then Return ""
+		  If localBase = Nil Then Return ""
+		  
+		  Var basePath As String = localBase.NativePath
+		  Var localPath As String = localItem.NativePath
+		  If basePath.Trim = "" Then Return ""
+		  If Not localPath.BeginsWith(basePath) Then Return ""
+		  
+		  Var relPath As String = localPath.Middle(basePath.Length)
+		  relPath = relPath.ReplaceAll("\\", "/")
+		  If relPath = "" Then relPath = "/"
+		  If Not relPath.BeginsWith("/") Then relPath = "/" + relPath
+		  
+		  While relPath.IndexOf("//") >= 0
+		    relPath = relPath.ReplaceAll("//", "/")
+		  Wend
+		  
+		  If relPath.Length > 1 And relPath.EndsWith("/") Then
+		    relPath = relPath.Left(relPath.Length - 1)
+		  End If
+		  
+		  Return relPath
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function BuildRemotePathFromRelative(relativePath As String) As String
+		  Var root As String = NormalizeRemotePath(KanjoRootFolder)
+		  If root.Trim = "" Then Return ""
+		  
+		  Var relPath As String = relativePath.Trim
+		  If relPath = "" Or relPath = "/" Then
+		    If root <> "/" And root.EndsWith("/") Then
+		      Return root.Left(root.Length - 1)
+		    End If
+		    Return root
+		  End If
+		  
+		  If relPath.BeginsWith("/") Then relPath = relPath.Middle(1)
+		  
+		  Var remotePath As String = root + relPath
+		  While remotePath.IndexOf("//") >= 0
+		    remotePath = remotePath.ReplaceAll("//", "/")
+		  Wend
+		  
+		  If remotePath.Length > 1 And remotePath.EndsWith("/") Then
+		    remotePath = remotePath.Left(remotePath.Length - 1)
+		  End If
+		  
+		  Return remotePath
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function BuildFilesWebURL(remotePath As String) As String
 		  // Builds a human-friendly Nextcloud Files URL that stays
 		  // compatible with instances that still require /index.php.
@@ -63,33 +164,59 @@ Protected Class NextCloudClass
 
 	#tag Method, Flags = &h0
 		Function BuildRemotePathFromLocal(localItem As FolderItem, localBase As FolderItem) As String
-		  If localItem = Nil Then Return ""
-		  If localBase = Nil Then Return ""
+		  Var relPath As String = BuildRelativePathFromLocal(localItem, localBase)
+		  If relPath = "" Then Return ""
 		  
-		  Var basePath As String = localBase.NativePath
-		  Var localPath As String = localItem.NativePath
-		  If basePath.Trim = "" Then Return ""
-		  If Not localPath.BeginsWith(basePath) Then Return ""
-		  
-		  Var relPath As String = localPath.Middle(basePath.Length)
-		  relPath = relPath.ReplaceAll("\\", "/")
-		  If Not relPath.BeginsWith("/") Then relPath = "/" + relPath
-		  
-		  Var root As String = NormalizeRemotePath(KanjoRootFolder)
-		  If relPath.BeginsWith("/") Then relPath = relPath.Middle(1)
-		  
-		  Var remotePath As String = root + relPath
-		  remotePath = NormalizeRemotePath(remotePath)
-		  If remotePath.Length > 1 And remotePath.EndsWith("/") Then remotePath = remotePath.Left(remotePath.Length - 1)
-		  
-		  Return remotePath
+		  Return BuildRemotePathFromRelative(relPath)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Delete()
-		  // Optional: implement later (WebDAV DELETE)
-		End Sub
+		Function Delete(remotePath As String, ByRef pMessage As String) As Boolean
+		  pMessage = ""
+		  
+		  Var url As String = BuildDavUrl(remotePath)
+		  Var authHeader As String = BuildAuthorizationHeaderValue()
+		  If url = "" Or authHeader = "" Then
+		    pMessage = "Nextcloud DELETE: configuration invalide."
+		    Return False
+		  End If
+		  
+		  Var u As New URLConnection
+		  u.RequestHeader("Authorization") = authHeader
+		  u.RequestHeader("User-Agent") = "KanjoDesktop/1.0"
+		  
+		  Var response As String
+		  Try
+		    response = u.SendSync("DELETE", url, 60)
+		  Catch e As RuntimeException
+		    pMessage = "Nextcloud DELETE: " + e.Message
+		    Return False
+		  End Try
+		  
+		  Select Case u.HTTPStatusCode
+		  Case 200, 204, 404
+		    // ok or already absent
+		  Else
+		    pMessage = "Nextcloud DELETE HTTP " + u.HTTPStatusCode.ToString + If(response.Trim <> "", ": " + response, "")
+		    Return False
+		  End Select
+		  
+		  Dim httpStatus As Integer
+		  Dim fileId As String
+		  Dim existsMessage As String
+		  If Exists(remotePath, httpStatus, fileId, existsMessage) Then
+		    pMessage = "Nextcloud DELETE: la ressource existe encore après suppression."
+		    Return False
+		  End If
+		  
+		  If httpStatus <> 404 And existsMessage.Trim <> "" Then
+		    pMessage = "Nextcloud DELETE: vérification distante impossible. " + existsMessage
+		    Return False
+		  End If
+		  
+		  Return True
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -128,31 +255,28 @@ Protected Class NextCloudClass
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Exists()
-		  // Optional: implement later (WebDAV PROPFIND Depth:0 or HEAD)
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function FetchFileId(remotePath As String) As String
-		  // Returns oc:fileid for a file path via WebDAV PROPFIND Depth:0
+		Function Exists(remotePath As String, ByRef pHttpStatus As Integer, ByRef pFileId As String, ByRef pMessage As String) As Boolean
+		  pHttpStatus = 0
+		  pFileId = ""
+		  pMessage = ""
 		  
 		  Var rp As String = remotePath.Trim
-		  If rp = "" Then Return ""
+		  If rp = "" Then
+		    pMessage = "Nextcloud EXISTS: chemin distant vide."
+		    Return False
+		  End If
 		  
 		  If Not rp.BeginsWith("/") Then rp = "/" + rp
 		  While rp.IndexOf("//") >= 0
 		    rp = rp.ReplaceAll("//", "/")
 		  Wend
 		  
-		  If Username.Trim = "" Or AppPassword.Trim = "" Then Return ""
-		  If BaseDav.Trim = "" Then Return ""
-		  
-		  Var base As String = BaseDav.Trim
-		  If Not base.EndsWith("/") Then base = base + "/"
-		  
-		  Var rpEncoded As String = EncodeRemotePathForDav(rp)
-		  Var url As String = base + rpEncoded.Middle(1)
+		  Var url As String = BuildDavUrl(rp)
+		  Var authHeader As String = BuildAuthorizationHeaderValue()
+		  If url = "" Or authHeader = "" Then
+		    pMessage = "Nextcloud EXISTS: configuration invalide."
+		    Return False
+		  End If
 		  
 		  Var body As String = _
 		  "<?xml version=""1.0"" encoding=""utf-8""?>" + EndOfLine + _
@@ -166,30 +290,45 @@ Protected Class NextCloudClass
 		  u.RequestHeader("Depth") = "0"
 		  u.RequestHeader("Content-Type") = "application/xml; charset=utf-8"
 		  u.RequestHeader("User-Agent") = "KanjoDesktop/1.0"
-		  
-		  Var auth As String = EncodeBase64(Username + ":" + AppPassword, 0)
-		  u.RequestHeader("Authorization") = "Basic " + auth
+		  u.RequestHeader("Authorization") = authHeader
 		  u.SetRequestContent(body, "application/xml; charset=utf-8")
 		  
 		  Var response As String
 		  Try
 		    response = u.SendSync("PROPFIND", url, 30)
 		  Catch e As RuntimeException
-		    Return ""
+		    pMessage = "Nextcloud EXISTS: " + e.Message
+		    Return False
 		  End Try
 		  
-		  If response.Trim = "" Then Return ""
-		  If Not response.Trim.BeginsWith("<") Then Return ""
+		  pHttpStatus = u.HTTPStatusCode
+		  Select Case pHttpStatus
+		  Case 200, 207
+		    // continue
+		  Case 401, 403
+		    pMessage = "Nextcloud EXISTS: accès refusé."
+		    Return False
+		  Case 404
+		    Return False
+		  Else
+		    pMessage = "Nextcloud EXISTS HTTP " + pHttpStatus.ToString + If(response.Trim <> "", ": " + response, "")
+		    Return False
+		  End Select
+		  
+		  If response.Trim = "" Or Not response.Trim.BeginsWith("<") Then
+		    // Some servers may answer 207 without fileid payload.
+		    Return True
+		  End If
 		  
 		  Var x As New XmlDocument
 		  Try
 		    x.LoadXml(response)
 		  Catch
-		    Return ""
+		    Return True
 		  End Try
 		  
 		  Var root As XmlNode = x.DocumentElement
-		  If root Is Nil Then Return ""
+		  If root Is Nil Then Return True
 		  
 		  For i As Integer = 0 To root.ChildCount - 1
 		    Var resp As XmlNode = root.Child(i)
@@ -208,14 +347,27 @@ Protected Class NextCloudClass
 		          If p Is Nil Then Continue
 		          
 		          If p.LocalName = "fileid" And p.FirstChild <> Nil Then
-		            Return p.FirstChild.Value
+		            pFileId = p.FirstChild.Value
+		            Return True
 		          End If
 		        Next
 		      Next
 		    Next
 		  Next
 		  
-		  Return ""
+		  Return True
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function FetchFileId(remotePath As String) As String
+		  // Returns oc:fileid for a file path via WebDAV PROPFIND Depth:0
+		  
+		  Var httpStatus As Integer
+		  Var fileId As String
+		  Var message As String
+		  Call Exists(remotePath, httpStatus, fileId, message)
+		  Return fileId
 		End Function
 	#tag EndMethod
 
@@ -439,6 +591,37 @@ Protected Class NextCloudClass
 		  
 		  if data = nil then Return ""
 		  return data.Lookup("email", "").StringValue.Trim
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function FindChildEntryByCandidateNames(remoteParentPath As String, pCandidateNames() As String, ByRef pEntry As Dictionary, ByRef pMessage As String) As Boolean
+		  pEntry = Nil
+		  pMessage = ""
+		  
+		  Dim pCandidates As New Dictionary
+		  For Each pCandidateName As String In pCandidateNames
+		    Dim pNormalized As String = pCandidateName.Trim.Lowercase
+		    If pNormalized = "" Then Continue
+		    pCandidates.Value(pNormalized) = True
+		  Next
+		  
+		  If pCandidates.KeyCount = 0 Then Return False
+		  
+		  Dim pEntries() As Dictionary = ListEntries(remoteParentPath, pMessage)
+		  If pEntries.LastIndex < 0 Then Return False
+		  
+		  For Each pChildEntry As Dictionary In pEntries
+		    If pChildEntry = Nil Then Continue
+		    Dim pName As String = pChildEntry.Lookup("name", "").StringValue.Trim.Lowercase
+		    If pName = "" Then Continue
+		    If pCandidates.HasKey(pName) Then
+		      pEntry = pChildEntry
+		      Return True
+		    End If
+		  Next
+		  
+		  Return False
 		End Function
 	#tag EndMethod
 
@@ -765,15 +948,431 @@ Protected Class NextCloudClass
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub MkCol()
-		  // Optional: implement later (WebDAV MKCOL)
-		End Sub
+		Function ListEntries(remotePath As String, ByRef pMessage As String) As Dictionary()
+		  // Lists files and folders in remotePath using WebDAV PROPFIND Depth: 1
+		  // Returns dictionaries with: name, remote_path, parent_remote_path,
+		  // is_folder, file_id, content_type, open_url
+		  
+		  Var out() As Dictionary
+		  pMessage = ""
+		  
+		  Var rp As String = NormalizeRemotePath(remotePath)
+		  If Username.Trim = "" Or AppPassword.Trim = "" Then
+		    pMessage = "Nextcloud LIST: identifiants manquants."
+		    Return out
+		  End If
+		  
+		  If BaseDav.Trim = "" Then
+		    pMessage = "Nextcloud LIST: BaseDav manquante."
+		    Return out
+		  End If
+		  
+		  Var base As String = BaseDav.Trim
+		  If Not base.EndsWith("/") Then base = base + "/"
+		  
+		  Var authHeader As String = BuildAuthorizationHeaderValue()
+		  If authHeader = "" Then
+		    pMessage = "Nextcloud LIST: configuration invalide."
+		    Return out
+		  End If
+		  
+		  Var rpEncoded As String = EncodeRemotePathForDav(rp)
+		  Var url As String = base + rpEncoded.Middle(1)
+		  
+		  Var body As String = _
+		  "<?xml version=""1.0"" encoding=""utf-8""?>" + EndOfLine + _
+		  "<d:propfind xmlns:d=""DAV:"" xmlns:oc=""http://owncloud.org/ns"">" + EndOfLine + _
+		  "  <d:prop>" + EndOfLine + _
+		  "    <d:resourcetype/>" + EndOfLine + _
+		  "    <d:displayname/>" + EndOfLine + _
+		  "    <d:getcontenttype/>" + EndOfLine + _
+		  "    <oc:fileid/>" + EndOfLine + _
+		  "  </d:prop>" + EndOfLine + _
+		  "</d:propfind>"
+		  
+		  Var u As New URLConnection
+		  u.RequestHeader("Depth") = "1"
+		  u.RequestHeader("Content-Type") = "application/xml; charset=utf-8"
+		  u.RequestHeader("User-Agent") = "KanjoDesktop/1.0"
+		  u.RequestHeader("Authorization") = authHeader
+		  u.SetRequestContent(body, "application/xml; charset=utf-8")
+		  
+		  Var response As String
+		  Try
+		    response = u.SendSync("PROPFIND", url, 60)
+		  Catch e As RuntimeException
+		    pMessage = "Nextcloud LIST: " + e.Message
+		    Return out
+		  End Try
+		  
+		  Select Case u.HTTPStatusCode
+		  Case 200, 207
+		    // ok
+		  Case 404
+		    Return out
+		  Case 401, 403
+		    pMessage = "Nextcloud LIST: accès refusé."
+		    Return out
+		  Else
+		    pMessage = "Nextcloud LIST HTTP " + u.HTTPStatusCode.ToString + If(response.Trim <> "", ": " + response, "")
+		    Return out
+		  End Select
+		  
+		  If response.Trim = "" Or Not response.Trim.BeginsWith("<") Then Return out
+		  
+		  Var x As New XmlDocument
+		  Try
+		    x.LoadXml(response)
+		  Catch
+		    pMessage = "Nextcloud LIST: réponse XML invalide."
+		    Return out
+		  End Try
+		  
+		  Var marker As String = "/remote.php/dav/files/" + Username
+		  Var root As XmlNode = x.DocumentElement
+		  If root Is Nil Then Return out
+		  
+		  For i As Integer = 0 To root.ChildCount - 1
+		    Var resp As XmlNode = root.Child(i)
+		    If resp Is Nil Or resp.LocalName <> "response" Then Continue
+		    
+		    Var href As String
+		    Var display As String
+		    Var fileId As String
+		    Var contentType As String
+		    Var isCollection As Boolean
+		    
+		    For j As Integer = 0 To resp.ChildCount - 1
+		      Var n As XmlNode = resp.Child(j)
+		      If n Is Nil Then Continue
+		      
+		      Select Case n.LocalName
+		      Case "href"
+		        If n.FirstChild <> Nil Then href = n.FirstChild.Value.URLDecode
+		        
+		      Case "propstat"
+		        For k As Integer = 0 To n.ChildCount - 1
+		          Var ps As XmlNode = n.Child(k)
+		          If ps Is Nil Or ps.LocalName <> "prop" Then Continue
+		          
+		          For m As Integer = 0 To ps.ChildCount - 1
+		            Var p As XmlNode = ps.Child(m)
+		            If p Is Nil Then Continue
+		            
+		            Select Case p.LocalName
+		            Case "displayname"
+		              If p.FirstChild <> Nil Then display = p.FirstChild.Value
+		              
+		            Case "resourcetype"
+		              For t As Integer = 0 To p.ChildCount - 1
+		                Var c As XmlNode = p.Child(t)
+		                If c <> Nil And c.LocalName = "collection" Then
+		                  isCollection = True
+		                  Exit
+		                End If
+		              Next
+		              
+		            Case "fileid"
+		              If p.FirstChild <> Nil Then fileId = p.FirstChild.Value
+		              
+		            Case "getcontenttype"
+		              If p.FirstChild <> Nil Then contentType = p.FirstChild.Value
+		            End Select
+		          Next
+		        Next
+		      End Select
+		    Next
+		    
+		    If href.Trim = "" Then Continue
+		    
+		    Var pos As Integer = href.IndexOf(marker)
+		    If pos < 0 Then Continue
+		    
+		    Var remote As String = href.Middle(pos + marker.Length)
+		    If remote.Trim = "" Then remote = "/"
+		    If Not remote.BeginsWith("/") Then remote = "/" + remote
+		    If isCollection Then
+		      If Not remote.EndsWith("/") Then remote = remote + "/"
+		    ElseIf remote.Length > 1 And remote.EndsWith("/") Then
+		      remote = remote.Left(remote.Length - 1)
+		    End If
+		    
+		    If remote = rp Then Continue
+		    
+		    Var itemName As String = display.Trim
+		    If itemName = "" Then
+		      Var remoteName As String = remote
+		      If remoteName.Length > 1 And remoteName.EndsWith("/") Then remoteName = remoteName.Left(remoteName.Length - 1)
+		      Var remoteParts() As String = remoteName.Split("/")
+		      If remoteParts.LastIndex >= 0 Then itemName = remoteParts(remoteParts.LastIndex)
+		    End If
+		    If itemName.Trim = "" Then Continue
+		    
+		    Var entry As New Dictionary
+		    entry.Value("name") = itemName
+		    entry.Value("remote_path") = remote
+		    entry.Value("parent_remote_path") = rp
+		    entry.Value("is_folder") = isCollection
+		    entry.Value("file_id") = fileId
+		    entry.Value("content_type") = contentType
+		    
+		    If isCollection Then
+		      entry.Value("open_url") = BuildFilesWebURL(remote)
+		    Else
+		      entry.Value("open_url") = BuildFileWebURL(remote, fileId)
+		    End If
+		    
+		    out.Add(entry)
+		  Next
+		  
+		  Return out
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Move()
-		  // Optional: implement later (WebDAV MOVE)
-		End Sub
+		Function MkCol(remoteFolderPath As String, ByRef pMessage As String) As Boolean
+		  pMessage = ""
+		  
+		  Var folderPath As String = NormalizeRemotePath(remoteFolderPath)
+		  If folderPath = "/" Then Return True
+		  
+		  Var authHeader As String = BuildAuthorizationHeaderValue()
+		  If authHeader = "" Then
+		    pMessage = "Nextcloud MKCOL: configuration invalide."
+		    Return False
+		  End If
+		  
+		  Var currentPath As String = ""
+		  Var parts() As String = folderPath.Split("/")
+		  For Each part As String In parts
+		    If part.Trim = "" Then Continue
+		    
+		    If currentPath = "" Then
+		      currentPath = "/" + part
+		    Else
+		      currentPath = currentPath + "/" + part
+		    End If
+		    
+		    Var u As New URLConnection
+		    u.RequestHeader("Authorization") = authHeader
+		    u.RequestHeader("User-Agent") = "KanjoDesktop/1.0"
+		    
+		    Var response As String
+		    Try
+		      response = u.SendSync("MKCOL", BuildDavUrl(currentPath), 30)
+		    Catch e As RuntimeException
+		      pMessage = "Nextcloud MKCOL: " + e.Message
+		      Return False
+		    End Try
+		    
+		    Select Case u.HTTPStatusCode
+		    Case 200, 201, 405
+		      // ok / created / already exists
+		    Else
+		      pMessage = "Nextcloud MKCOL HTTP " + u.HTTPStatusCode.ToString + If(response.Trim <> "", ": " + response, "")
+		      Return False
+		    End Select
+		  Next
+		  
+		  Return True
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function Move(sourcePath As String, destinationPath As String, ByRef pMessage As String, ByRef pDestinationFileId As String) As Boolean
+		  pMessage = ""
+		  pDestinationFileId = ""
+		  
+		  Var src As String = sourcePath.Trim
+		  Var dst As String = destinationPath.Trim
+		  If src = "" Or dst = "" Then
+		    pMessage = "Nextcloud MOVE: chemin source ou destination vide."
+		    Return False
+		  End If
+		  
+		  If src = dst Then
+		    pMessage = "Nextcloud MOVE: source et destination identiques."
+		    Return False
+		  End If
+		  
+		  Dim httpStatus As Integer
+		  Dim sourceFileId As String
+		  Dim existsMessage As String
+		  If Not Exists(src, httpStatus, sourceFileId, existsMessage) Then
+		    pMessage = "Nextcloud MOVE: source introuvable. " + existsMessage
+		    Return False
+		  End If
+		  
+		  Dim destinationExists As Boolean = Exists(dst, httpStatus, pDestinationFileId, existsMessage)
+		  If destinationExists Then
+		    pMessage = "Nextcloud MOVE: la destination existe déjà."
+		    Return False
+		  End If
+		  
+		  If httpStatus <> 404 And existsMessage.Trim <> "" Then
+		    pMessage = "Nextcloud MOVE: impossible de vérifier la destination avant déplacement. " + existsMessage
+		    Return False
+		  End If
+		  
+		  If Not MkCol(ParentRemotePath(dst), pMessage) Then
+		    Return False
+		  End If
+		  
+		  Var authHeader As String = BuildAuthorizationHeaderValue()
+		  If authHeader = "" Then
+		    pMessage = "Nextcloud MOVE: configuration invalide."
+		    Return False
+		  End If
+		  
+		  Var u As New URLConnection
+		  u.RequestHeader("Authorization") = authHeader
+		  u.RequestHeader("Destination") = BuildDavUrl(dst)
+		  u.RequestHeader("Overwrite") = "F"
+		  u.RequestHeader("User-Agent") = "KanjoDesktop/1.0"
+		  
+		  Var response As String
+		  Try
+		    response = u.SendSync("MOVE", BuildDavUrl(src), 60)
+		  Catch e As RuntimeException
+		    pMessage = "Nextcloud MOVE: " + e.Message
+		    Return False
+		  End Try
+		  
+		  Select Case u.HTTPStatusCode
+		  Case 201, 204
+		    // ok
+		  Else
+		    pMessage = "Nextcloud MOVE HTTP " + u.HTTPStatusCode.ToString + If(response.Trim <> "", ": " + response, "")
+		    Return False
+		  End Select
+		  
+		  Dim sourceStillExists As Boolean = Exists(src, httpStatus, sourceFileId, existsMessage)
+		  If sourceStillExists Then
+		    pMessage = "Nextcloud MOVE: la source existe encore après déplacement."
+		    Return False
+		  End If
+		  
+		  If httpStatus <> 404 And existsMessage.Trim <> "" Then
+		    pMessage = "Nextcloud MOVE: impossible de confirmer la disparition de la source. " + existsMessage
+		    Return False
+		  End If
+		  
+		  If Not Exists(dst, httpStatus, pDestinationFileId, existsMessage) Then
+		    If httpStatus <> 404 And existsMessage.Trim <> "" Then
+		      pMessage = "Nextcloud MOVE: impossible de vérifier la destination après déplacement. " + existsMessage
+		    Else
+		      pMessage = "Nextcloud MOVE: la destination est introuvable après déplacement."
+		    End If
+		    Return False
+		  End If
+		  
+		  pMessage = "Nextcloud MOVE OK" + EndOfLine + _
+		  "HTTP: " + u.HTTPStatusCode.ToString + EndOfLine + _
+		  "Source: " + src + EndOfLine + _
+		  "Destination: " + dst + EndOfLine + _
+		  "FileId destination: " + pDestinationFileId + EndOfLine + _
+		  "Réponse brute: " + If(response.Trim <> "", response, "<vide>")
+		  
+		  Return True
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function MoveLocalItemOnServer(localItem As FolderItem, localBase As FolderItem, sourceRootName As String, destinationRootName As String, ByRef pResult As Dictionary, pAction As String = "") As Boolean
+		  If localItem = Nil Then
+		    pResult = New Dictionary
+		    pResult.Value("ok") = False
+		    pResult.Value("action") = pAction
+		    pResult.Value("message") = "Aucun fichier local fourni."
+		    Return False
+		  End If
+		  
+		  If localBase = Nil Then
+		    pResult = New Dictionary
+		    pResult.Value("ok") = False
+		    pResult.Value("action") = pAction
+		    pResult.Value("message") = "Aucune base locale fournie."
+		    Return False
+		  End If
+		  
+		  Var relativePath As String = BuildRelativePathFromLocal(localItem, localBase)
+		  If relativePath = "" Then
+		    pResult = New Dictionary
+		    pResult.Value("ok") = False
+		    pResult.Value("action") = pAction
+		    pResult.Value("message") = "Le fichier ne fait pas partie du dossier média attendu."
+		    Return False
+		  End If
+		  
+		  Var ok As Boolean = MoveRelativePathOnServer(relativePath, sourceRootName, destinationRootName, pResult, pAction)
+		  If ok Then
+		    pResult.Value("local_path") = localItem.NativePath
+		    pResult.Value("is_folder") = localItem.IsFolder
+		  End If
+		  
+		  Return ok
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function MoveRelativePathOnServer(relativePath As String, sourceRootName As String, destinationRootName As String, ByRef pResult As Dictionary, pAction As String = "") As Boolean
+		  pResult = New Dictionary
+		  pResult.Value("ok") = False
+		  pResult.Value("action") = pAction
+		  pResult.Value("message") = ""
+		  
+		  If sourceRootName.Trim = "" Or destinationRootName.Trim = "" Then
+		    pResult.Value("message") = "Racine source ou destination invalide."
+		    Return False
+		  End If
+		  
+		  If KanjoRootFolder.Trim = "" Then
+		    pResult.Value("message") = "Le dossier racine Nextcloud n'est pas configuré."
+		    Return False
+		  End If
+		  
+		  Var sourceRelativePath As String = NormalizeMediaRelativePath(relativePath)
+		  If sourceRelativePath = "" Then
+		    pResult.Value("message") = "Chemin relatif média invalide."
+		    Return False
+		  End If
+		  
+		  Var destinationRelativePath As String = SwitchRelativeTopFolder(sourceRelativePath, sourceRootName, destinationRootName)
+		  If destinationRelativePath = "" Then
+		    pResult.Value("message") = "Impossible de calculer le chemin relatif de destination."
+		    Return False
+		  End If
+		  
+		  Var sourceRemotePath As String = BuildRemotePathFromRelative(sourceRelativePath)
+		  Var destinationRemotePath As String = BuildRemotePathFromRelative(destinationRelativePath)
+		  If sourceRemotePath = "" Or destinationRemotePath = "" Then
+		    pResult.Value("message") = "Impossible de calculer les chemins distants."
+		    Return False
+		  End If
+		  
+		  Var destinationFileId As String
+		  Var moveMessage As String
+		  If Not Move(sourceRemotePath, destinationRemotePath, moveMessage, destinationFileId) Then
+		    pResult.Value("relative_path") = sourceRelativePath
+		    pResult.Value("source_relative_path") = sourceRelativePath
+		    pResult.Value("destination_relative_path") = destinationRelativePath
+		    pResult.Value("source_remote_path") = sourceRemotePath
+		    pResult.Value("destination_remote_path") = destinationRemotePath
+		    pResult.Value("message") = moveMessage
+		    Return False
+		  End If
+		  
+		  pResult.Value("ok") = True
+		  pResult.Value("relative_path") = sourceRelativePath
+		  pResult.Value("source_relative_path") = sourceRelativePath
+		  pResult.Value("destination_relative_path") = destinationRelativePath
+		  pResult.Value("source_remote_path") = sourceRemotePath
+		  pResult.Value("destination_remote_path") = destinationRemotePath
+		  pResult.Value("destination_file_id") = destinationFileId
+		  pResult.Value("message") = moveMessage
+		  
+		  Return True
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -810,6 +1409,50 @@ Protected Class NextCloudClass
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function NormalizeMediaRelativePath(relativePath As String) As String
+		  Var rp As String = relativePath.Trim
+		  If rp = "" Then Return ""
+		  
+		  rp = rp.ReplaceAll("\\", "/")
+		  If Not rp.BeginsWith("/") Then rp = "/" + rp
+		  While rp.IndexOf("//") >= 0
+		    rp = rp.ReplaceAll("//", "/")
+		  Wend
+		  
+		  If rp.Length > 1 And rp.EndsWith("/") Then
+		    rp = rp.Left(rp.Length - 1)
+		  End If
+		  
+		  Return rp
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function ParentRemotePath(remotePath As String) As String
+		  Var rp As String = remotePath.Trim
+		  If rp = "" Then Return ""
+		  
+		  If Not rp.BeginsWith("/") Then rp = "/" + rp
+		  While rp.IndexOf("//") >= 0
+		    rp = rp.ReplaceAll("//", "/")
+		  Wend
+		  
+		  If rp.Length > 1 And rp.EndsWith("/") Then
+		    rp = rp.Left(rp.Length - 1)
+		  End If
+		  
+		  Var cut As Integer = rp.LastIndexOf("/")
+		  If cut <= 0 Then Return "/"
+		  
+		  Var parentPath As String = rp.Left(cut)
+		  If parentPath = "" Then parentPath = "/"
+		  If Not parentPath.EndsWith("/") Then parentPath = parentPath + "/"
+		  
+		  Return parentPath
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function NormalizeRemotePath(path As String) As String
 		  // Ensures:
 		  // - starts with "/"
@@ -828,6 +1471,91 @@ Protected Class NextCloudClass
 		  
 		  If p <> "/" And Not p.EndsWith("/") Then p = p + "/"
 		  Return p
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function RestoreLocalItemOnServer(localItem As FolderItem, localBase As FolderItem, ByRef pResult As Dictionary, activeRootName As String = "Fichiers", archiveRootName As String = "Archives") As Boolean
+		  Return MoveLocalItemOnServer(localItem, localBase, archiveRootName, activeRootName, pResult, "restore")
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function RestoreRelativePathOnServer(relativePath As String, ByRef pResult As Dictionary, activeRootName As String = "Fichiers", archiveRootName As String = "Archives") As Boolean
+		  Return MoveRelativePathOnServer(relativePath, archiveRootName, activeRootName, pResult, "restore")
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function SwitchRelativeTopFolder(relativePath As String, sourceRootName As String, destinationRootName As String) As String
+		  Var rp As String = NormalizeMediaRelativePath(relativePath)
+		  If rp = "" Then Return ""
+		  
+		  Var rel As String = rp
+		  If rel.BeginsWith("/") Then rel = rel.Middle(1)
+		  
+		  Var parts() As String = rel.Split("/")
+		  Var firstIndex As Integer = -1
+		  For i As Integer = 0 To parts.LastIndex
+		    If parts(i).Trim <> "" Then
+		      firstIndex = i
+		      Exit
+		    End If
+		  Next
+		  
+		  If firstIndex < 0 Then Return ""
+		  If parts(firstIndex) <> sourceRootName Then Return ""
+		  
+		  parts(firstIndex) = destinationRootName
+		  
+		  Return "/" + String.FromArray(parts, "/")
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function SwitchRemoteTopFolder(remotePath As String, sourceRootName As String, destinationRootName As String) As String
+		  Var rp As String = remotePath.Trim
+		  If rp = "" Then Return ""
+		  
+		  Var root As String = NormalizeRemotePath(KanjoRootFolder)
+		  If root.Trim = "" Then Return ""
+		  
+		  Var rel As String = rp
+		  If rel.BeginsWith(root) Then
+		    rel = rel.Middle(root.Length)
+		  Else
+		    If rel.BeginsWith("/") Then rel = rel.Middle(1)
+		  End If
+		  
+		  rel = rel.ReplaceAll("\\", "/")
+		  While rel.IndexOf("//") >= 0
+		    rel = rel.ReplaceAll("//", "/")
+		  Wend
+		  If rel.BeginsWith("/") Then rel = rel.Middle(1)
+		  
+		  Var parts() As String = rel.Split("/")
+		  Var firstIndex As Integer = -1
+		  For i As Integer = 0 To parts.LastIndex
+		    If parts(i).Trim <> "" Then
+		      firstIndex = i
+		      Exit
+		    End If
+		  Next
+		  
+		  If firstIndex < 0 Then Return ""
+		  If parts(firstIndex) <> sourceRootName Then Return ""
+		  
+		  parts(firstIndex) = destinationRootName
+		  Var rebuilt As String = root + String.FromArray(parts, "/")
+		  While rebuilt.IndexOf("//") >= 0
+		    rebuilt = rebuilt.ReplaceAll("//", "/")
+		  Wend
+		  
+		  If rebuilt.Length > 1 And rebuilt.EndsWith("/") Then
+		    rebuilt = rebuilt.Left(rebuilt.Length - 1)
+		  End If
+		  
+		  Return rebuilt
 		End Function
 	#tag EndMethod
 
