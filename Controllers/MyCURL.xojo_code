@@ -23,13 +23,17 @@ Inherits CURLSMBS
 		Folder As String
 	#tag EndProperty
 
-	#tag Property, Flags = &h0
-		imap As Boolean
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		pop3 As Boolean
-	#tag EndProperty
+		#tag Property, Flags = &h0
+			imap As Boolean
+		#tag EndProperty
+		
+		#tag Property, Flags = &h0
+			OptionalFailureOK As Boolean
+		#tag EndProperty
+		
+		#tag Property, Flags = &h0
+			pop3 As Boolean
+		#tag EndProperty
 
 
 	#tag ViewBehavior
@@ -81,17 +85,25 @@ Inherits CURLSMBS
 			Type="string"
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
-		#tag ViewProperty
-			Name="pop3"
-			Visible=false
-			Group="Behavior"
-			InitialValue=""
-			Type="Boolean"
-			EditorType=""
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="imap"
-			Visible=false
+			#tag ViewProperty
+				Name="pop3"
+				Visible=false
+				Group="Behavior"
+				InitialValue=""
+				Type="Boolean"
+				EditorType=""
+			#tag EndViewProperty
+			#tag ViewProperty
+				Name="OptionalFailureOK"
+				Visible=false
+				Group="Behavior"
+				InitialValue=""
+				Type="Boolean"
+				EditorType=""
+			#tag EndViewProperty
+			#tag ViewProperty
+				Name="imap"
+				Visible=false
 			Group="Behavior"
 			InitialValue=""
 			Type="Boolean"
