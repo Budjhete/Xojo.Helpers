@@ -717,8 +717,29 @@ Protected Module StringExtra
 		      digits = digits + ch
 		    End If
 		  Next
-		  if digits.toInt=0 then Return ""
-		  return Format(Digits.toInt, pFormat)
+		  If digits = "" Then Return ""
+		  
+		  Var formatted As String
+		  Var digitIndex As Integer
+		  
+		  For i As Integer = 0 To pFormat.Length - 1
+		    Var token As String = pFormat.Middle(i, 1)
+		    
+		    If token = "#" Then
+		      If digitIndex >= digits.Length Then Exit
+		      
+		      formatted = formatted + digits.Middle(digitIndex, 1)
+		      digitIndex = digitIndex + 1
+		    ElseIf digitIndex > 0 And digitIndex < digits.Length Then
+		      formatted = formatted + token
+		    End If
+		  Next
+		  
+		  If formatted = "" Then
+		    Return digits
+		  End If
+		  
+		  Return formatted
 		End Function
 	#tag EndMethod
 
