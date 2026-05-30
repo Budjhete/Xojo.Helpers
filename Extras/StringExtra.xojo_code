@@ -751,7 +751,20 @@ Protected Module StringExtra
 		  
 		  Dim result As String
 		  Dim nbChars As Integer = source.Length
-		  Dim raw As MemoryBlock = App.GenerateSecureRandomBytes(len)
+		  Dim raw As MemoryBlock
+		  Try
+		    raw = Crypto.GenerateRandomBytes(len)
+		  Catch error As RuntimeException
+		    raw = Nil
+		  End Try
+		  
+		  If raw = Nil Or raw.Size <> len Then
+		    raw = New MemoryBlock(len)
+		    Dim weakRandom As New Random
+		    For i As Integer = 0 To len - 1
+		      raw.UInt8Value(i) = weakRandom.InRange(0, 255)
+		    Next
+		  End If
 		  
 		  For i As Integer = 0 To len - 1
 		    Dim index As Integer = raw.UInt8Value(i) Mod nbChars
