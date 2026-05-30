@@ -227,6 +227,18 @@ Protected Module NumberExtra
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function StringValue(Extends pInteger as Integer, pShowZero as Boolean) As String
+		  if pShowZero then
+		    Return pInteger.ToString()
+		  elseif NOT pShowZero and pInteger=0 then
+		    Return ""
+		  else
+		    Return pInteger.ToString()
+		  end if
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function StringValue(Extends pInteger as Integer, pLength as Integer) As String
 		  dim formatstring as String
