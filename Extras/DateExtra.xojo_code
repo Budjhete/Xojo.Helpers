@@ -273,16 +273,19 @@ Protected Module DateExtra
 	#tag Method, Flags = &h0
 		Function Month(Extends d as DateTime, pMonth as integer) As DateTime
 		  dim mYear as integer = d.Year
-		  if pMonth<1 then
-		    pMonth = 11+pMonth
+		  while pMonth < 1
+		    pMonth = pMonth + 12
 		    myear = myear-1
-		  elseif pMonth > 12 then
+		  wend
+		  while pMonth > 12
 		    pMonth = pMonth - 12
 		    mYear = myear +1
-		  end if
+		  wend
+
 		  dim dd as integer = d.day
-		  if pMonth = 2 and d.day > 28 then
-		    dd = 28
+		  dim targetMonth as new DateTime(mYear, pMonth, 1, d.Hour, d.Minute, d.Second, d.Nanosecond, d.TimeZone)
+		  if dd > targetMonth.DaysInMonth() then
+		    dd = targetMonth.DaysInMonth()
 		  end if
 		  
 		  Return New DateTime(mYear, pMonth, dd, d.Hour, d.Minute, d.Second, d.Nanosecond, d.TimeZone)
