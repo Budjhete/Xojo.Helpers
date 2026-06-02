@@ -156,15 +156,25 @@ Protected Module Helpers
 
 	#tag Method, Flags = &h0
 		Sub ErrorBox(title as String = "", message as String)
+		  Dim alertTitle As String = title.Trim
+		  Dim alertMessage As String = message.Trim
+
+		  If alertMessage = "" Then alertMessage = alertTitle
+		  If alertTitle = "" Then alertTitle = alertMessage
+		  If alertMessage = "" Then
+		    alertTitle = kErreur(App.Lang)
+		    alertMessage = kErreur(App.Lang)
+		  End If
+
 		  #if TargetIOS then
-		    Dim MessageBox As MobileMessageBox
-		    MessageBox.Title = title
-		    MessageBox.Message = message
+		    Dim MessageBox As New MobileMessageBox
+		    MessageBox.Title = alertTitle
+		    MessageBox.Message = alertMessage
 		    
 		    MessageBox.Show
 		    
 		  #else
-		    MessageBox(title+EndOfLine+EndOfLine+message)
+		    MessageBox(alertTitle+EndOfLine+EndOfLine+alertMessage)
 		  #endif
 		End Sub
 	#tag EndMethod
