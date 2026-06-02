@@ -21,7 +21,7 @@ Protected Module NumberExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = API1Only or ( (TargetIOS and (Target64Bit)) )
+	#tag Method, Flags = &h0, CompatibilityFlags = API1Only
 		Function ExactMoneyValue(Extends pCurrency as Currency, pUnit as String = "") As String
 		  If pUnit.Length > 1 Then
 		    pUnit = " " + pUnit
@@ -31,13 +31,15 @@ Protected Module NumberExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target64Bit))
 		Function ExactMoneyValue(Extends pCurrency as Currency, pUnit as String = "") As String
 		  If pUnit.Length > 1 Then
 		    pUnit = " " + pUnit
 		  End If
 		  
-		  Return Format(pCurrency,"-##0.00#####" + pUnit)
+		  Dim cc As Double = pCurrency
+		  Dim pp As String = "-##0.00#####" + pUnit
+		  Return cc.ToString(Nil, pp)
 		End Function
 	#tag EndMethod
 
@@ -249,13 +251,13 @@ Protected Module NumberExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target64Bit))
 		Function XSLValue(Extends pCurrency As Currency) As String
 		  Return Str(pCurrency, "-#0.00")
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target64Bit))
 		Function XSLValue(Extends pDouble As Double) As String
 		  Return Str(pDouble, "-#0.00")
 		End Function
