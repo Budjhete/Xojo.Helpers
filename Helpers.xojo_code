@@ -135,6 +135,29 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub DebugLog(pMessage As String)
+		  #If TargetDesktop Or TargetWeb Then
+		    Dim canDebugLog As Boolean = DebugBuild Or App.GodMode
+		    If Not canDebugLog Then
+		      Try
+		        canDebugLog = App.DebugMode
+		      Catch err As RuntimeException
+		        canDebugLog = False
+		      End Try
+		    End If
+
+		    If canDebugLog Then
+		      System.DebugLog(pMessage)
+		    End If
+		  #Else
+		    #If DebugBuild Then
+		      System.DebugLog(pMessage)
+		    #EndIf
+		  #EndIf
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function Equals(Extends ref as Dictionary, obj as Dictionary) As Boolean
 		  
 		  for each entry as DictionaryEntry in ref
@@ -371,12 +394,12 @@ Protected Module Helpers
 		      
 		    Catch error As DatabaseException
 		      
-		      System.DebugLog "DB Error: " + error.ErrorNumber.StringValue + "  " + error.Message + EndOfLine  + EndOfLine+ "Dans cette requête : " + query
+		      DebugLog "DB Error: " + error.ErrorNumber.StringValue + "  " + error.Message + EndOfLine  + EndOfLine+ "Dans cette requête : " + query
 		      
 		    End Try
 		  Next
 		  
-		  System.DebugLog "DEBUG : Tables created as sqlite"
+		  DebugLog "DEBUG : Tables created as sqlite"
 		  
 		  
 		End Sub

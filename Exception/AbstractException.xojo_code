@@ -7,7 +7,7 @@ Inherits RuntimeException
 		  Me.ErrorMessage = message
 		  
 		  mPrevious = Me
-		  System.DebugLog(Me.ErrorMessage)
+		  DebugLog(Me.ErrorMessage)
 		End Sub
 	#tag EndMethod
 
@@ -18,7 +18,7 @@ Inherits RuntimeException
 		  Me.Code = code
 		  
 		  mPrevious = Me
-		  System.DebugLog(Me.ErrorMessage)
+		  DebugLog(Me.ErrorMessage)
 		End Sub
 	#tag EndMethod
 
@@ -30,7 +30,7 @@ Inherits RuntimeException
 		  Me.Line = line
 		  
 		  mPrevious = Me
-		  System.DebugLog(Me.ErrorMessage)
+		  DebugLog(Me.ErrorMessage)
 		End Sub
 	#tag EndMethod
 
@@ -42,7 +42,7 @@ Inherits RuntimeException
 		  Me.Location = location
 		  
 		  mPrevious = Me
-		  System.DebugLog(Me.ErrorMessage)
+		  DebugLog(Me.ErrorMessage)
 		End Sub
 	#tag EndMethod
 
@@ -55,7 +55,7 @@ Inherits RuntimeException
 		  Me.Line = line
 		  
 		  mPrevious = Me
-		  System.DebugLog(Me.ErrorMessage)
+		  DebugLog(Me.ErrorMessage)
 		End Sub
 	#tag EndMethod
 
@@ -64,7 +64,7 @@ Inherits RuntimeException
 		  Me.ErrorMessage = message
 		  
 		  mPrevious = Me
-		  System.DebugLog(Me.ErrorMessage)
+		  DebugLog(Me.ErrorMessage)
 		End Sub
 	#tag EndMethod
 
@@ -74,7 +74,7 @@ Inherits RuntimeException
 		  Me.Code = code
 		  
 		  mPrevious = Me
-		  System.DebugLog(Me.ErrorMessage)
+		  DebugLog(Me.ErrorMessage)
 		End Sub
 	#tag EndMethod
 
@@ -85,7 +85,7 @@ Inherits RuntimeException
 		  Me.Line = line
 		  
 		  mPrevious = Me
-		  System.DebugLog( Me.ErrorMessage)
+		  DebugLog( Me.ErrorMessage)
 		End Sub
 	#tag EndMethod
 
@@ -96,7 +96,7 @@ Inherits RuntimeException
 		  Me.Location = location
 		  
 		  mPrevious = Me
-		  System.DebugLog(Me.ErrorMessage)
+		  DebugLog(Me.ErrorMessage)
 		End Sub
 	#tag EndMethod
 
@@ -108,7 +108,7 @@ Inherits RuntimeException
 		  Me.Line = line
 		  
 		  mPrevious = Me
-		  System.DebugLog(Me.ErrorMessage)
+		  DebugLog(Me.ErrorMessage)
 		End Sub
 	#tag EndMethod
 

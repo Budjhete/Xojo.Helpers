@@ -202,7 +202,7 @@ Protected Module FolderItemExtra
 		    #if TargetDesktop then
 		      Raise new BHApplicationException(s)
 		    #endif
-		    System.DebugLog s
+		    DebugLog s
 		  End Try
 		End Function
 	#tag EndMethod

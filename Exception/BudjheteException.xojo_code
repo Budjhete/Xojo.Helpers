@@ -11,7 +11,7 @@ Inherits RuntimeException
 		Sub Constructor(message as String)
 		  Me.ErrorMessage = message
 		  
-		  System.DebugLog(self.ErrorMessage)
+		  DebugLog(self.ErrorMessage)
 		End Sub
 	#tag EndMethod
 
@@ -20,7 +20,7 @@ Inherits RuntimeException
 		  Me.ErrorMessage = message
 		  mCode = code
 		  
-		  System.DebugLog(self.ErrorMessage)
+		  DebugLog(self.ErrorMessage)
 		End Sub
 	#tag EndMethod
 
@@ -30,7 +30,7 @@ Inherits RuntimeException
 		  mCode = code
 		  mLocation = location
 		  
-		  System.DebugLog(ErrorMessage)
+		  DebugLog(ErrorMessage)
 		End Sub
 	#tag EndMethod
 
