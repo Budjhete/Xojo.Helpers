@@ -2,7 +2,9 @@
 Protected Class ResourceManager
 	#tag Method, Flags = &h0
 		Function Folder() As FolderItem
-		  #if TargetLinux
+		  #if TargetIOS
+		    Return GetResourceFolder
+		  #elseif TargetLinux
 		    return App.ExecutableFile.Parent.Child("Resources")
 		  #elseif TargetWindows
 		    return App.ExecutableFile.Parent.Child(App.ApplicationNameMBS).Child(App.ApplicationNameMBS + " Resources")
