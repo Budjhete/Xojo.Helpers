@@ -27,7 +27,7 @@ Protected Module NumberExtra
 		    pUnit = " " + pUnit
 		  End If
 		  
-		  Return Format(pCurrency,"-##0.00#####" + pUnit)
+		  Return Format(pCurrency,"##0.00#####;-##0.00#####")+ pUnit
 		End Function
 	#tag EndMethod
 
@@ -38,8 +38,8 @@ Protected Module NumberExtra
 		  End If
 		  
 		  Dim cc As Double = pCurrency
-		  Dim pp As String = "-##0.00#####" + pUnit
-		  Return cc.ToString(Nil, pp)
+		  Dim pp As String = "##0.00#####;-##0.00#####"
+		  Return cc.ToString(Nil, pp) + pUnit
 		End Function
 	#tag EndMethod
 
