@@ -72,21 +72,22 @@ Protected Module DateExtra
 
 	#tag Method, Flags = &h0
 		Function DaysInMonth(Extends d as DateTime) As Integer
-		  dim d1 as DateTime = d
-		  d1 = d1.Day(1)
+		  Select Case d.Month
+		  Case 1, 3, 5, 7, 8, 10, 12
+		    Return 31
+		  Case 4, 6, 9, 11
+		    Return 30
+		  Case 2
+		    Dim pYear As Integer = d.Year
+
+		    If (pYear Mod 400 = 0) Or (pYear Mod 4 = 0 And pYear Mod 100 <> 0) Then
+		      Return 29
+		    End If
+
+		    Return 28
+		  End Select
 		  
-		  dim iaddmonth as new DateInterval
-		  iaddmonth.Months = 1
-		  
-		  dim irrDay as new DateInterval
-		  irrDay.Days = 1
-		  
-		  dim d2 as DateTime = d1
-		  d2 = d2.Operator_Add(iaddmonth)
-		  
-		  d2 = d2.Operator_Subtract(irrDay)
-		  
-		  return (d2.Day - d1.Day) + 1
+		  Return 0
 		End Function
 	#tag EndMethod
 
