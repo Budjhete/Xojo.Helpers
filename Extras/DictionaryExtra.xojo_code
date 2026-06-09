@@ -88,14 +88,14 @@ Protected Module DictionaryExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function GetDouble(Extends pDictionary As Dictionary, pKey As Auto) As Double
+		Function GetDouble(Extends pDictionary As Dictionary, pKey As Variant) As Double
 		  Dim d as double =  pDictionary.Value(pKey)
 		  Return d
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function GetDouble(Extends pDictionary As Dictionary, pKey As Auto, pDefault As Double) As Double
+		Function GetDouble(Extends pDictionary As Dictionary, pKey As Variant, pDefault As Double) As Double
 		  Dim d as Double =  pDictionary.Lookup(pKey, pDefault)
 		  Return d
 		End Function
@@ -214,7 +214,7 @@ Protected Module DictionaryExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target64Bit)) or  (TargetWeb and (Target64Bit)) or  (TargetDesktop and (Target64Bit)) or  (TargetIOS and (Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target64Bit)) or  (TargetWeb and (Target64Bit)) or  (TargetDesktop and (Target64Bit)) or  (TargetIOS and (Target64Bit)) or  (TargetAndroid and (Target64Bit))
 		Function JSONValue(Extends pDictionaries() As Dictionary) As String
 		  return GenerateJSON(pDictionaries)
 		End Function
@@ -247,7 +247,7 @@ Protected Module DictionaryExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target64Bit)) or  (TargetWeb and (Target64Bit)) or  (TargetDesktop and (Target64Bit)) or  (TargetIOS and (Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target64Bit)) or  (TargetWeb and (Target64Bit)) or  (TargetDesktop and (Target64Bit)) or  (TargetIOS and (Target64Bit)) or  (TargetAndroid and (Target64Bit))
 		Function JSONValue(Extends pDictionary As Dictionary) As String
 		  return GenerateJSON(pDictionary)
 		End Function
@@ -296,8 +296,8 @@ Protected Module DictionaryExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Values(Extends pDictionary as Dictionary) As Auto()
-		  dim values() as Auto
+		Function Values(Extends pDictionary as Dictionary) As Variant()
+		  dim values() as Variant
 		  For each ent as DictionaryEntry in pDictionary
 		    values.Add(ent.Value)
 		  Next

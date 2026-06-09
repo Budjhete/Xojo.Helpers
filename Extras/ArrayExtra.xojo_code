@@ -19,7 +19,7 @@ Protected Module ArrayExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Sub Append(Extends arr() As Integer, arr2() As Integer)
 		  // Concatenate arr2 to arr.
 		  
@@ -58,14 +58,14 @@ Protected Module ArrayExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub AppendAll(Extends  ByRef arr() as String, source() as String)
+		Sub AppendAll(Extends arr() as String, source() as String)
 		  for i as Integer = 0 to source.LastIndex
 		    arr.Add(source(i))
 		  Next
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Sub AppendAll(Extends  ByRef arr() as Text, source() as Text)
 		  for i as Integer = 0 to source.LastIndex
 		    arr.Add(source(i))
@@ -74,7 +74,7 @@ Protected Module ArrayExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function AutoArray(ParamArray pAutos as Auto) As Auto()
+		Function AutoArray(ParamArray pAutos as Variant) As Variant()
 		  return pAutos
 		End Function
 	#tag EndMethod
@@ -91,7 +91,7 @@ Protected Module ArrayExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function Average(Extends arr() As Integer) As Double
 		  // Return the arithmetic mean of the values in the array.
 		  Dim item, sum As Integer
@@ -104,10 +104,10 @@ Protected Module ArrayExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Clone(Extends arr() As Auto) As Auto()
+		Function Clone(Extends arr() As Variant) As Variant()
 		  // Return an independent copy of this array.
 		  
-		  Dim out() As Auto
+		  Dim out() As Variant
 		  Dim ub As Integer = arr.LastIndex
 		  if ub >= 0 then
 		    Redim out( ub )
@@ -139,7 +139,7 @@ Protected Module ArrayExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function Clone(Extends arr() As Integer) As Integer()
 		  // Return an independent copy of this array.
 		  
@@ -175,7 +175,7 @@ Protected Module ArrayExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function Clone(Extends arr() as Text) As Text()
 		  // Return an independent copy of this array.
 		  
@@ -213,7 +213,7 @@ Protected Module ArrayExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function Concat(Extends arr1() As Integer, arr2() As Integer) As Integer()
 		  // Concatenate arr2 to arr1 and return the result as a new array.
 		  Dim out() As Integer
@@ -254,7 +254,7 @@ Protected Module ArrayExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Contains(Extends  ByRef arr() as Auto, search as Auto) As Boolean
+		Function Contains(Extends arr() as Variant, search as Variant) As Boolean
 		  for i as Integer = 0 to arr.LastIndex
 		    if arr(i) = search then
 		      return true
@@ -325,7 +325,7 @@ Protected Module ArrayExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function Max(Extends arr() As Integer) As Integer
 		  // Return the greatest of the items in the array, or 0 for an empty array.
 		  Dim index, ub As Integer
@@ -359,7 +359,7 @@ Protected Module ArrayExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function Min(Extends arr() As Integer) As Integer
 		  // Return the least of the items in the array, or 0 for an empty array.
 		  Dim index, ub As Integer
@@ -386,7 +386,7 @@ Protected Module ArrayExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Sub RemoveByValue(Extends arr() As Integer, value as Integer)
 		  for i as Integer = arr.LastIndex DownTo 0
 		    if arr(i) = value then
@@ -442,7 +442,7 @@ Protected Module ArrayExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Sub RemoveSlice(Extends arr() As Integer, fromIndex As Integer = 0, toIndex As Integer = 0)
 		  // Deletes a portion of the array.
 		  // See "Slice Indexing" note.
@@ -533,7 +533,7 @@ Protected Module ArrayExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Sub Reverse(Extends arr() As Integer)
 		  // Reverse the order of the elements in the array, in place.
 		  
@@ -594,7 +594,7 @@ Protected Module ArrayExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function Slice(Extends arr() As Integer, fromIndex As Integer = 0, toIndex As Integer = 0) As Integer()
 		  // Return a subset of the given array.
 		  // See "Slice Indexing" note.
@@ -682,7 +682,7 @@ Protected Module ArrayExtra
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Sub Splice(Extends arr() As Integer, fromIndex As Integer, toIndex As Integer, arrayToInsert() As Integer, srcFrom As Integer = 0, srcTo As Integer = 0)
 		  // This function replaces a section (or slice) of the base array with the contents
 		  // of another array.  The range replaced is specified with from/to indices, which
@@ -778,7 +778,7 @@ Protected Module ArrayExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function Total(Extends arr() As Integer) As Integer
 		  // Return the total sum of the items in the array.
 		  Dim item, out As Integer

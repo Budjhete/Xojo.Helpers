@@ -189,7 +189,7 @@ Protected Module Helpers
 		    alertMessage = kErreur(App.Lang)
 		  End If
 
-		  #if TargetIOS then
+		  #if TargetIOS Or TargetAndroid then
 		    Dim MessageBox As New MobileMessageBox
 		    MessageBox.Title = alertTitle
 		    MessageBox.Message = alertMessage
@@ -204,20 +204,24 @@ Protected Module Helpers
 
 	#tag Method, Flags = &h0
 		Function EstEntrer(char as String) As Boolean
-		  return (char = Text.FromUnicodeCodepoint(3) Or char = Text.FromUnicodeCodepoint(13))
+		  return (char.Asc = 3 Or char.Asc = 13)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		Function FillLeft(str As String, padding As String, length As Integer) As String
-		  trigger_error("La fonction «FillLeft» est désuette.", ErrorType.Deprecated)
+		  #If Not TargetAndroid Then
+		    trigger_error("La fonction «FillLeft» est désuette.", ErrorType.Deprecated)
+		  #EndIf
 		  return str.FillLeft(padding, length)
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		Function FillRight(str As String, padding As String, length As Integer) As String
-		  trigger_error("La fonction «FillRight» est désuette.", ErrorType.Deprecated)
+		  #If Not TargetAndroid Then
+		    trigger_error("La fonction «FillRight» est désuète.", ErrorType.Deprecated)
+		  #EndIf
 		  return str.FillRight(padding, length)
 		End Function
 	#tag EndMethod
@@ -246,7 +250,7 @@ Protected Module Helpers
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function FromLabel(extends e as MimeEmailMBS) As string
 		  dim h as MimeHeaderMBS = e.Header
 		  dim f as MimeMailboxListMBS = h.from
@@ -268,7 +272,7 @@ Protected Module Helpers
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit)) or  (TargetAndroid and (Target64Bit))
 		Function GetResourceFolder() As FolderItem
 		  #if TargetLinux
 		    return new FolderItem(App.ExecutableFile.Parent.Child(App.ExecutableFile.Name + " Resources").NativePath)
@@ -278,11 +282,13 @@ Protected Module Helpers
 		    return new FolderItem(App.ExecutableFile.Parent.Parent.Child("Resources").NativePath)
 		  #Elseif TargetIOS
 		    Return new FolderItem(SpecialFolder.Resource("Resources").NativePath)
+		  #Elseif TargetAndroid
+		    Return SpecialFolder.Resource("Resources")
 		  #endif
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target64Bit))
 		Function GetResourceItem(path as String) As FolderItem
 		  dim fi as FolderItem = GetResourceFolder()
 		  
@@ -319,7 +325,7 @@ Protected Module Helpers
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function IIF(condition as Boolean, trueValue as Currency, falseValue as Currency) As Currency
 		  if condition then
 		    return trueValue
@@ -329,7 +335,7 @@ Protected Module Helpers
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function IIF(condition as Boolean, trueValue as Double, falseValue as Double) As Double
 		  if condition then
 		    return trueValue
@@ -431,7 +437,7 @@ Protected Module Helpers
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target64Bit))
 		Function isArray(value As Auto) As Boolean
 		  Using Xojo.Introspection
 		  if value=nil then Return false
@@ -589,9 +595,10 @@ Protected Module Helpers
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit)) or  (TargetAndroid and (Target64Bit))
 		Function StringMD5(str As String) As String
-		  return ConvertToHex(MD5(str)).Lowercase.Padding(32, "0", PaddingAlignment.Left)
+		  Dim data As MemoryBlock = str
+		  Return ConvertToHex(Crypto.MD5(data)).Lowercase.Padding(32, "0", PaddingAlignment.Left)
 		  
 		End Function
 	#tag EndMethod
@@ -604,9 +611,9 @@ Protected Module Helpers
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function strtobasictype(value as String) As Auto
-		  dim Auto As Auto = value
-		  return Auto
+		Function strtobasictype(value as String) As Variant
+		  dim result As Variant = value
+		  return result
 		  
 		End Function
 	#tag EndMethod
@@ -633,7 +640,7 @@ Protected Module Helpers
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit))
 		Function ToLabel(extends e as MimeEmailMBS) As string
 		  dim h as MimeHeaderMBS = e.Header
 		  dim f as MimeAddressListMBS = h.too

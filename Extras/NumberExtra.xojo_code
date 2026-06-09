@@ -6,7 +6,7 @@ Protected Module NumberExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function Between(Extends value as Integer, min as Integer, max as Integer) As Boolean
 		  return (value > min and value <max)
 		End Function
@@ -49,20 +49,20 @@ Protected Module NumberExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function limit(Extends number as Integer, min as Integer, max as Integer) As Integer
 		  return Min(max, Max(min, number))
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function MoneyRound(value as Double) As Double
 		  // @deprecated
 		  Return value.Round(2)
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = API2Only and ( (TargetIOS and (Target64Bit)) )
+	#tag Method, Flags = &h0, CompatibilityFlags = API2Only and ( (TargetIOS and (Target64Bit)) or  (TargetAndroid and (Target64Bit)) )
 		Function MoneyValue(Extends pCurrency as Currency, pFormat as String = "##0.00;-##0.00;0.00", pUnit as String = "") As String
 		  If pUnit.Length > 1 Then
 		    pUnit = " " + pUnit
@@ -90,7 +90,7 @@ Protected Module NumberExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function MoneyValue(Extends pDouble as Double, pFormat as String = "#0.00", pUnit as String = "") As String
 		  If pUnit.Length > 1 Then
 		    pUnit = " " + pUnit
@@ -100,7 +100,7 @@ Protected Module NumberExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function MoneyValue(Extends pInteger as Integer, pFormat as String = "#0.00", pUnit as String = "") As String
 		  If pUnit.Length > 1 Then
 		    pUnit = " " + pUnit
@@ -112,7 +112,7 @@ Protected Module NumberExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function PercentValue(Extends pCurrency As Currency) As String
 		  
 		  // @deprecated les pourcentages sont des Double, pas des Currency
@@ -131,7 +131,7 @@ Protected Module NumberExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function PercentValue(Extends pInteger As Integer) As String
 		  //Return Format(pInteger, "-#")
 		  
@@ -170,7 +170,7 @@ Protected Module NumberExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function Round(Extends pCurrency As Currency, pPrecision As Integer) As Double
 		  dim pExponent as Double = (10 ^ pPrecision)
 		  

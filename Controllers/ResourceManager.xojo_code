@@ -2,7 +2,7 @@
 Protected Class ResourceManager
 	#tag Method, Flags = &h0
 		Function Folder() As FolderItem
-		  #if TargetIOS
+		  #if TargetIOS Or TargetAndroid
 		    Return GetResourceFolder
 		  #elseif TargetLinux
 		    return App.ExecutableFile.Parent.Child("Resources")
@@ -33,6 +33,7 @@ Protected Class ResourceManager
 	#tag Method, Flags = &h0
 		Function Item(path as String) As FolderItem
 		  dim fi as FolderItem = GetResourceFolder()
+		  If fi Is Nil Then Return Nil
 		  
 		  dim chunks() as String = path.Split("/")
 		  for i as Integer = 0 to UBound(chunks)

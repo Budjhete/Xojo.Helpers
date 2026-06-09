@@ -123,7 +123,13 @@ Inherits RuntimeException
 		  end
 		  
 		  if e.Code > 0 then
-		    FullMessage = FullMessage + " ["+e.Code.ToString+"]"
+		    Dim pCode As String = e.Code.ToString
+		    Dim pMessageParts() As String
+		    pMessageParts.Add(FullMessage)
+		    pMessageParts.Add(" [")
+		    pMessageParts.Add(pCode)
+		    pMessageParts.Add("]")
+		    FullMessage = String.FromArray(pMessageParts, "")
 		  end
 		  
 		  ErrorBox FullMessage
@@ -196,25 +202,36 @@ Inherits RuntimeException
 		Function ToText() As String
 		  // Affiche tout le détail de l'exception disponible au format texte
 		  
-		  dim FullMessage as String = Type()
+		  Dim pType As String = Type()
+		  Dim pMessageParts() As String
+		  pMessageParts.Add(pType)
 		  
 		  if Code > 0 and LevelCode <> 0 then
-		    FullMessage = FullMessage + " [" + Level + " " + Code.ToString+"]"
+		    pMessageParts.Add(" [")
+		    pMessageParts.Add(Level())
+		    pMessageParts.Add(" ")
+		    pMessageParts.Add(Code.ToString)
+		    pMessageParts.Add("]")
 		  elseif Code > 0 then
-		    FullMessage = FullMessage + " [" + Code.ToString + "]"
+		    pMessageParts.Add(" [")
+		    pMessageParts.Add(Code.ToString)
+		    pMessageParts.Add("]")
 		  elseif LevelCode > 0 then
-		    FullMessage = FullMessage + " [" + Level + "]"
+		    pMessageParts.Add(" [")
+		    pMessageParts.Add(Level())
+		    pMessageParts.Add("]")
 		  end
 		  
 		  
-		  if FullMessage <> "" then
-		    FullMessage = FullMessage + ": " + ErrorMessage
+		  if pType <> "" then
+		    pMessageParts.Add(": ")
+		    pMessageParts.Add(ErrorMessage)
 		  end
 		  
-		  FullMessage = FullMessage + " ~ "
+		  pMessageParts.Add(" ~ ")
 		  
 		  if Location <> "" then
-		    FullMessage = FullMessage + Location
+		    pMessageParts.Add(Location)
 		  else
 		    dim call_stack() as String
 		    
@@ -227,17 +244,18 @@ Inherits RuntimeException
 		      
 		    #endif
 		    if call_stack.LastIndex >= 0 then
-		      FullMessage = FullMessage + call_stack(0)
+		      pMessageParts.Add(call_stack(0))
 		    else
-		      FullMessage = FullMessage + "unknown-location"
+		      pMessageParts.Add("unknown-location")
 		    end
 		  end
 		  
 		  if Line >= 0 then
-		    FullMessage = FullMessage + "," + Line.ToString
+		    pMessageParts.Add(",")
+		    pMessageParts.Add(Line.ToString)
 		  end
 		  
-		  return FullMessage
+		  return String.FromArray(pMessageParts, "")
 		End Function
 	#tag EndMethod
 
