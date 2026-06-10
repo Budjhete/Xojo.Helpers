@@ -67,7 +67,7 @@ Protected Module DictionaryExtra
 		  dim d as DateTime
 		  try
 		    d = pDictionary.Lookup(pKey, pDefault)
-		  Catch
+		  Catch err As RuntimeException
 		    d = nil
 		  end try
 		  Return d
