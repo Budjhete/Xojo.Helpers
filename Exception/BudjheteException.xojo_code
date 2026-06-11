@@ -36,31 +36,32 @@ Inherits RuntimeException
 
 	#tag Method, Flags = &h0
 		Shared Function HumanReadableCode(code as Integer) As String
-		  If code = E_UNDEFINED Then
+		  select case code
+		  case E_UNDEFINED
 		    return "Undefined"
-		  ElseIf code = E_ERROR Then
+		  case E_ERROR
 		    return "Error"
-		  ElseIf code = E_WARNING Then
+		  case E_WARNING
 		    return "Warning"
-		  ElseIf code = E_PARSE Then
+		  case E_PARSE
 		    return "Parse error"
-		  ElseIf code = E_NOTICE Then
+		  case E_NOTICE
 		    return "Notice"
-		  ElseIf code = E_USER_ERROR Then
+		  case E_USER_ERROR
 		    return "User error"
-		  ElseIf code = E_USER_WARNING Then
+		  case E_USER_WARNING
 		    return "User warning"
-		  ElseIf code = E_USER_NOTICE Then
+		  case E_USER_NOTICE
 		    return "User notice"
-		  ElseIf code = E_STRICT Then
+		  case E_STRICT
 		    return "Strict"
-		  ElseIf code = E_RECOVERABLE_ERROR Then
+		  case E_RECOVERABLE_ERROR
 		    return "Recoverable error"
-		  ElseIf code = E_DEPRECATED Then
+		  case E_DEPRECATED
 		    return "Deprecated"
-		  ElseIf code = E_USER_DEPRECATED Then
+		  case E_USER_DEPRECATED
 		    return "User deprecated"
-		  End If
+		  end
 		  
 		  return "Multiple"
 		End Function

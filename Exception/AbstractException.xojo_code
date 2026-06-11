@@ -145,31 +145,32 @@ Inherits RuntimeException
 
 	#tag Method, Flags = &h0
 		Shared Function HumanReadableLevel(level as Integer) As String
-		  If level = E_UNDEFINED Then
+		  select case level
+		  case E_UNDEFINED
 		    return "Undefined"
-		  ElseIf level = E_ERROR Then
+		  case E_ERROR
 		    return "Error"
-		  ElseIf level = E_WARNING Then
+		  case E_WARNING
 		    return "Warning"
-		  ElseIf level = E_PARSE Then
+		  case E_PARSE
 		    return "Parse error"
-		  ElseIf level = E_NOTICE Then
+		  case E_NOTICE
 		    return "Notice"
-		  ElseIf level = E_USER_ERROR Then
+		  case E_USER_ERROR
 		    return "User error"
-		  ElseIf level = E_USER_WARNING Then
+		  case E_USER_WARNING
 		    return "User warning"
-		  ElseIf level = E_USER_NOTICE Then
+		  case E_USER_NOTICE
 		    return "User notice"
-		  ElseIf level = E_STRICT Then
+		  case E_STRICT
 		    return "Strict"
-		  ElseIf level = E_RECOVERABLE_ERROR Then
+		  case E_RECOVERABLE_ERROR
 		    return "Recoverable error"
-		  ElseIf level = E_DEPRECATED Then
+		  case E_DEPRECATED
 		    return "Deprecated"
-		  ElseIf level = E_USER_DEPRECATED Then
+		  case E_USER_DEPRECATED
 		    return "User deprecated"
-		  End If
+		  end
 		  
 		  return "Unknown"
 		End Function
