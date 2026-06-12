@@ -172,6 +172,33 @@ Protected Class NextCloudClass
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function Configure(baseWebURL As String, usernameValue As String, appPasswordValue As String, rootFolderValue As String, ByRef pMessage As String) As Boolean
+		  pMessage = ""
+
+		  BaseWeb = NormalizeBaseWeb(baseWebURL)
+		  Username = usernameValue.Trim
+		  AppPassword = appPasswordValue
+		  KanjoRootFolder = rootFolderValue.Trim
+
+		  If BaseWeb.Trim = "" Or Username.Trim = "" Or AppPassword.Trim = "" Or KanjoRootFolder.Trim = "" Then
+		    pMessage = "Nextcloud: configuration incomplete."
+		    BaseDav = ""
+		    Return False
+		  End If
+
+		  Var baseRoot As String = BuildBaseRoot()
+		  If baseRoot.Trim = "" Then
+		    pMessage = "Nextcloud: URL invalide."
+		    BaseDav = ""
+		    Return False
+		  End If
+
+		  BaseDav = baseRoot + "/remote.php/dav/files/" + Username + "/"
+		  Return True
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function Delete(remotePath As String, ByRef pMessage As String) As Boolean
 		  pMessage = ""
 		  
@@ -223,6 +250,61 @@ Protected Class NextCloudClass
 		Sub Download()
 		  // Optional: implement later (WebDAV GET)
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function DownloadFile(remotePath As String, destination As FolderItem, ByRef pMessage As String) As Boolean
+		  pMessage = ""
+
+		  If destination = Nil Then
+		    pMessage = "Nextcloud DOWNLOAD: destination invalide."
+		    Return False
+		  End If
+
+		  Var url As String = BuildDavUrl(remotePath)
+		  Var authHeader As String = BuildAuthorizationHeaderValue()
+		  If url = "" Or authHeader = "" Then
+		    pMessage = "Nextcloud DOWNLOAD: configuration invalide."
+		    Return False
+		  End If
+
+		  Var u As New URLConnection
+		  u.RequestHeader("Authorization") = authHeader
+		  u.RequestHeader("User-Agent") = "Kanjo/1.0"
+
+		  Var response As String
+		  Try
+		    response = u.SendSync("GET", url, 60)
+		  Catch e As RuntimeException
+		    pMessage = "Nextcloud DOWNLOAD: " + e.Message
+		    Return False
+		  End Try
+
+		  Select Case u.HTTPStatusCode
+		  Case 200
+		    // ok
+		  Case 401, 403
+		    pMessage = "Nextcloud DOWNLOAD: acces refuse."
+		    Return False
+		  Case 404
+		    pMessage = "Nextcloud DOWNLOAD: fichier introuvable."
+		    Return False
+		  Else
+		    pMessage = "Nextcloud DOWNLOAD HTTP " + u.HTTPStatusCode.ToString + If(response.Trim <> "", ": " + response, "")
+		    Return False
+		  End Select
+
+		  Try
+		    Var output As BinaryStream = BinaryStream.Create(destination, True)
+		    output.Write(response)
+		    output.Close
+		  Catch e As RuntimeException
+		    pMessage = "Nextcloud DOWNLOAD: " + e.Message
+		    Return False
+		  End Try
+
+		  Return True
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -893,7 +975,14 @@ Protected Class NextCloudClass
 		      
 		      Select Case n.LocalName
 		      Case "href"
-		        If n.FirstChild <> Nil Then href = n.FirstChild.Value.URLDecode
+		        If n.FirstChild <> Nil Then
+		          href = n.FirstChild.Value
+		          href = href.ReplaceAll("+", "%20")
+		          Try
+		            href = DecodeURLComponent(href)
+		          Catch
+		          End Try
+		        End If
 		        
 		      Case "propstat"
 		        // Find prop/displayname and prop/resourcetype/collection
@@ -1048,7 +1137,14 @@ Protected Class NextCloudClass
 		      
 		      Select Case n.LocalName
 		      Case "href"
-		        If n.FirstChild <> Nil Then href = n.FirstChild.Value.URLDecode
+		        If n.FirstChild <> Nil Then
+		          href = n.FirstChild.Value
+		          href = href.ReplaceAll("+", "%20")
+		          Try
+		            href = DecodeURLComponent(href)
+		          Catch
+		          End Try
+		        End If
 		        
 		      Case "propstat"
 		        For k As Integer = 0 To n.ChildCount - 1
@@ -1563,6 +1659,76 @@ Protected Class NextCloudClass
 		Sub Upload()
 		  // Optional: implement later (WebDAV PUT)
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function UploadFile(localFile As FolderItem, remotePath As String, ByRef pMessage As String) As Boolean
+		  pMessage = ""
+
+		  If localFile = Nil Or Not localFile.Exists Then
+		    pMessage = "Nextcloud UPLOAD: fichier local introuvable."
+		    Return False
+		  End If
+
+		  Var normalizedRemotePath As String = NormalizeRemotePath(remotePath)
+		  If normalizedRemotePath = "/" Or normalizedRemotePath.Trim = "" Then
+		    pMessage = "Nextcloud UPLOAD: chemin distant invalide."
+		    Return False
+		  End If
+
+		  Var url As String = BuildDavUrl(normalizedRemotePath)
+		  Var authHeader As String = BuildAuthorizationHeaderValue()
+		  If url = "" Or authHeader = "" Then
+		    pMessage = "Nextcloud UPLOAD: configuration invalide."
+		    Return False
+		  End If
+
+		  Var lastSlash As Integer = normalizedRemotePath.LastIndexOf("/")
+		  If lastSlash > 0 Then
+		    Var parentPath As String = normalizedRemotePath.Left(lastSlash)
+		    If parentPath.Trim <> "" Then
+		      Var mkcolMessage As String
+		      If Not MkCol(parentPath, mkcolMessage) Then
+		        pMessage = mkcolMessage
+		        Return False
+		      End If
+		    End If
+		  End If
+
+		  Var content As String
+		  Try
+		    Var input As BinaryStream = BinaryStream.Open(localFile, False)
+		    content = input.Read(input.Length)
+		    input.Close
+		  Catch e As RuntimeException
+		    pMessage = "Nextcloud UPLOAD: " + e.Message
+		    Return False
+		  End Try
+
+		  Var u As New URLConnection
+		  u.RequestHeader("Authorization") = authHeader
+		  u.RequestHeader("User-Agent") = "Kanjo/1.0"
+		  u.SetRequestContent(content, "application/octet-stream")
+
+		  Var response As String
+		  Try
+		    response = u.SendSync("PUT", url, 60)
+		  Catch e As RuntimeException
+		    pMessage = "Nextcloud UPLOAD: " + e.Message
+		    Return False
+		  End Try
+
+		  Select Case u.HTTPStatusCode
+		  Case 200, 201, 204
+		    Return True
+		  Case 401, 403
+		    pMessage = "Nextcloud UPLOAD: acces refuse."
+		    Return False
+		  Else
+		    pMessage = "Nextcloud UPLOAD HTTP " + u.HTTPStatusCode.ToString + If(response.Trim <> "", ": " + response, "")
+		    Return False
+		  End Select
+		End Function
 	#tag EndMethod
 
 
