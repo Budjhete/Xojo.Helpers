@@ -131,7 +131,8 @@ Protected Module DateExtra
 	#tag Method, Flags = &h0
 		Function IsLeapYear(extends d As DateTime) As Boolean
 		  // Return True if this date a leap year
-		  Return (((d.year MOD 4)=0) AND ((d.year MOD 100)<>0)) OR (d.year MOD 400)=0
+		  Dim pYear As Integer = d.Year
+		  Return (pYear Mod 400 = 0) Or (pYear Mod 4 = 0 And pYear Mod 100 <> 0)
 		End Function
 	#tag EndMethod
 

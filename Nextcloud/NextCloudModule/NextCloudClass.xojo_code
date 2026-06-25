@@ -336,7 +336,7 @@ Protected Class NextCloudClass
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function Exists(remotePath As String, ByRef pHttpStatus As Integer, ByRef pFileId As String, ByRef pMessage As String) As Boolean
 		  pHttpStatus = 0
 		  pFileId = ""
@@ -437,6 +437,87 @@ Protected Class NextCloudClass
 		    Next
 		  Next
 		  
+		  Return True
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetAndroid and (Target64Bit))
+		Function Exists(remotePath As String, ByRef pHttpStatus As Integer, ByRef pFileId As String, ByRef pMessage As String) As Boolean
+		  pHttpStatus = 0
+		  pFileId = ""
+		  pMessage = ""
+
+		  Var rp As String = remotePath.Trim
+		  If rp = "" Then
+		    pMessage = "Nextcloud EXISTS: chemin distant vide."
+		    Return False
+		  End If
+
+		  If Not rp.BeginsWith("/") Then rp = "/" + rp
+		  While rp.IndexOf("//") >= 0
+		    rp = rp.ReplaceAll("//", "/")
+		  Wend
+
+		  Var url As String = BuildDavUrl(rp)
+		  Var authHeader As String = BuildAuthorizationHeaderValue()
+		  If url = "" Or authHeader = "" Then
+		    pMessage = "Nextcloud EXISTS: configuration invalide."
+		    Return False
+		  End If
+
+		  Var body As String = _
+		  "<?xml version=""1.0"" encoding=""utf-8""?>" + EndOfLine + _
+		  "<d:propfind xmlns:d=""DAV:"" xmlns:oc=""http://owncloud.org/ns"">" + EndOfLine + _
+		  "  <d:prop>" + EndOfLine + _
+		  "    <oc:fileid/>" + EndOfLine + _
+		  "  </d:prop>" + EndOfLine + _
+		  "</d:propfind>"
+
+		  Var u As New URLConnection
+		  u.RequestHeader("Depth") = "0"
+		  u.RequestHeader("Content-Type") = "application/xml; charset=utf-8"
+		  u.RequestHeader("User-Agent") = "KanjoDesktop/1.0"
+		  u.RequestHeader("Authorization") = authHeader
+		  u.SetRequestContent(body, "application/xml; charset=utf-8")
+
+		  Var response As String
+		  Try
+		    response = u.SendSync("PROPFIND", url, 30)
+		  Catch e As RuntimeException
+		    pMessage = "Nextcloud EXISTS: " + e.Message
+		    Return False
+		  End Try
+
+		  pHttpStatus = u.HTTPStatusCode
+		  Select Case pHttpStatus
+		  Case 200, 207
+		    // continue
+		  Case 401, 403
+		    pMessage = "Nextcloud EXISTS: accès refusé."
+		    Return False
+		  Case 404
+		    Return False
+		  Else
+		    pMessage = "Nextcloud EXISTS HTTP " + pHttpStatus.ToString + If(response.Trim <> "", ": " + response, "")
+		    Return False
+		  End Select
+
+		  If response.Trim = "" Or Not response.Trim.BeginsWith("<") Then
+		    // Some servers may answer 207 without fileid payload.
+		    Return True
+		  End If
+
+		  Var responses() As String = WebDavResponseBlocks(response)
+		  If responses.LastIndex >= 0 Then
+		    For Each resp As String In responses
+		      pFileId = WebDavTagValue(resp, "fileid")
+		      If pFileId.Trim <> "" Then Return True
+		    Next
+		  Else
+		    pFileId = WebDavTagValue(response, "fileid")
+		    If pFileId.Trim <> "" Then Return True
+		  End If
+
 		  Return True
 		End Function
 	#tag EndMethod
@@ -899,7 +980,7 @@ Protected Class NextCloudClass
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function ListFolders(remotePath As String) As NcFolderEntry()
 		  // Lists sub-folders in remotePath using WebDAV PROPFIND Depth: 1
 		  // BaseDav example:
@@ -1036,7 +1117,28 @@ Protected Class NextCloudClass
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetAndroid and (Target64Bit))
+		Function ListFolders(remotePath As String) As NcFolderEntry()
+		  // Lists sub-folders in remotePath using the Android-compatible ListEntries parser.
+
+		  Var out() As NcFolderEntry
+		  Var message As String
+		  Var entries() As Dictionary = ListEntries(remotePath, message)
+		  For Each entry As Dictionary In entries
+		    If entry = Nil Then Continue
+		    If Not entry.Lookup("is_folder", False).BooleanValue Then Continue
+
+		    Var e As NcFolderEntry
+		    e.Name = entry.Lookup("name", "").StringValue
+		    e.RemotePath = entry.Lookup("remote_path", "").StringValue
+		    out.Add(e)
+		  Next
+
+		  Return out
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function ListEntries(remotePath As String, ByRef pMessage As String) As Dictionary()
 		  // Lists files and folders in remotePath using WebDAV PROPFIND Depth: 1
 		  // Returns dictionaries with: name, remote_path, parent_remote_path,
@@ -1222,6 +1324,204 @@ Protected Class NextCloudClass
 		  Next
 		  
 		  Return out
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetAndroid and (Target64Bit))
+		Function ListEntries(remotePath As String, ByRef pMessage As String) As Dictionary()
+		  // Lists files and folders in remotePath using WebDAV PROPFIND Depth: 1.
+		  // Android does not expose XmlDocument/XmlNode, so this variant extracts only the WebDAV fields needed here.
+
+		  Var out() As Dictionary
+		  pMessage = ""
+
+		  Var rp As String = NormalizeRemotePath(remotePath)
+		  If Username.Trim = "" Or AppPassword.Trim = "" Then
+		    pMessage = "Nextcloud LIST: identifiants manquants."
+		    Return out
+		  End If
+
+		  If BaseDav.Trim = "" Then
+		    pMessage = "Nextcloud LIST: BaseDav manquante."
+		    Return out
+		  End If
+
+		  Var base As String = BaseDav.Trim
+		  If Not base.EndsWith("/") Then base = base + "/"
+
+		  Var authHeader As String = BuildAuthorizationHeaderValue()
+		  If authHeader = "" Then
+		    pMessage = "Nextcloud LIST: configuration invalide."
+		    Return out
+		  End If
+
+		  Var rpEncoded As String = EncodeRemotePathForDav(rp)
+		  Var url As String = base + rpEncoded.Middle(1)
+
+		  Var body As String = _
+		  "<?xml version=""1.0"" encoding=""utf-8""?>" + EndOfLine + _
+		  "<d:propfind xmlns:d=""DAV:"" xmlns:oc=""http://owncloud.org/ns"">" + EndOfLine + _
+		  "  <d:prop>" + EndOfLine + _
+		  "    <d:resourcetype/>" + EndOfLine + _
+		  "    <d:displayname/>" + EndOfLine + _
+		  "    <d:getcontenttype/>" + EndOfLine + _
+		  "    <oc:fileid/>" + EndOfLine + _
+		  "  </d:prop>" + EndOfLine + _
+		  "</d:propfind>"
+
+		  Var u As New URLConnection
+		  u.RequestHeader("Depth") = "1"
+		  u.RequestHeader("Content-Type") = "application/xml; charset=utf-8"
+		  u.RequestHeader("User-Agent") = "KanjoDesktop/1.0"
+		  u.RequestHeader("Authorization") = authHeader
+		  u.SetRequestContent(body, "application/xml; charset=utf-8")
+
+		  Var response As String
+		  Try
+		    response = u.SendSync("PROPFIND", url, 60)
+		  Catch e As RuntimeException
+		    pMessage = "Nextcloud LIST: " + e.Message
+		    Return out
+		  End Try
+
+		  Select Case u.HTTPStatusCode
+		  Case 200, 207
+		    // ok
+		  Case 404
+		    Return out
+		  Case 401, 403
+		    pMessage = "Nextcloud LIST: accès refusé."
+		    Return out
+		  Else
+		    pMessage = "Nextcloud LIST HTTP " + u.HTTPStatusCode.ToString + If(response.Trim <> "", ": " + response, "")
+		    Return out
+		  End Select
+
+		  If response.Trim = "" Or Not response.Trim.BeginsWith("<") Then Return out
+
+		  Var marker As String = "/remote.php/dav/files/" + Username
+		  Var responses() As String = WebDavResponseBlocks(response)
+		  If responses.LastIndex < 0 Then
+		    pMessage = "Nextcloud LIST: réponse XML invalide."
+		    Return out
+		  End If
+
+		  For Each resp As String In responses
+		    Var href As String = WebDavTagValue(resp, "href")
+		    href = href.ReplaceAll("+", "%20")
+		    Try
+		      href = DecodeURLComponent(href)
+		    Catch
+		    End Try
+
+		    Var displayName As String = WebDavTagValue(resp, "displayname")
+		    Var fileId As String = WebDavTagValue(resp, "fileid")
+		    Var contentType As String = WebDavTagValue(resp, "getcontenttype")
+		    Var isCollection As Boolean = WebDavHasTag(resp, "collection")
+
+		    If href.Trim = "" Then Continue
+
+		    Var pos As Integer = href.IndexOf(marker)
+		    If pos < 0 Then Continue
+
+		    Var remote As String = href.Middle(pos + marker.Length)
+		    If remote.Trim = "" Then remote = "/"
+		    If Not remote.BeginsWith("/") Then remote = "/" + remote
+		    If isCollection Then
+		      If Not remote.EndsWith("/") Then remote = remote + "/"
+		    ElseIf remote.Length > 1 And remote.EndsWith("/") Then
+		      remote = remote.Left(remote.Length - 1)
+		    End If
+
+		    If remote = rp Then Continue
+
+		    Var itemName As String = displayName.Trim
+		    If itemName = "" Then
+		      Var remoteName As String = remote
+		      If remoteName.Length > 1 And remoteName.EndsWith("/") Then remoteName = remoteName.Left(remoteName.Length - 1)
+		      Var remoteParts() As String = remoteName.Split("/")
+		      If remoteParts.LastIndex >= 0 Then itemName = remoteParts(remoteParts.LastIndex)
+		    End If
+		    If itemName.Trim = "" Then Continue
+
+		    Var entry As New Dictionary
+		    entry.Value("name") = itemName
+		    entry.Value("remote_path") = remote
+		    entry.Value("parent_remote_path") = rp
+		    entry.Value("is_folder") = isCollection
+		    entry.Value("file_id") = fileId
+		    entry.Value("content_type") = contentType
+
+		    If isCollection Then
+		      entry.Value("open_url") = BuildFilesWebURL(remote)
+		    Else
+		      entry.Value("open_url") = BuildFileWebURL(remote, fileId)
+		    End If
+
+		    out.Add(entry)
+		  Next
+
+		  Return out
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21, CompatibilityFlags = (TargetAndroid and (Target64Bit))
+		Private Function WebDavHasTag(pXml As String, pTagName As String) As Boolean
+		  Var rx As New RegEx
+		  Var opts As New RegExOptions
+		  opts.CaseSensitive = False
+		  opts.DotMatchAll = True
+		  opts.TreatTargetAsOneLine = True
+		  rx.Options = opts
+		  rx.SearchPattern = "<(?:[A-Za-z_][A-Za-z0-9_.-]*:)?" + pTagName + "\b[^>]*(?:/?>)"
+
+		  Var match As RegExMatch = rx.Search(pXml)
+		  Return Not (match Is Nil)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21, CompatibilityFlags = (TargetAndroid and (Target64Bit))
+		Private Function WebDavResponseBlocks(pXml As String) As String()
+		  Var blocks() As String
+
+		  Var rx As New RegEx
+		  Var opts As New RegExOptions
+		  opts.CaseSensitive = False
+		  opts.DotMatchAll = True
+		  opts.TreatTargetAsOneLine = True
+		  rx.Options = opts
+		  rx.SearchPattern = "<(?:[A-Za-z_][A-Za-z0-9_.-]*:)?response\b[^>]*>(.*?)</(?:[A-Za-z_][A-Za-z0-9_.-]*:)?response>"
+
+		  Var match As RegExMatch = rx.Search(pXml)
+		  While Not (match Is Nil)
+		    blocks.Add(match.SubExpressionString(1))
+		    match = rx.Search()
+		  Wend
+
+		  Return blocks
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21, CompatibilityFlags = (TargetAndroid and (Target64Bit))
+		Private Function WebDavTagValue(pXml As String, pTagName As String) As String
+		  Var rx As New RegEx
+		  Var opts As New RegExOptions
+		  opts.CaseSensitive = False
+		  opts.DotMatchAll = True
+		  opts.TreatTargetAsOneLine = True
+		  rx.Options = opts
+		  rx.SearchPattern = "<(?:[A-Za-z_][A-Za-z0-9_.-]*:)?" + pTagName + "\b[^>]*>(.*?)</(?:[A-Za-z_][A-Za-z0-9_.-]*:)?" + pTagName + ">"
+
+		  Var match As RegExMatch = rx.Search(pXml)
+		  If match Is Nil Then Return ""
+
+		  Var value As String = match.SubExpressionString(1).Trim
+		  value = value.ReplaceAll("&lt;", "<")
+		  value = value.ReplaceAll("&gt;", ">")
+		  value = value.ReplaceAll("&quot;", """")
+		  value = value.ReplaceAll("&apos;", "'")
+		  value = value.ReplaceAll("&amp;", "&")
+		  Return value
 		End Function
 	#tag EndMethod
 
