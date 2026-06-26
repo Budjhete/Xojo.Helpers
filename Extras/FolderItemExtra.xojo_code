@@ -208,7 +208,7 @@ Protected Module FolderItemExtra
 	#tag EndMethod
 
 
-	#tag Constant, Name = kImpossibleDeGenererUnFichierUnique, Type = String, Dynamic = True, Default = \"Impossible de g\xC3\xA9n\xC3\xA9rer un fichier unique.", Scope = Public
+	#tag Constant, Name = kImpossibleDeGenererUnFichierUnique, Type = String, Dynamic = True, Default = \"Impossible de g\xC3\xA9n\xC3\xA9rer un fichier unique.", Scope = Public, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		#Tag Instance, Platform = Any, Language = fr, Definition  = \"Impossible de g\xC3\xA9n\xC3\xA9rer un fichier unique."
 		#Tag Instance, Platform = Any, Language = en, Definition  = \"Cannot create a unique file."
 	#tag EndConstant

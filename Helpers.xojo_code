@@ -540,12 +540,15 @@ Protected Module Helpers
 
 	#tag Method, Flags = &h0
 		Function Parent(Extends fi as FolderItem, endsWith as String) As FolderItem
-		  dim parent as FolderItem = fi.Parent
-		  if (parent = nil) or parent.Name.EndsWith(endsWith) then
-		    return parent
-		  end
+		  dim currentParent as FolderItem = fi.Parent
+		  while currentParent <> Nil
+		    if currentParent.Name.EndsWith(endsWith) then
+		      return currentParent
+		    end if
+		    currentParent = currentParent.Parent
+		  wend
 		  
-		  return parent.Parent(endsWith)
+		  return Nil
 		  
 		End Function
 	#tag EndMethod

@@ -42,7 +42,7 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function BaseConvert(Extends str as String, fromBase as Integer, toBase as Integer) As String
 		  
 		End Function
@@ -106,7 +106,7 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Sub CharAt(Extends ByRef str As String, position as Integer, Assigns char as String)
 		  if position > str.Length then
 		    raise new OutOfBoundsException
@@ -257,7 +257,7 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function CsvSplit(Extends str as String, separator as String = ",", enclose as String = "", escape as String = "\") As String()
 		  dim parts() as String = str.Split(separator)
 		  
@@ -352,7 +352,7 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function EscapeRegExMetacharacters(Extends str as String) As String
 		  str = str.ReplaceAll("\", "\\")
 		  str = str.ReplaceAll("[", "\[")
@@ -461,7 +461,7 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
+	#tag Method, Flags = &h1, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Protected Function Hash(s As String) As Integer
 		  // Return the hash value of the given string, as used by RB's
 		  // Variant and Dictionary classes.
@@ -498,7 +498,7 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function InStrReverse(Extends source As String, startPos As Integer = - 1, substr As String) As Integer
 		  // Similar to InStr, but searches backwards from the given position
 		  // (or if startPos = -1, then from the end of the string).
@@ -520,7 +520,7 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function InStrReverseB(Extends source As String, startPosB As Integer = - 1, substr As String) As Integer
 		  // Similar to InStrB, but searches backwards from the given position
 		  // (or if startPosB = -1, then from the end of the string).
@@ -708,8 +708,43 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target64Bit)) or  (TargetWeb and (Target64Bit)) or  (TargetDesktop and (Target64Bit)) or  (TargetIOS and (Target64Bit)) or  (TargetAndroid and (Target64Bit))
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target64Bit)) or  (TargetWeb and (Target64Bit)) or  (TargetDesktop and (Target64Bit)) or  (TargetIOS and (Target64Bit))
 		Function PhoneNumber(Extends str as String, pFormat as String = "###\-###\-####") As String
+		  var digits As String
+		  For i As Integer = 0 To str.Length - 1
+		    Var ch As String = str.Middle(i, 1)
+		    If ch >= "0" And ch <= "9" Then
+		      digits = digits + ch
+		    End If
+		  Next
+		  If digits = "" Then Return ""
+
+		  Var formatted As String
+		  Var digitIndex As Integer
+
+		  For i As Integer = 0 To pFormat.Length - 1
+		    Var token As String = pFormat.Middle(i, 1)
+
+		    If token = "#" Then
+		      If digitIndex >= digits.Length Then Exit
+
+		      formatted = formatted + digits.Middle(digitIndex, 1)
+		      digitIndex = digitIndex + 1
+		    ElseIf digitIndex > 0 And digitIndex < digits.Length Then
+		      formatted = formatted + token
+		    End If
+		  Next
+
+		  If formatted = "" Then
+		    Return digits
+		  End If
+
+		  Return formatted
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetAndroid and (Target64Bit))
+		Function PhoneNumber(Extends str as String, pFormat as String = "###-###-####") As String
 		  var digits As String
 		  For i As Integer = 0 To str.Length - 1
 		    Var ch As String = str.Middle(i, 1)
@@ -841,7 +876,7 @@ Protected Module StringExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
+	#tag Method, Flags = &h1, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Protected Function Reverse(s As String) As String
 		  // Return s with the characters in reverse order.
 		  

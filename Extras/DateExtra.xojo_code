@@ -39,7 +39,7 @@ Protected Module DateExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function DatesMatch(d1 as DateTime, d2 as DateTime) As Boolean
 		  return d1.DayOfYear = d2.DayOfYear and d1.Year = d2.Year
 		End Function
@@ -116,19 +116,19 @@ Protected Module DateExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function IsAnteMeridiem(Extends d as DateTime) As Boolean
 		  return (d.Hour < 12)
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function IsFuture(Extends d as DateTime) As Boolean
 		  return (d > DateTime.Now)
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function IsLeapYear(extends d As DateTime) As Boolean
 		  // Return True if this date a leap year
 		  Dim pYear As Integer = d.Year
@@ -144,19 +144,19 @@ Protected Module DateExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function IsPast(Extends d as DateTime) As Boolean
 		  return (d < DateTime.Now)
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function IsPostMeridiem(Extends d as DateTime) As Boolean
 		  return (d.Hour >= 12)
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function IsToday(Extends d as DateTime) As Boolean
 		  // Return True if this date is the same day as today.
 		  'Dim now As DateTime
@@ -164,7 +164,7 @@ Protected Module DateExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function IsTomorrow(extends d As DateTime) As Boolean
 		  // Return True if this date is the same day as tomorrow.
 		  Dim tomorrow As new DateTime(DateTime.Now.SecondsFrom1970 + kSecondsPerDay,  TimeZone.Current)
@@ -172,7 +172,7 @@ Protected Module DateExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function IsYesterday(extends d As DateTime) As Boolean
 		  // Return True if this date is the same day as yesterday.
 		  Dim yesterday As new DateTime(d.SecondsFrom1970 - kSecondsPerDay, TimeZone.Current)
@@ -202,12 +202,24 @@ Protected Module DateExtra
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function LastQuarterEnd(Extends d As DateTime, firstDay As DateTime = Nil) As DateTime
+		  #Pragma Unused d
+
 		  dim start as DateTime = firstDay
 		  dim diff as new DateInterval(0, 3)
 		  dim diffday as new DateInterval(0,0,1)
 		  start = start+diff-diffday
+		  return start
+
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetAndroid and (Target64Bit))
+		Function LastQuarterEnd(Extends d As DateTime, firstDay As DateTime = Nil) As DateTime
+		  dim start as DateTime = d.QuarterStart(firstDay)
+		  dim diffday as new DateInterval(0,0,1)
+		  start = start - diffday
 		  return start
 		  
 		End Function
