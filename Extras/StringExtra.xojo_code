@@ -811,6 +811,66 @@ Protected Module StringExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function ExportFileBaseName(Extends pString As String, pFallback As String = "Document", pMaxLength As Integer = 150) As String
+		  Var pBaseName As String = pString.Trim
+		  Var pAccentChars As String = "à,á,â,ã,ä,å,æ,ç,è,é,ê,ë,ì,í,î,ï,ñ,ò,ó,ô,õ,ö,ø,ù,ú,û,ü,ý,ÿ,À,Á,Â,Ã,Ä,Å,Æ,Ç,È,É,Ê,Ë,Ì,Í,Î,Ï,Ñ,Ò,Ó,Ô,Õ,Ö,Ø,Ù,Ú,Û,Ü,Ý,Œ,œ"
+
+		  For pIndex As Integer = 1 To pAccentChars.CountFields(",")
+		    pBaseName = pBaseName.ReplaceAll(pAccentChars.NthField(",", pIndex), "")
+		  Next
+
+		  pBaseName = pBaseName.ReplaceAllRegExp("[^0-9a-zA-Z _.-]+", "")
+		  pBaseName = pBaseName.ReplaceAllRegExp("\s+", "_")
+		  pBaseName = pBaseName.ReplaceAllRegExp("_+", "_")
+		  pBaseName = pBaseName.ReplaceAllRegExp("^[._-]+", "")
+		  pBaseName = pBaseName.ReplaceAllRegExp("[._-]+$", "")
+
+		  If pBaseName = "" And pFallback.Trim <> "" And pFallback <> pString Then
+		    Return pFallback.ExportFileBaseName("Document", pMaxLength)
+		  End If
+
+		  If pBaseName = "" Then
+		    Return "Document"
+		  End If
+
+		  If pMaxLength > 0 And pBaseName.Length > pMaxLength Then
+		    pBaseName = pBaseName.Left(pMaxLength)
+		    pBaseName = pBaseName.ReplaceAllRegExp("[._-]+$", "")
+		  End If
+
+		  If pBaseName = "" Then
+		    Return "Document"
+		  End If
+
+		  Return pBaseName
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function ExportFileName(Extends pString As String, pExtension As String, pFallback As String = "Document", pMaxLength As Integer = 180) As String
+		  Var pExt As String = pExtension.Trim.Lowercase.Replace(".", "")
+		  pExt = pExt.ReplaceAllRegExp("[^0-9a-z]+", "")
+		  If pExt = "" Then
+		    pExt = "txt"
+		  End If
+
+		  Var pBaseSource As String = pString.Trim
+		  If pBaseSource.Lowercase.EndsWith("." + pExt) Then
+		    pBaseSource = pBaseSource.Left(pBaseSource.Length - pExt.Length - 1)
+		  End If
+
+		  Var pDateSuffix As String = DateTime.Now.SQLDateTime.ReplaceAll("-", "").ReplaceAll(":", "").ReplaceAll(" ", "-")
+		  Var pSuffix As String = "_" + pDateSuffix + "." + pExt
+		  Var pBaseMaxLength As Integer = pMaxLength - pSuffix.Length
+		  If pBaseMaxLength < 20 Then
+		    pBaseMaxLength = 20
+		  End If
+
+		  Return pBaseSource.ExportFileBaseName(pFallback, pBaseMaxLength) + pSuffix
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function Repeat(Extends str As String, multiplier As Integer) As String
 		  dim result As String = ""
 		  
