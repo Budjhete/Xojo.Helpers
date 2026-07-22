@@ -591,6 +591,7 @@ Protected Class NextCloudClass
 		    Return Nil
 		  End Try
 
+		  Var progressData As Dictionary
 		  If conn.HTTPStatusCode < 200 Or conn.HTTPStatusCode >= 300 Then
 		    pContent = "LibreSign status HTTP " + conn.HTTPStatusCode.ToString + ": " + content
 		  Else
@@ -601,56 +602,43 @@ Protected Class NextCloudClass
 		      pContent = "LibreSign status: réponse invalide"
 		    End Try
 
-		    Var data As Dictionary
 		    If response <> Nil And response.HasKey("ocs") Then
 		      Try
 		        Var ocs As Dictionary = Dictionary(response.Value("ocs"))
-		        data = Dictionary(ocs.Lookup("data", Nil))
+		        progressData = Dictionary(ocs.Lookup("data", Nil))
 		      Catch error As RuntimeException
-		        data = Nil
+		        progressData = Nil
 		      End Try
 		    ElseIf response <> Nil Then
 		      Try
-		        data = Dictionary(response.Lookup("data", response))
+		        progressData = Dictionary(response.Lookup("data", response))
 		      Catch error As RuntimeException
-		        data = Nil
+		        progressData = Nil
 		      End Try
 		    End If
 
 		    pContent = content
-		    If data <> Nil And data.Lookup("status", "").StringValue.Trim <> "" Then Return data
 		  End If
 
-		  // Older LibreSign releases may expose only the validation routes.
+		  // The validation routes expose every signer. This also corrects servers
+		  // whose progress route still reports DRAFT after one signer has signed.
 		  Var fallbackContent As String
 		  Var fallbackEntries() As Dictionary = LibreSignFetchEntries(baseRoot + "/ocs/v2.php/apps/libresign/api/v1/file/validate/uuid/" + EncodeURLComponent(pUuid), fallbackContent)
 		  If fallbackEntries.LastIndex >= 0 Then
-		    Var fallbackProgress As New Dictionary
-		    fallbackProgress.Value("status") = "UNKNOWN"
-		    fallbackProgress.Value("statusText") = ""
-		    Var fallbackPayload As New Dictionary
-		    fallbackPayload.Value("signers") = fallbackEntries
-		    fallbackProgress.Value("progress") = fallbackPayload
 		    pContent = fallbackContent
-		    Return fallbackProgress
+		    Return LibreSignProgressFromEntries(fallbackEntries, progressData)
 		  End If
 
 		  If pFileId.Trim <> "" Then
 		    Var fallbackFileContent As String
 		    Var fallbackFileEntries() As Dictionary = LibreSignFetchEntries(baseRoot + "/ocs/v2.php/apps/libresign/api/v1/file/validate/file_id/" + EncodeURLComponent(pFileId), fallbackFileContent)
 		    If fallbackFileEntries.LastIndex >= 0 Then
-		      Var fallbackFileProgress As New Dictionary
-		      fallbackFileProgress.Value("status") = "UNKNOWN"
-		      fallbackFileProgress.Value("statusText") = ""
-		      Var fallbackFilePayload As New Dictionary
-		      fallbackFilePayload.Value("signers") = fallbackFileEntries
-		      fallbackFileProgress.Value("progress") = fallbackFilePayload
 		      pContent = fallbackFileContent
-		      Return fallbackFileProgress
+		      Return LibreSignProgressFromEntries(fallbackFileEntries, progressData)
 		    End If
 		  End If
 
-		  Return Nil
+		  Return progressData
 		End Function
 	#tag EndMethod
 
@@ -891,6 +879,78 @@ Protected Class NextCloudClass
 		  end if
 		  
 		  Return entries
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Function LibreSignProgressFromEntries(pEntries() As Dictionary, pBaseProgress As Dictionary) As Dictionary
+		  Var result As Dictionary = pBaseProgress
+		  If result = Nil Then result = New Dictionary
+
+		  Var payload As Dictionary
+		  Try
+		    payload = Dictionary(result.Lookup("progress", Nil))
+		  Catch error As RuntimeException
+		    payload = Nil
+		  End Try
+		  If payload = Nil Then payload = New Dictionary
+		  payload.Value("signers") = pEntries
+
+		  Var signedCount As Integer
+		  Var readyCount As Integer
+		  For Each signer As Dictionary In pEntries
+		    If signer = Nil Then Continue
+		    Var signerStatus As Integer = signer.Lookup("status", -1).IntegerValue
+		    Var isSigned As Boolean = signerStatus = cLibreSignSignerStatusSigned
+		    If Not isSigned Then
+		      Var signedValue As Variant = signer.Lookup("signed", Nil)
+		      If signedValue <> Nil Then
+		        Var signedText As String = signedValue.StringValue.Trim.Lowercase
+		        isSigned = signedText <> "" And signedText <> "false" And signedText <> "0"
+		      End If
+		    End If
+
+		    If isSigned Then
+		      signedCount = signedCount + 1
+		    ElseIf signerStatus = cLibreSignSignerStatusReady Then
+		      readyCount = readyCount + 1
+		    End If
+		  Next
+
+		  Var total As Integer = pEntries.Count
+		  Var inProgress As Integer = payload.Lookup("inProgress", 0).IntegerValue
+		  payload.Value("total") = total
+		  payload.Value("signed") = signedCount
+		  payload.Value("inProgress") = inProgress
+		  payload.Value("pending") = Max(0, total - signedCount - inProgress)
+		  result.Value("progress") = payload
+
+		  Var existingStatus As String = result.Lookup("status", "").StringValue.Trim.Uppercase
+		  If existingStatus = cLibreSignStatusError Or existingStatus = cLibreSignStatusDeleted Then Return result
+
+		  Var derivedStatus As String
+		  Var derivedStatusCode As Integer
+		  If total > 0 And signedCount >= total Then
+		    derivedStatus = cLibreSignStatusSigned
+		    derivedStatusCode = cLibreSignFileStatusSigned
+		  ElseIf inProgress > 0 Or existingStatus = cLibreSignStatusSigning Then
+		    derivedStatus = cLibreSignStatusSigning
+		    derivedStatusCode = cLibreSignFileStatusSigning
+		  ElseIf signedCount > 0 Then
+		    derivedStatus = cLibreSignStatusPartial
+		    derivedStatusCode = cLibreSignFileStatusPartial
+		  ElseIf readyCount > 0 Then
+		    derivedStatus = cLibreSignStatusReady
+		    derivedStatusCode = cLibreSignFileStatusReady
+		  Else
+		    derivedStatus = cLibreSignStatusDraft
+		    derivedStatusCode = cLibreSignFileStatusDraft
+		  End If
+
+		  result.Value("status") = derivedStatus
+		  result.Value("statusCode") = derivedStatusCode
+		  result.Value("statusText") = derivedStatus
+		  Return result
 		End Function
 	#tag EndMethod
 
@@ -2089,6 +2149,49 @@ Protected Class NextCloudClass
 		  End Select
 		End Function
 	#tag EndMethod
+
+
+	#tag Constant, Name = cLibreSignFileStatusDraft, Type = Integer, Dynamic = False, Default = "0", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = cLibreSignFileStatusPartial, Type = Integer, Dynamic = False, Default = "2", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = cLibreSignFileStatusReady, Type = Integer, Dynamic = False, Default = "1", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = cLibreSignFileStatusSigned, Type = Integer, Dynamic = False, Default = "3", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = cLibreSignFileStatusSigning, Type = Integer, Dynamic = False, Default = "5", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = cLibreSignSignerStatusReady, Type = Integer, Dynamic = False, Default = "1", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = cLibreSignSignerStatusSigned, Type = Integer, Dynamic = False, Default = "2", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = cLibreSignStatusDeleted, Type = String, Dynamic = False, Default = "DELETED", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = cLibreSignStatusDraft, Type = String, Dynamic = False, Default = "DRAFT", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = cLibreSignStatusError, Type = String, Dynamic = False, Default = "ERROR", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = cLibreSignStatusPartial, Type = String, Dynamic = False, Default = "PARTIAL_SIGNED", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = cLibreSignStatusReady, Type = String, Dynamic = False, Default = "ABLE_TO_SIGN", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = cLibreSignStatusSigned, Type = String, Dynamic = False, Default = "SIGNED", Scope = Private
+	#tag EndConstant
+
+	#tag Constant, Name = cLibreSignStatusSigning, Type = String, Dynamic = False, Default = "SIGNING_IN_PROGRESS", Scope = Private
+	#tag EndConstant
 
 
 	#tag Property, Flags = &h0
