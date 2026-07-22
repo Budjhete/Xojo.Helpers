@@ -537,57 +537,14 @@ Protected Class NextCloudClass
 	#tag Method, Flags = &h0
 		Function FetchLibreSignEntries(pUuid as String, pFileId as String, ByRef pContent as String) As Dictionary()
 		  dim entries() as Dictionary
-		  pContent = ""
+		  dim progress as Dictionary = FetchLibreSignProgress(pUuid, pFileId, pContent)
+		  entries = LibreSignExtractEntries(progress)
 		  
+		  if entries.LastIndex >= 0 then Return entries
 		  if pUuid.Trim = "" then Return entries
-		  if BaseWeb.Trim = "" or Username.Trim = "" or AppPassword.Trim = "" then Return entries
 		  
 		  dim baseRoot as String = BuildBaseRoot()
 		  if baseRoot.Trim = "" then Return entries
-		  
-		  dim conn as new URLConnection
-		  conn.RequestHeader("Authorization") = "Basic " + EncodeBase64(Username+":"+AppPassword, 0)
-		  conn.RequestHeader("OCS-APIRequest") = "true"
-		  conn.RequestHeader("Accept") = "application/json"
-		  
-		  dim url as String = baseRoot + "/ocs/v2.php/apps/libresign/api/v1/file/progress/" + EncodeURLComponent(pUuid)
-		  dim content as String
-		  try
-		    content = conn.SendSync("GET", url, 30)
-		  catch e as RuntimeException
-		    pContent = "LibreSign status: erreur de connexion"
-		    Return entries
-		  end try
-		  
-		  if conn.HTTPStatusCode < 200 or conn.HTTPStatusCode >= 300 then
-		    pContent = "LibreSign status HTTP " + conn.HTTPStatusCode.ToString + ": " + content
-		    Return entries
-		  end if
-		  
-		  dim resp as Dictionary
-		  try
-		    resp = ParseJSON(content)
-		  catch InvalidJSONException
-		    pContent = "LibreSign status: réponse invalide"
-		    Return entries
-		  end try
-		  
-		  dim dataVar as Variant
-		  if resp <> nil and resp.HasKey("ocs") then
-		    try
-		      dim ocs as Dictionary = Dictionary(resp.Value("ocs"))
-		      dataVar = ocs.Lookup("data", Nil)
-		    catch
-		      dataVar = Nil
-		    end try
-		  else
-		    dataVar = resp.Lookup("data", resp)
-		  end if
-		  
-		  entries = LibreSignExtractEntries(dataVar)
-		  pContent = content
-		  
-		  if entries.LastIndex >= 0 then Return entries
 		  
 		  dim fallbackContent as String
 		  dim fallbackUrl as String = baseRoot + "/ocs/v2.php/apps/libresign/api/v1/file/validate/uuid/" + EncodeURLComponent(pUuid)
@@ -608,6 +565,92 @@ Protected Class NextCloudClass
 		  end if
 		  
 		  Return entries
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function FetchLibreSignProgress(pUuid As String, pFileId As String, ByRef pContent As String) As Dictionary
+		  pContent = ""
+		  If pUuid.Trim = "" Then Return Nil
+		  If BaseWeb.Trim = "" Or Username.Trim = "" Or AppPassword.Trim = "" Then Return Nil
+
+		  Var baseRoot As String = BuildBaseRoot()
+		  If baseRoot.Trim = "" Then Return Nil
+
+		  Var conn As New URLConnection
+		  conn.RequestHeader("Authorization") = "Basic " + EncodeBase64(Username + ":" + AppPassword, 0)
+		  conn.RequestHeader("OCS-APIRequest") = "true"
+		  conn.RequestHeader("Accept") = "application/json"
+
+		  Var url As String = baseRoot + "/ocs/v2.php/apps/libresign/api/v1/file/progress/" + EncodeURLComponent(pUuid) + "?timeout=1"
+		  Var content As String
+		  Try
+		    content = conn.SendSync("GET", url, 10)
+		  Catch error As RuntimeException
+		    pContent = "LibreSign status: erreur de connexion"
+		    Return Nil
+		  End Try
+
+		  If conn.HTTPStatusCode < 200 Or conn.HTTPStatusCode >= 300 Then
+		    pContent = "LibreSign status HTTP " + conn.HTTPStatusCode.ToString + ": " + content
+		  Else
+		    Var response As Dictionary
+		    Try
+		      response = ParseJSON(content)
+		    Catch error As InvalidJSONException
+		      pContent = "LibreSign status: réponse invalide"
+		    End Try
+
+		    Var data As Dictionary
+		    If response <> Nil And response.HasKey("ocs") Then
+		      Try
+		        Var ocs As Dictionary = Dictionary(response.Value("ocs"))
+		        data = Dictionary(ocs.Lookup("data", Nil))
+		      Catch error As RuntimeException
+		        data = Nil
+		      End Try
+		    ElseIf response <> Nil Then
+		      Try
+		        data = Dictionary(response.Lookup("data", response))
+		      Catch error As RuntimeException
+		        data = Nil
+		      End Try
+		    End If
+
+		    pContent = content
+		    If data <> Nil And data.Lookup("status", "").StringValue.Trim <> "" Then Return data
+		  End If
+
+		  // Older LibreSign releases may expose only the validation routes.
+		  Var fallbackContent As String
+		  Var fallbackEntries() As Dictionary = LibreSignFetchEntries(baseRoot + "/ocs/v2.php/apps/libresign/api/v1/file/validate/uuid/" + EncodeURLComponent(pUuid), fallbackContent)
+		  If fallbackEntries.LastIndex >= 0 Then
+		    Var fallbackProgress As New Dictionary
+		    fallbackProgress.Value("status") = "UNKNOWN"
+		    fallbackProgress.Value("statusText") = ""
+		    Var fallbackPayload As New Dictionary
+		    fallbackPayload.Value("signers") = fallbackEntries
+		    fallbackProgress.Value("progress") = fallbackPayload
+		    pContent = fallbackContent
+		    Return fallbackProgress
+		  End If
+
+		  If pFileId.Trim <> "" Then
+		    Var fallbackFileContent As String
+		    Var fallbackFileEntries() As Dictionary = LibreSignFetchEntries(baseRoot + "/ocs/v2.php/apps/libresign/api/v1/file/validate/file_id/" + EncodeURLComponent(pFileId), fallbackFileContent)
+		    If fallbackFileEntries.LastIndex >= 0 Then
+		      Var fallbackFileProgress As New Dictionary
+		      fallbackFileProgress.Value("status") = "UNKNOWN"
+		      fallbackFileProgress.Value("statusText") = ""
+		      Var fallbackFilePayload As New Dictionary
+		      fallbackFilePayload.Value("signers") = fallbackFileEntries
+		      fallbackFileProgress.Value("progress") = fallbackFilePayload
+		      pContent = fallbackFileContent
+		      Return fallbackFileProgress
+		    End If
+		  End If
+
+		  Return Nil
 		End Function
 	#tag EndMethod
 
@@ -798,6 +841,22 @@ Protected Class NextCloudClass
 		    dd = Nil
 		  end try
 		  
+		  if dd <> nil and dd.HasKey("progress") then
+		    try
+		      dim progress as Dictionary = Dictionary(dd.Value("progress"))
+		      if progress <> nil then dd = progress
+		    catch
+		    end try
+		  end if
+
+		  if dd <> nil and not dd.HasKey("signers") and dd.HasKey("file") then
+		    try
+		      dim fileData as Dictionary = Dictionary(dd.Value("file"))
+		      if fileData <> nil and fileData.HasKey("signers") then dd = fileData
+		    catch
+		    end try
+		  end if
+
 		  dim arrVar as Variant
 		  if dd <> nil then
 		    if dd.HasKey("signers") then
