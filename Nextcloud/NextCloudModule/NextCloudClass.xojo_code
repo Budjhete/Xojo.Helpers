@@ -2151,46 +2151,46 @@ Protected Class NextCloudClass
 	#tag EndMethod
 
 
-	#tag Constant, Name = cLibreSignFileStatusDraft, Type = Integer, Dynamic = False, Default = "0", Scope = Private
+	#tag Constant, Name = cLibreSignFileStatusDraft, Type = Integer, Dynamic = False, Default = \"0", Scope = Private
 	#tag EndConstant
 
-	#tag Constant, Name = cLibreSignFileStatusPartial, Type = Integer, Dynamic = False, Default = "2", Scope = Private
+	#tag Constant, Name = cLibreSignFileStatusPartial, Type = Integer, Dynamic = False, Default = \"2", Scope = Private
 	#tag EndConstant
 
-	#tag Constant, Name = cLibreSignFileStatusReady, Type = Integer, Dynamic = False, Default = "1", Scope = Private
+	#tag Constant, Name = cLibreSignFileStatusReady, Type = Integer, Dynamic = False, Default = \"1", Scope = Private
 	#tag EndConstant
 
-	#tag Constant, Name = cLibreSignFileStatusSigned, Type = Integer, Dynamic = False, Default = "3", Scope = Private
+	#tag Constant, Name = cLibreSignFileStatusSigned, Type = Integer, Dynamic = False, Default = \"3", Scope = Private
 	#tag EndConstant
 
-	#tag Constant, Name = cLibreSignFileStatusSigning, Type = Integer, Dynamic = False, Default = "5", Scope = Private
+	#tag Constant, Name = cLibreSignFileStatusSigning, Type = Integer, Dynamic = False, Default = \"5", Scope = Private
 	#tag EndConstant
 
-	#tag Constant, Name = cLibreSignSignerStatusReady, Type = Integer, Dynamic = False, Default = "1", Scope = Private
+	#tag Constant, Name = cLibreSignSignerStatusReady, Type = Integer, Dynamic = False, Default = \"1", Scope = Private
 	#tag EndConstant
 
-	#tag Constant, Name = cLibreSignSignerStatusSigned, Type = Integer, Dynamic = False, Default = "2", Scope = Private
+	#tag Constant, Name = cLibreSignSignerStatusSigned, Type = Integer, Dynamic = False, Default = \"2", Scope = Private
 	#tag EndConstant
 
-	#tag Constant, Name = cLibreSignStatusDeleted, Type = String, Dynamic = False, Default = "DELETED", Scope = Private
+	#tag Constant, Name = cLibreSignStatusDeleted, Type = String, Dynamic = False, Default = \"DELETED", Scope = Private
 	#tag EndConstant
 
-	#tag Constant, Name = cLibreSignStatusDraft, Type = String, Dynamic = False, Default = "DRAFT", Scope = Private
+	#tag Constant, Name = cLibreSignStatusDraft, Type = String, Dynamic = False, Default = \"DRAFT", Scope = Private
 	#tag EndConstant
 
-	#tag Constant, Name = cLibreSignStatusError, Type = String, Dynamic = False, Default = "ERROR", Scope = Private
+	#tag Constant, Name = cLibreSignStatusError, Type = String, Dynamic = False, Default = \"ERROR", Scope = Private
 	#tag EndConstant
 
-	#tag Constant, Name = cLibreSignStatusPartial, Type = String, Dynamic = False, Default = "PARTIAL_SIGNED", Scope = Private
+	#tag Constant, Name = cLibreSignStatusPartial, Type = String, Dynamic = False, Default = \"PARTIAL_SIGNED", Scope = Private
 	#tag EndConstant
 
-	#tag Constant, Name = cLibreSignStatusReady, Type = String, Dynamic = False, Default = "ABLE_TO_SIGN", Scope = Private
+	#tag Constant, Name = cLibreSignStatusReady, Type = String, Dynamic = False, Default = \"ABLE_TO_SIGN", Scope = Private
 	#tag EndConstant
 
-	#tag Constant, Name = cLibreSignStatusSigned, Type = String, Dynamic = False, Default = "SIGNED", Scope = Private
+	#tag Constant, Name = cLibreSignStatusSigned, Type = String, Dynamic = False, Default = \"SIGNED", Scope = Private
 	#tag EndConstant
 
-	#tag Constant, Name = cLibreSignStatusSigning, Type = String, Dynamic = False, Default = "SIGNING_IN_PROGRESS", Scope = Private
+	#tag Constant, Name = cLibreSignStatusSigning, Type = String, Dynamic = False, Default = \"SIGNING_IN_PROGRESS", Scope = Private
 	#tag EndConstant
 
 
