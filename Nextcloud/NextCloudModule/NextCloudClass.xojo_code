@@ -1296,6 +1296,9 @@ Protected Class NextCloudClass
 		  "    <d:resourcetype/>" + EndOfLine + _
 		  "    <d:displayname/>" + EndOfLine + _
 		  "    <d:getcontenttype/>" + EndOfLine + _
+		  "    <d:getetag/>" + EndOfLine + _
+		  "    <d:getlastmodified/>" + EndOfLine + _
+		  "    <d:getcontentlength/>" + EndOfLine + _
 		  "    <oc:fileid/>" + EndOfLine + _
 		  "  </d:prop>" + EndOfLine + _
 		  "</d:propfind>"
@@ -1350,6 +1353,9 @@ Protected Class NextCloudClass
 		    Var display As String
 		    Var fileId As String
 		    Var contentType As String
+		    Var etag As String
+		    Var lastModified As String
+		    Var contentLength As String
 		    Var isCollection As Boolean
 		    
 		    For j As Integer = 0 To resp.ChildCount - 1
@@ -1394,6 +1400,15 @@ Protected Class NextCloudClass
 		              
 		            Case "getcontenttype"
 		              If p.FirstChild <> Nil Then contentType = p.FirstChild.Value
+
+		            Case "getetag"
+		              If p.FirstChild <> Nil Then etag = p.FirstChild.Value
+
+		            Case "getlastmodified"
+		              If p.FirstChild <> Nil Then lastModified = p.FirstChild.Value
+
+		            Case "getcontentlength"
+		              If p.FirstChild <> Nil Then contentLength = p.FirstChild.Value
 		            End Select
 		          Next
 		        Next
@@ -1432,6 +1447,9 @@ Protected Class NextCloudClass
 		    entry.Value("is_folder") = isCollection
 		    entry.Value("file_id") = fileId
 		    entry.Value("content_type") = contentType
+		    entry.Value("etag") = etag
+		    entry.Value("last_modified") = lastModified
+		    entry.Value("content_length") = contentLength
 		    
 		    If isCollection Then
 		      entry.Value("open_url") = BuildFilesWebURL(remote)
@@ -1581,6 +1599,30 @@ Protected Class NextCloudClass
 		  Next
 
 		  Return out
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function RemotePathHasContent(pRemotePath As String, ByRef pMessage As String) As Boolean
+		  pMessage = ""
+		  If pRemotePath.Trim = "" Then Return False
+
+		  Var entries() As Dictionary = ListEntries(pRemotePath, pMessage)
+		  If pMessage.Trim <> "" Then Return False
+
+		  For Each entry As Dictionary In entries
+		    If entry = Nil Then Continue
+		    If Not entry.Lookup("is_folder", False).BooleanValue Then Return True
+
+		    Var childMessage As String
+		    If RemotePathHasContent(entry.Lookup("remote_path", "").StringValue, childMessage) Then Return True
+		    If childMessage.Trim <> "" Then
+		      pMessage = childMessage
+		      Return False
+		    End If
+		  Next
+
+		  Return False
 		End Function
 	#tag EndMethod
 
