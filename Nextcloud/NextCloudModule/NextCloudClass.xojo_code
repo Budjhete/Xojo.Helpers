@@ -57,7 +57,7 @@ Protected Class NextCloudClass
 		  If Not localPath.BeginsWith(basePath) Then Return ""
 		  
 		  Var relPath As String = localPath.Middle(basePath.Length)
-		  relPath = relPath.ReplaceAll("\\", "/")
+		  relPath = relPath.ReplaceAll("\", "/")
 		  If relPath = "" Then relPath = "/"
 		  If Not relPath.BeginsWith("/") Then relPath = "/" + relPath
 		  
@@ -135,7 +135,7 @@ Protected Class NextCloudClass
 		  Var rf As String = remoteFile.Trim
 		  If base = "" Or rf = "" Then Return ""
 		  
-		  rf = rf.ReplaceAll("\\", "/")
+		  rf = rf.ReplaceAll("\", "/")
 		  If Not rf.BeginsWith("/") Then rf = "/" + rf
 		  If rf.Length > 1 And rf.EndsWith("/") Then rf = rf.Left(rf.Length - 1)
 		  
@@ -313,6 +313,7 @@ Protected Class NextCloudClass
 		  
 		  Var p As String = path.Trim
 		  If p = "" Then Return ""
+		  p = p.ReplaceAll("\", "/")
 		  
 		  Var hasLeading As Boolean = p.BeginsWith("/")
 		  Var hasTrailing As Boolean = (p.EndsWith("/") And p.Length > 1)
@@ -1626,6 +1627,40 @@ Protected Class NextCloudClass
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function RemotePathIsFolder(remotePath As String, ByRef pMessage As String) As Boolean
+		  pMessage = ""
+
+		  Var normalizedRemotePath As String = NormalizeMediaRelativePath(remotePath)
+		  If normalizedRemotePath = "" Then
+		    pMessage = "Nextcloud: chemin distant invalide."
+		    Return False
+		  End If
+
+		  If normalizedRemotePath = "/" Then
+		    pMessage = "Nextcloud: la destination est un dossier: /"
+		    Return True
+		  End If
+
+		  Var parentPath As String = ParentRemotePath(normalizedRemotePath)
+		  Var entries() As Dictionary = ListEntries(parentPath, pMessage)
+		  If pMessage.Trim <> "" Then Return False
+
+		  For Each entry As Dictionary In entries
+		    If entry = Nil Then Continue
+		    Var entryPath As String = NormalizeMediaRelativePath(entry.Lookup("remote_path", "").StringValue)
+		    If entryPath <> normalizedRemotePath Then Continue
+		    If entry.Lookup("is_folder", False).BooleanValue Then
+		      pMessage = "Nextcloud: la destination est un dossier: " + normalizedRemotePath
+		      Return True
+		    End If
+		    Return False
+		  Next
+
+		  Return False
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h21, CompatibilityFlags = (TargetAndroid and (Target64Bit))
 		Private Function WebDavHasTag(pXml As String, pTagName As String) As Boolean
 		  Var rx As New RegEx
@@ -1970,7 +2005,7 @@ Protected Class NextCloudClass
 		  Var rp As String = relativePath.Trim
 		  If rp = "" Then Return ""
 		  
-		  rp = rp.ReplaceAll("\\", "/")
+		  rp = rp.ReplaceAll("\", "/")
 		  If Not rp.BeginsWith("/") Then rp = "/" + rp
 		  While rp.IndexOf("//") >= 0
 		    rp = rp.ReplaceAll("//", "/")
@@ -2018,6 +2053,7 @@ Protected Class NextCloudClass
 		  
 		  Var p As String = path.Trim
 		  If p = "" Then Return "/"
+		  p = p.ReplaceAll("\", "/")
 		  
 		  If Not p.BeginsWith("/") Then p = "/" + p
 		  
@@ -2084,7 +2120,7 @@ Protected Class NextCloudClass
 		    If rel.BeginsWith("/") Then rel = rel.Middle(1)
 		  End If
 		  
-		  rel = rel.ReplaceAll("\\", "/")
+		  rel = rel.ReplaceAll("\", "/")
 		  While rel.IndexOf("//") >= 0
 		    rel = rel.ReplaceAll("//", "/")
 		  Wend
@@ -2126,12 +2162,13 @@ Protected Class NextCloudClass
 		Function UploadFile(localFile As FolderItem, remotePath As String, ByRef pMessage As String) As Boolean
 		  pMessage = ""
 
-		  If localFile = Nil Or Not localFile.Exists Then
+		  If localFile = Nil Or Not localFile.Exists Or localFile.IsFolder Then
 		    pMessage = "Nextcloud UPLOAD: fichier local introuvable."
 		    Return False
 		  End If
 
-		  Var normalizedRemotePath As String = NormalizeRemotePath(remotePath)
+		  // A file path must never be normalized as a folder: the trailing slash would make MKCOL create the file name as a collection.
+		  Var normalizedRemotePath As String = NormalizeMediaRelativePath(remotePath)
 		  If normalizedRemotePath = "/" Or normalizedRemotePath.Trim = "" Then
 		    pMessage = "Nextcloud UPLOAD: chemin distant invalide."
 		    Return False
@@ -2144,15 +2181,30 @@ Protected Class NextCloudClass
 		    Return False
 		  End If
 
-		  Var lastSlash As Integer = normalizedRemotePath.LastIndexOf("/")
-		  If lastSlash > 0 Then
-		    Var parentPath As String = normalizedRemotePath.Left(lastSlash)
-		    If parentPath.Trim <> "" Then
-		      Var mkcolMessage As String
-		      If Not MkCol(parentPath, mkcolMessage) Then
-		        pMessage = mkcolMessage
-		        Return False
-		      End If
+		  Var destinationHttpStatus As Integer
+		  Var destinationFileId As String
+		  Var destinationExistsMessage As String
+		  If Exists(normalizedRemotePath, destinationHttpStatus, destinationFileId, destinationExistsMessage) Then
+		    Var destinationTypeMessage As String
+		    If RemotePathIsFolder(normalizedRemotePath, destinationTypeMessage) Then
+		      pMessage = destinationTypeMessage
+		      Return False
+		    ElseIf destinationTypeMessage.Trim <> "" Then
+		      pMessage = destinationTypeMessage
+		      Return False
+		    End If
+		  ElseIf destinationHttpStatus <> 404 Then
+		    pMessage = destinationExistsMessage
+		    If pMessage.Trim = "" Then pMessage = "Nextcloud UPLOAD: impossible de vérifier la destination."
+		    Return False
+		  End If
+
+		  Var parentPath As String = ParentRemotePath(normalizedRemotePath)
+		  If parentPath.Trim <> "" Then
+		    Var mkcolMessage As String
+		    If Not MkCol(parentPath, mkcolMessage) Then
+		      pMessage = mkcolMessage
+		      Return False
 		    End If
 		  End If
 
