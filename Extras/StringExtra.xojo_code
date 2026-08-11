@@ -168,7 +168,7 @@ Protected Module StringExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetIOS and (Target64Bit)) or  (TargetAndroid and (Target64Bit))
-		Function CHR(numchar as Integer) As string
+		Function CHR(numchar as Integer) As String
 		  Var enc As TextEncoding = Encodings.UTF8 
 		  return enc.Chr(numchar)
 		End Function
@@ -431,7 +431,7 @@ Protected Module StringExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function FromArray(Extends pStrings() as String, pSeparator as string = ",") As String
+		Function FromArray(Extends pStrings() as String, pSeparator as String = ",") As String
 		  Return String.FromArray(pStrings, pSeparator)
 		End Function
 	#tag EndMethod
@@ -649,7 +649,7 @@ Protected Module StringExtra
 
 	#tag Method, Flags = &h0, CompatibilityFlags = false
 		Function MoneyValue(Extends pString as String, pUnit as String, pDecimal as integer = 2) As String
-		  dim nFormat as string = "-##0.00"
+		  dim nFormat as String = "-##0.00"
 		  
 		  for i as Integer = 2 to pDecimal
 		    nFormat = nFormat + "#"
@@ -660,7 +660,7 @@ Protected Module StringExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target64Bit)) or  (TargetWeb and (Target64Bit)) or  (TargetDesktop and (Target64Bit)) or  (TargetIOS and (Target64Bit)) or  (TargetAndroid and (Target64Bit))
-		Function MoneyValue(Extends pString as String, pUnit as String, pDecimal as integer = 2, pFormat as string = "##0.00;-##0.00;0.00") As String
+		Function MoneyValue(Extends pString as String, pUnit as String, pDecimal as integer = 2, pFormat as String = "##0.00;-##0.00;0.00") As String
 		  
 		  for i as Integer = 2 to pDecimal
 		    pFormat = pFormat + "#"
@@ -1168,7 +1168,7 @@ Protected Module StringExtra
 	#tag Method, Flags = &h0
 		Function ToText(Extends s() as String) As String()
 		  dim Tss() as String
-		  For each ss as string in s
+		  For each ss as String in s
 		    tss.Add(ss)
 		  Next
 		  
