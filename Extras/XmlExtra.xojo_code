@@ -41,7 +41,11 @@ Protected Module XmlExtra
 		    end
 		  next
 		  
-		  return texts.FromArray(" ")
+		  #If TargetAndroid
+		    Return String.FromArray(texts, " ")
+		  #Else
+		    Return texts.FromArray(" ")
+		  #EndIf
 		End Function
 	#tag EndMethod
 
