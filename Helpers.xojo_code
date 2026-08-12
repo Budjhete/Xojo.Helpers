@@ -538,7 +538,7 @@ Protected Module Helpers
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function Parent(Extends fi as FolderItem, endsWith as String) As FolderItem
 		  dim currentParent as FolderItem = fi.Parent
 		  while currentParent <> Nil
