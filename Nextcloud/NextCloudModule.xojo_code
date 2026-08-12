@@ -1,6 +1,6 @@
 #tag Module
 Protected Module NextCloudModule
-	#tag Method, Flags = &h0
+	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target32Bit or Target64Bit)) or  (TargetWeb and (Target32Bit or Target64Bit)) or  (TargetDesktop and (Target32Bit or Target64Bit)) or  (TargetIOS and (Target32Bit or Target64Bit))
 		Function URLDecode(Extends s As String) As String
 		  // Decodes percent-encoded strings. Safe for full paths too.
 		  // Nextcloud href can contain "+" sometimes; treat as space.
