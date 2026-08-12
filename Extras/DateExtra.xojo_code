@@ -182,8 +182,17 @@ Protected Module DateExtra
 
 	#tag Method, Flags = &h0
 		Function LastMonthEnd(Extends d As DateTime) As DateTime
-		  Dim y as integer = IIF(d.Month = 1, d.Year - 1, d.Year)
-		  Dim m as integer = IIF(d.Month = 1, 12, d.Month - 1)
+		  #If TargetAndroid Then
+		    Dim y As Integer = d.Year
+		    Dim m As Integer = d.Month - 1
+		    If d.Month = 1 Then
+		      y = d.Year - 1
+		      m = 12
+		    End If
+		  #Else
+		    Dim y as integer = IIF(d.Month = 1, d.Year - 1, d.Year)
+		    Dim m as integer = IIF(d.Month = 1, 12, d.Month - 1)
+		  #EndIf
 		  dim ddd as new DateTime(y, m, 1,2,3,4,5, TimeZone.Current)
 		  dim dd as integer = ddd.DaysInMonth()
 		  dim aDate As new DateTime(y, m, dd, 23, 59, 59,0,  TimeZone.Current)
@@ -195,7 +204,17 @@ Protected Module DateExtra
 
 	#tag Method, Flags = &h0
 		Function LastMonthStart(Extends d As DateTime, firstDay As DateTime = Nil) As DateTime
-		  dim dd as new DateTime(IIF(d.Month = 1, d.Year - 1, d.Year), IIF(d.Month = 1, 12, d.Month - 1), 1, 0, 0, 1, 0,TimeZone.Current)
+		  #If TargetAndroid Then
+		    Dim y As Integer = d.Year
+		    Dim m As Integer = d.Month - 1
+		    If d.Month = 1 Then
+		      y = d.Year - 1
+		      m = 12
+		    End If
+		    Dim dd As New DateTime(y, m, 1, 0, 0, 1, 0, TimeZone.Current)
+		  #Else
+		    dim dd as new DateTime(IIF(d.Month = 1, d.Year - 1, d.Year), IIF(d.Month = 1, 12, d.Month - 1), 1, 0, 0, 1, 0,TimeZone.Current)
+		  #EndIf
 		  
 		  return dd
 		  
