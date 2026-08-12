@@ -923,7 +923,13 @@ Protected Class NextCloudClass
 		  payload.Value("total") = total
 		  payload.Value("signed") = signedCount
 		  payload.Value("inProgress") = inProgress
-		  payload.Value("pending") = Max(0, total - signedCount - inProgress)
+		  #If TargetAndroid
+		    Var pendingCount As Integer = total - signedCount - inProgress
+		    If pendingCount < 0 Then pendingCount = 0
+		    payload.Value("pending") = pendingCount
+		  #Else
+		    payload.Value("pending") = Max(0, total - signedCount - inProgress)
+		  #EndIf
 		  result.Value("progress") = payload
 
 		  Var existingStatus As String = result.Lookup("status", "").StringValue.Trim.Uppercase
