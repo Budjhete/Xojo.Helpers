@@ -562,94 +562,99 @@ End
 	#tag Event
 		Sub Pressed()
 		  Me.Enabled = False
-		  progress.Visible = true
-		  bFermer.Cancel = false
-		  bFermer.Caption = "Annuler"
-		  
-		  
-		  
-		  
-		  dim req as new HTTPSocket
-		  
-		  req.SetRequestHeader("User-Agent", "Kanjo/2.0 (Macintosh; Intel Mac OS X 10_11_5; en-us)")
-		  
-		  dim post as new Dictionary
-		  
-		  post.Value("Details") = self.Message
-		  post.Value("Langue") = kLangue
-		  post.Value("OS") = CurrentOS // Part of Xojo.Helpers by kanjo
-		  post.Value("Version") = App.Version
-		  
-		  
-		  if ReportToEmail <> "" then
-		    post.Value("ReportTo") = ReportToEmail
-		  end
-		  
-		  
-		  // Version initial du logiciel
-		  
-		  'IF version <> "" THEN
-		  'post.Value("Initial version") = version
-		  'end if
-		  if creationDate <> "" Then
-		    post.Value("Created on") = creationDate
-		  end if
-		  
-		  
-		  if System.NetworkInterfaceCount > 0 then
-		    post.Value("MAC-modified") = StringMD5(System.GetNetworkInterface(0).MACAddress).Lowercase
-		  end if
-		  
-		  post.Value("NbWindows") = App.WindowCount.ToString
-		  for i as Integer = 0 to App.WindowCount - 1
+		  progress.Visible = True
+		  bFermer.Cancel = False
+		  bFermer.Caption = kAnnuler(App.Lang)
+
+		  Var crashStackLines() As String
+		  Var crashExceptionType As String
+		  Var crashExceptionMessage As String
+		  If excp <> Nil Then
+		    crashExceptionType = Introspection.GetType(excp).Name
+		    crashExceptionMessage = excp.Message
+		    crashStackLines = excp.Stack
+		  End If
+
+		  Var crashContext As New Dictionary
+		  Var crashWindows() As Variant
+		  For crashWindowIndex As Integer = 0 To App.WindowCount - 1
+		    If App.WindowAt(crashWindowIndex) IsA FenetreCrashReporter Then Continue
+		    crashWindows.Add(Introspection.GetType(App.WindowAt(crashWindowIndex)).Name)
+		  Next
+		  crashContext.Value("windows") = crashWindows
+		  crashContext.Value("window_count") = crashWindows.Count
+		  crashContext.Value("created_on") = CreationDate
+		  crashContext.Value("report_to") = ReportToEmail
+		  crashContext.Value("details") = Self.Message
+
+		  Var crashDeviceHash As String
+		  If System.NetworkInterfaceCount > 0 Then
+		    crashDeviceHash = EncodeHex(Crypto.SHA256(System.GetNetworkInterface(0).MACAddress)).Lowercase
+		  End If
+
+		  Var crashCompany As ModelCompany = App.CurrentCompany
+		  Var crashUserName As String
+		  Var crashPassword As String
+		  If crashCompany <> Nil And crashCompany.Utilisateur <> Nil And crashCompany.Utilisateur.Pk > 0 Then
+		    Var crashUserID As Integer = crashCompany.Utilisateur.Pk.IntegerValue
+		    crashUserName = crashCompany.Preference("UserNameKanjoWeb" + crashUserID.ToString).StringValue.Trim
+		    If crashUserName = "" Then crashUserName = crashCompany.Preference("UserNameKanjoMobile" + crashUserID.ToString).StringValue.Trim
+		    crashPassword = crashCompany.Preference("MotDePasseKanjoWeb" + crashUserID.ToString).StringValue
+		    If crashPassword = "" Then crashPassword = crashCompany.Preference("MotDePasseKanjoMobile" + crashUserID.ToString).StringValue
+		  End If
+
+		  Var crashReporterEmail As String = tEmail.Text.Trim
+		  If crashReporterEmail = "" Then crashReporterEmail = crashUserName
+		  Var crashUUIDSource As String = DateTime.Now.SecondsFrom1970.ToString + "|" + System.Random.InRange(100000, 999999).ToString + "|" + crashDeviceHash
+
+		  Var crashPayload As New Dictionary
+		  crashPayload.Value("report_uuid") = EncodeHex(Crypto.SHA256(crashUUIDSource)).Lowercase
+		  crashPayload.Value("project") = KanjoAppDesktopProjectName
+		  crashPayload.Value("version") = App.Version
+		  crashPayload.Value("build") = App.NonReleaseVersion
+		  crashPayload.Value("operating_system") = CurrentOS
+		  crashPayload.Value("language") = App.Lang
+		  crashPayload.Value("exception_type") = crashExceptionType
+		  crashPayload.Value("exception_message") = crashExceptionMessage
+		  crashPayload.Value("stack_trace") = String.FromArray(crashStackLines, EndOfLine)
+		  crashPayload.Value("comments") = tComment.Text
+		  crashPayload.Value("reporter_email") = crashReporterEmail
+		  crashPayload.Value("device_hash") = crashDeviceHash
+		  crashPayload.Value("context") = crashContext
+
+		  Var crashPayloadJSON As String = GenerateJSON(crashPayload)
+		  Var crashAuthHeader As String
+		  If crashUserName <> "" And crashPassword <> "" Then crashAuthHeader = KanjoAppEncodeCredentials(crashUserName, crashPassword)
+
+		  Var crashResponse As Dictionary = App.KanjoAppSendCrashReport(crashPayloadJSON, crashAuthHeader)
+		  If crashResponse Is Nil Or Not crashResponse.Lookup("ok", False).BooleanValue Then
+		    Var queued As Boolean = App.KanjoAppQueueCrashReport(crashPayload.Value("report_uuid").StringValue, crashPayloadJSON, crashAuthHeader)
+		    Var sendDetails As String
 		    
-		    if App.WindowAt(i) isA FenetreCrashReporter then
-		      continue
-		    end if
+		    If crashResponse <> Nil Then
+		      Var crashStatus As Integer = crashResponse.Lookup("status", 0).IntegerValue
+		      If crashStatus > 0 Then sendDetails = "HTTP " + crashStatus.ToString
+		      If crashResponse.Lookup("error", "").StringValue.Trim <> "" Then
+		        If sendDetails <> "" Then sendDetails = sendDetails + EndOfLine
+		        sendDetails = sendDetails + crashResponse.Value("error").StringValue
+		      End If
+		    End If
 		    
-		    post.Value("Window" +str(i)) = Introspection.GetType(App.WindowAt(i)).Name
+		    If queued Then
+		      tInformations.Text = Self.Message + EndOfLine + EndOfLine + kCrashReportQueued(App.Lang)
+		    Else
+		      tInformations.Text = Self.Message + EndOfLine + EndOfLine + kCrashReportSendFailed(App.Lang)
+		    End If
+		    If sendDetails <> "" Then tInformations.Text = tInformations.Text + EndOfLine + sendDetails
 		    
-		    
-		  next
-		  
-		  dim strStack() as String = excp.Stack
-		  post.Value("NbStack") = str(strStack.LastIndex + 1)
-		  for i as Integer = 0 to strStack.LastIndex
-		    post.Value("Stack" + str(i)) = strStack(i)
-		  next
-		  
-		  if tEmail.Text <> "" then
-		    post.Value("Email") = tEmail.Text
-		  else
-		    
-		  end if
-		  
-		  post.Value("CompagnieEmail") = ""
-		  
-		  
-		  if tComment.Text <> "" then
-		    post.Value("Comments") = tComment.Text
-		  end if
-		  
-		  
-		  // Fichier de journalisation
-		  'dim fi as FolderItem = Logger.LogOutputFile
-		  '
-		  'if fi <> nil and fi.Exists then
-		  'dim tis As TextInputStream = TextInputStream.Open(fi)
-		  '
-		  'try
-		  'post.Value("Logs") = tis.ReadAll
-		  'finally
-		  'tis.Close
-		  'end
-		  'end
-		  
-		  
-		  req.SetFormData(post)
-		  call req.Post("https://app.kanjo.ca/crash-reporter.php", nil, 15)
-		  
-		  Quit()
+		    Me.Enabled = True
+		    progress.Visible = False
+		    bFermer.Cancel = True
+		    bFermer.Caption = kFermer(App.Lang)
+		    Return
+		  End If
+
+		  Quit
 		End Sub
 	#tag EndEvent
 #tag EndEvents

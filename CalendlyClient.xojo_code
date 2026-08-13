@@ -132,7 +132,7 @@ Protected Class CalendlyClient
 		    Try
 		      Dim pErrorPayload As Dictionary = Dictionary(ParseJSON(pResponse))
 		      LastError = pErrorPayload.Lookup("message", pResponse).StringValue.Trim
-		    Catch pError As InvalidJSONException
+		    Catch pError As JSONException
 		      LastError = pResponse.Trim
 		    End Try
 		    If LastError = "" Then LastError = "Calendly HTTP " + LastHTTPStatus.ToString
@@ -142,7 +142,7 @@ Protected Class CalendlyClient
 		  If pResponse.Trim = "" Then Return New Dictionary
 		  Try
 		    Return Dictionary(ParseJSON(pResponse))
-		  Catch pError As InvalidJSONException
+		  Catch pError As JSONException
 		    LastError = kCalendlyReponseJSONInvalide(App.Lang)
 		    Return Nil
 		  End Try
