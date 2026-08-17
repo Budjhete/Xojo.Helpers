@@ -1,6 +1,50 @@
 #tag Module
 Protected Module StringExtra
 	#tag Method, Flags = &h0
+		Function AddressCapitalized(Extends pText As String) As String
+		  Dim pWords() As String = pText.Trim.Split(" ")
+		  Dim pFormattedWords() As String
+		  Const cLowercaseStreetTitles As String = ",allee,avenue,boulevard,carrefour,chemin,circulaire,cote,croissant,impasse,montee,place,promenade,rang,route,rue,sentier,terrasse,"
+
+		  For Each pOriginalWord As String In pWords
+		    If pOriginalWord = "" Then Continue
+		    Dim pComparisonWord As String = pOriginalWord.ReplaceAll(",", "").ReplaceAll(".", "").ReplaceAll(";", "").ReplaceAll(":", "").ReplaceAccents.Lowercase
+		    If cLowercaseStreetTitles.IndexOf("," + pComparisonWord + ",") >= 0 Then
+		      pFormattedWords.Add(pOriginalWord.Lowercase)
+		      Continue
+		    End If
+
+		    Dim pHasDigit As Boolean
+		    For pCharacterIndex As Integer = 0 To pOriginalWord.Length - 1
+		      Dim pCharacterCode As Integer = Asc(pOriginalWord.Middle(pCharacterIndex, 1))
+		      If pCharacterCode >= 48 And pCharacterCode <= 57 Then
+		        pHasDigit = True
+		        Exit
+		      End If
+		    Next
+		    If pHasDigit Then
+		      pFormattedWords.Add(pOriginalWord.Uppercase)
+		      Continue
+		    End If
+
+		    Dim pWord As String = pOriginalWord.Lowercase
+		    Dim pApostrophe As String = If(pWord.IndexOf("’") >= 0, "’", "'")
+		    Dim pApostropheParts() As String = pWord.Split(pApostrophe)
+		    For pApostropheIndex As Integer = 0 To pApostropheParts.LastIndex
+		      Dim pHyphenParts() As String = pApostropheParts(pApostropheIndex).Split("-")
+		      For pHyphenIndex As Integer = 0 To pHyphenParts.LastIndex
+		        If pHyphenParts(pHyphenIndex) <> "" Then pHyphenParts(pHyphenIndex) = pHyphenParts(pHyphenIndex).Left(1).Uppercase + pHyphenParts(pHyphenIndex).Middle(1)
+		      Next
+		      pApostropheParts(pApostropheIndex) = String.FromArray(pHyphenParts, "-")
+		    Next
+		    pFormattedWords.Add(String.FromArray(pApostropheParts, pApostrophe))
+		  Next
+
+		  Return String.FromArray(pFormattedWords, " ")
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function AssignVars(Extends str as String, ParamArray vars as Pair) As String
 		  For Each p as Pair in vars
 		    str = str.ReplaceAll("$"+p.Left, p.Right)
