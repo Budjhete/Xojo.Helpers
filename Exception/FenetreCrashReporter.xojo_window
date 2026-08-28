@@ -442,6 +442,9 @@ End
 
 	#tag Method, Flags = &h1000
 		Sub Constructor(error as RuntimeException)
+		  // Calling the overridden superclass constructor.
+		  Super.Constructor
+
 		  Me.excp = error
 		  
 		  Message = "Une exception de type "+Introspection.GetType(error).Name+" n'a pas été gérée." + EndOfLine
@@ -452,8 +455,6 @@ End
 		  end
 		  
 		  tInformations.Text = Message
-		  // Calling the overridden superclass constructor.
-		  Super.Constructor
 		  
 		  post = new Dictionary
 		  
@@ -462,6 +463,9 @@ End
 
 	#tag Method, Flags = &h1000
 		Sub Constructor(error as RuntimeException, pMessage as String)
+		  // Calling the overridden superclass constructor.
+		  Super.Constructor
+
 		  Me.excp = error
 		  
 		  Message = "Une exception de type "+Introspection.GetType(error).Name+" n'a pas été gérée." + EndOfLine
@@ -472,8 +476,6 @@ End
 		  end
 		  
 		  tInformations.Text = Message
-		  // Calling the overridden superclass constructor.
-		  Super.Constructor
 		  
 		  post = new Dictionary
 		  
