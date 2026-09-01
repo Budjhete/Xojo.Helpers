@@ -860,22 +860,42 @@ Protected Class NextCloudClass
 		  end if
 		  
 		  if arrVar <> Nil then
-		    dim arr() as Variant
-		    try
-		      arr = arrVar
-		      for each v as Variant in arr
-		        if v IsA Dictionary then entries.Add(Dictionary(v))
-		      next
-		    catch
-		    end try
+		    if arrVar IsA Dictionary then
+		      entries.Add(Dictionary(arrVar))
+		    else
+		      dim dictionaryEntries() as Dictionary
+		      try
+		        dictionaryEntries = arrVar
+		        for each dictionaryEntry as Dictionary in dictionaryEntries
+		          if dictionaryEntry <> Nil then entries.Add(dictionaryEntry)
+		        next
+		      catch
+		        dim arr() as Variant
+		        try
+		          arr = arrVar
+		          for each v as Variant in arr
+		            if v IsA Dictionary then entries.Add(Dictionary(v))
+		          next
+		        catch
+		        end try
+		      end try
+		    end if
 		  else
-		    dim arr() as Variant
+		    dim dataDictionaryEntries() as Dictionary
 		    try
-		      arr = dataVar
-		      for each v as Variant in arr
-		        if v IsA Dictionary then entries.Add(Dictionary(v))
+		      dataDictionaryEntries = dataVar
+		      for each dataDictionaryEntry as Dictionary in dataDictionaryEntries
+		        if dataDictionaryEntry <> Nil then entries.Add(dataDictionaryEntry)
 		      next
 		    catch
+		      dim dataArray() as Variant
+		      try
+		        dataArray = dataVar
+		        for each dataValue as Variant in dataArray
+		          if dataValue IsA Dictionary then entries.Add(Dictionary(dataValue))
+		        next
+		      catch
+		      end try
 		    end try
 		  end if
 		  
