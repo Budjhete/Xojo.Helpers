@@ -287,7 +287,7 @@ Begin DesktopWindow FenetreCrashReporter
       TabIndex        =   5
       TabPanelIndex   =   0
       TabStop         =   True
-      Text            =   "#kEmailObligatoire"
+      Text            =   "#kEmailFacultatif"
       TextAlignment   =   0
       TextColor       =   &c00000000
       Tooltip         =   ""
@@ -335,7 +335,7 @@ Begin DesktopWindow FenetreCrashReporter
       MaxLength       =   0
       mError          =   ""
       MinLength       =   0
-      NotEmpty        =   True
+      NotEmpty        =   False
       Numeric         =   False
       Password        =   False
       Phone           =   False
@@ -368,7 +368,7 @@ Begin DesktopWindow FenetreCrashReporter
       Cancel          =   False
       Caption         =   "#kEnvoyer"
       Default         =   True
-      Enabled         =   False
+      Enabled         =   True
       FontName        =   "System"
       FontSize        =   0.0
       FontUnit        =   0
@@ -442,6 +442,9 @@ End
 
 	#tag Method, Flags = &h1000
 		Sub Constructor(error as RuntimeException)
+		  // Calling the overridden superclass constructor.
+		  Super.Constructor
+
 		  Me.excp = error
 		  
 		  Message = "Une exception de type "+Introspection.GetType(error).Name+" n'a pas été gérée." + EndOfLine
@@ -452,8 +455,6 @@ End
 		  end
 		  
 		  tInformations.Text = Message
-		  // Calling the overridden superclass constructor.
-		  Super.Constructor
 		  
 		  post = new Dictionary
 		  
@@ -462,6 +463,9 @@ End
 
 	#tag Method, Flags = &h1000
 		Sub Constructor(error as RuntimeException, pMessage as String)
+		  // Calling the overridden superclass constructor.
+		  Super.Constructor
+
 		  Me.excp = error
 		  
 		  Message = "Une exception de type "+Introspection.GetType(error).Name+" n'a pas été gérée." + EndOfLine
@@ -472,8 +476,6 @@ End
 		  end
 		  
 		  tInformations.Text = Message
-		  // Calling the overridden superclass constructor.
-		  Super.Constructor
 		  
 		  post = new Dictionary
 		  
@@ -552,9 +554,7 @@ End
 #tag Events tEmail
 	#tag Event
 		Sub TextChange()
-		  if me.Check then
-		    bEnvoyer.Enabled = true
-		  end if
+		  bEnvoyer.Enabled = Me.Check
 		End Sub
 	#tag EndEvent
 #tag EndEvents
