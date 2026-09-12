@@ -824,26 +824,19 @@ Protected Class NextCloudClass
 		Function LibreSignExtractEntries(dataVar as Variant) As Dictionary()
 		  dim entries() as Dictionary
 		  dim dd as Dictionary
-		  try
-		    dd = Dictionary(dataVar)
-		  catch
-		    dd = Nil
-		  end try
+		  if dataVar IsA Dictionary then dd = Dictionary(dataVar)
 		  
 		  if dd <> nil and dd.HasKey("progress") then
-		    try
-		      dim progress as Dictionary = Dictionary(dd.Value("progress"))
-		      if progress <> nil then dd = progress
-		    catch
-		    end try
+		    dim progressValue as Variant = dd.Value("progress")
+		    if progressValue IsA Dictionary then dd = Dictionary(progressValue)
 		  end if
 
 		  if dd <> nil and not dd.HasKey("signers") and dd.HasKey("file") then
-		    try
-		      dim fileData as Dictionary = Dictionary(dd.Value("file"))
-		      if fileData <> nil and fileData.HasKey("signers") then dd = fileData
-		    catch
-		    end try
+		    dim fileValue as Variant = dd.Value("file")
+		    if fileValue IsA Dictionary then
+		      dim fileData as Dictionary = Dictionary(fileValue)
+		      if fileData.HasKey("signers") then dd = fileData
+		    end if
 		  end if
 
 		  dim arrVar as Variant
@@ -859,45 +852,39 @@ Protected Class NextCloudClass
 		    end if
 		  end if
 		  
-		  if arrVar <> Nil then
-		    if arrVar IsA Dictionary then
-		      entries.Add(Dictionary(arrVar))
-		    else
-		      dim dictionaryEntries() as Dictionary
-		      try
-		        dictionaryEntries = arrVar
-		        for each dictionaryEntry as Dictionary in dictionaryEntries
-		          if dictionaryEntry <> Nil then entries.Add(dictionaryEntry)
-		        next
-		      catch
-		        dim arr() as Variant
-		        try
-		          arr = arrVar
-		          for each v as Variant in arr
-		            if v IsA Dictionary then entries.Add(Dictionary(v))
-		          next
-		        catch
-		        end try
-		      end try
-		    end if
-		  else
-		    dim dataDictionaryEntries() as Dictionary
-		    try
-		      dataDictionaryEntries = dataVar
-		      for each dataDictionaryEntry as Dictionary in dataDictionaryEntries
-		        if dataDictionaryEntry <> Nil then entries.Add(dataDictionaryEntry)
-		      next
-		    catch
-		      dim dataArray() as Variant
-		      try
-		        dataArray = dataVar
-		        for each dataValue as Variant in dataArray
-		          if dataValue IsA Dictionary then entries.Add(Dictionary(dataValue))
-		        next
-		      catch
-		      end try
-		    end try
+		  if arrVar = Nil and dataVar.IsArray then arrVar = dataVar
+		  if arrVar IsA Dictionary then
+		    entries.Add(Dictionary(arrVar))
+		    Return entries
 		  end if
+		  if not arrVar.IsArray then Return entries
+
+		  // Un tableau JSON et un Dictionary() ne sont pas interchangeables.
+		  // Inspecter le type avant conversion pour ne pas declencher d'exception.
+		  dim arrayInfo as Introspection.TypeInfo = Introspection.GetType(arrVar)
+		  if arrayInfo = Nil then Return entries
+		  if not arrayInfo.IsArray then Return entries
+		  if arrayInfo.GetArrayRank <> 1 then Return entries
+		  dim elementInfo as Introspection.TypeInfo = arrayInfo.GetElementType
+		  if elementInfo = Nil then Return entries
+
+		  select case elementInfo.FullName
+		  case "Dictionary"
+		    dim dictionaryEntries() as Dictionary = arrVar
+		    for each dictionaryEntry as Dictionary in dictionaryEntries
+		      if dictionaryEntry <> Nil then entries.Add(dictionaryEntry)
+		    next
+		  case "Object"
+		    dim objectEntries() as Object = arrVar
+		    for each objectEntry as Object in objectEntries
+		      if objectEntry IsA Dictionary then entries.Add(Dictionary(objectEntry))
+		    next
+		  case "Variant"
+		    dim variantEntries() as Variant = arrVar
+		    for each variantEntry as Variant in variantEntries
+		      if variantEntry IsA Dictionary then entries.Add(Dictionary(variantEntry))
+		    next
+		  end select
 		  
 		  Return entries
 		End Function
