@@ -753,7 +753,7 @@ Protected Module StringExtra
 	#tag EndMethod
 
 	#tag Method, Flags = &h0, CompatibilityFlags = (TargetConsole and (Target64Bit)) or  (TargetWeb and (Target64Bit)) or  (TargetDesktop and (Target64Bit)) or  (TargetIOS and (Target64Bit))
-		Function PhoneNumber(Extends str as String, pFormat as String = "###\-###\-####") As String
+		Function PhoneNumber(Extends str as String, pFormat as String = "###-###-####") As String
 		  var digits As String
 		  For i As Integer = 0 To str.Length - 1
 		    Var ch As String = str.Middle(i, 1)
@@ -762,6 +762,16 @@ Protected Module StringExtra
 		    End If
 		  Next
 		  If digits = "" Then Return ""
+		  // Accept both the native numeric mask and the plain display mask.
+		  pFormat = pFormat.ReplaceAll(Chr(92), "")
+		  If pFormat = "###-###-####" Then
+		    If digits.Length = 11 And digits.Left(1) = "1" Then
+		      pFormat = "#-###-###-####"
+		    ElseIf digits.Length <> 10 Then
+		      Return digits
+		    End If
+		  End If
+
 
 		  Var formatted As String
 		  Var digitIndex As Integer
@@ -779,7 +789,7 @@ Protected Module StringExtra
 		    End If
 		  Next
 
-		  If formatted = "" Then
+		  If formatted = "" Or digitIndex < digits.Length Then
 		    Return digits
 		  End If
 
@@ -797,6 +807,16 @@ Protected Module StringExtra
 		    End If
 		  Next
 		  If digits = "" Then Return ""
+		  // Accept both the native numeric mask and the plain display mask.
+		  pFormat = pFormat.ReplaceAll(Chr(92), "")
+		  If pFormat = "###-###-####" Then
+		    If digits.Length = 11 And digits.Left(1) = "1" Then
+		      pFormat = "#-###-###-####"
+		    ElseIf digits.Length <> 10 Then
+		      Return digits
+		    End If
+		  End If
+
 		  
 		  Var formatted As String
 		  Var digitIndex As Integer
@@ -814,7 +834,7 @@ Protected Module StringExtra
 		    End If
 		  Next
 		  
-		  If formatted = "" Then
+		  If formatted = "" Or digitIndex < digits.Length Then
 		    Return digits
 		  End If
 		  
