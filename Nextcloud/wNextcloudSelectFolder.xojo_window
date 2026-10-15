@@ -25,7 +25,7 @@ Begin DesktopWindow wNextcloudSelectFolder
    Type            =   0
    Visible         =   True
    Width           =   422
-   Begin DesktopListBox lbFolders
+   Begin BHSelectionListBox lbFolders
       AllowAutoDeactivate=   True
       AllowAutoHideScrollbars=   True
       AllowExpandableRows=   True
