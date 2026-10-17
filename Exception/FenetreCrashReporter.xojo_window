@@ -592,19 +592,9 @@ End
 		    crashDeviceHash = EncodeHex(Crypto.SHA256(System.GetNetworkInterface(0).MACAddress)).Lowercase
 		  End If
 
-		  Var crashCompany As ModelCompany = App.CurrentCompany
-		  Var crashUserName As String
-		  Var crashPassword As String
-		  If crashCompany <> Nil And crashCompany.Utilisateur <> Nil And crashCompany.Utilisateur.Pk > 0 Then
-		    Var crashUserID As Integer = crashCompany.Utilisateur.Pk.IntegerValue
-		    crashUserName = crashCompany.Preference("UserNameKanjoWeb" + crashUserID.ToString).StringValue.Trim
-		    If crashUserName = "" Then crashUserName = crashCompany.Preference("UserNameKanjoMobile" + crashUserID.ToString).StringValue.Trim
-		    crashPassword = crashCompany.Preference("MotDePasseKanjoWeb" + crashUserID.ToString).StringValue
-		    If crashPassword = "" Then crashPassword = crashCompany.Preference("MotDePasseKanjoMobile" + crashUserID.ToString).StringValue
-		  End If
-
+		  Var crashIdentity As Dictionary = KIdentityService.CrashReportIdentity(App.CurrentCompany)
 		  Var crashReporterEmail As String = tEmail.Text.Trim
-		  If crashReporterEmail = "" Then crashReporterEmail = crashUserName
+		  If crashReporterEmail = "" And crashIdentity <> Nil Then crashReporterEmail = crashIdentity.Lookup("email", "").StringValue
 		  Var crashUUIDSource As String = DateTime.Now.SecondsFrom1970.ToString + "|" + System.Random.InRange(100000, 999999).ToString + "|" + crashDeviceHash
 
 		  Var crashPayload As New Dictionary
@@ -623,12 +613,9 @@ End
 		  crashPayload.Value("context") = crashContext
 
 		  Var crashPayloadJSON As String = GenerateJSON(crashPayload)
-		  Var crashAuthHeader As String
-		  If crashUserName <> "" And crashPassword <> "" Then crashAuthHeader = KanjoAppEncodeCredentials(crashUserName, crashPassword)
-
-		  Var crashResponse As Dictionary = App.KanjoAppSendCrashReport(crashPayloadJSON, crashAuthHeader)
+		  Var crashResponse As Dictionary = App.KanjoAppSendCrashReport(crashPayloadJSON, "", 15, App.CONST_CRASH_REPORT_URL, crashIdentity)
 		  If crashResponse Is Nil Or Not crashResponse.Lookup("ok", False).BooleanValue Then
-		    Var queued As Boolean = App.KanjoAppQueueCrashReport(crashPayload.Value("report_uuid").StringValue, crashPayloadJSON, crashAuthHeader)
+		    Var queued As Boolean = App.KanjoAppQueueCrashReport(crashPayload.Value("report_uuid").StringValue, crashPayloadJSON, "", App.CONST_CRASH_REPORT_URL, crashIdentity)
 		    Var sendDetails As String
 		    
 		    If crashResponse <> Nil Then
